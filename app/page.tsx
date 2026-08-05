@@ -1,3 +1,5 @@
 export default function Home() {
-<h1>Code raayu ra munda</h1>
+return(
+    <h1>Code raayu ra munda</h1>
+)
 }
