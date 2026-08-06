@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import { dummyInventory } from '../../lib/dummy-data';
 export default function Page() {
   return (
     <div className="bg-background text-on-background h-full flex font-body-md">

@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import { dummyStaffRecords } from '../../lib/dummy-data';
 export default function Page() {
   return (
     <div className="bg-background text-on-background font-body-md antialiased flex h-screen overflow-hidden">

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 export default function Page() {
   return (
     <div className="flex bg-surface min-h-screen font-body-md text-on-surface">
@@ -16,16 +17,16 @@ export default function Page() {
 </div>
 <ul className="flex flex-col gap-1 flex-1 overflow-y-auto px-2">
 <li>
-<a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-inverse-surface rounded-lg transition-colors font-label-bold text-label-bold mx-2" href="#">
+<Link className="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-inverse-surface rounded-lg transition-colors font-label-bold text-label-bold mx-2" href="/staff">
 <span className="material-symbols-outlined" data-icon="dashboard">dashboard</span>
-                    Dashboard
-                </a>
+Dashboard
+</Link>
 </li>
 <li>
-<a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-inverse-surface rounded-lg transition-colors font-label-bold text-label-bold mx-2" href="#">
+<Link className="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-inverse-surface rounded-lg transition-colors font-label-bold text-label-bold mx-2" href="/staff/inventory">
 <span className="material-symbols-outlined" data-icon="directions_car">directions_car</span>
-                    Inventory
-                </a>
+Inventory
+</Link>
 </li>
 <li>
 <a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-inverse-surface rounded-lg transition-colors font-label-bold text-label-bold mx-2" href="#">
@@ -34,10 +35,10 @@ export default function Page() {
                 </a>
 </li>
 <li>
-<a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-inverse-surface rounded-lg transition-colors font-label-bold text-label-bold mx-2" href="#">
+<Link className="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-inverse-surface rounded-lg transition-colors font-label-bold text-label-bold mx-2" href="/staff/records">
 <span className="material-symbols-outlined" data-icon="build">build</span>
-                    Service Records
-                </a>
+Service Records
+</Link>
 </li>
 <li>
 <a className="flex items-center gap-3 px-4 py-3 bg-primary dark:bg-primary-container text-on-primary dark:text-on-primary-container rounded-lg mx-2 font-label-bold text-label-bold active:translate-x-1 duration-200" href="#">

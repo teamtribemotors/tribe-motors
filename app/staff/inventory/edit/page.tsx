@@ -1,3 +1,4 @@
+import Link from 'next/link';
 export default function Page() {
   return (
     <div className="bg-background text-on-background min-h-screen flex selection:bg-primary-fixed selection:text-on-primary-fixed">

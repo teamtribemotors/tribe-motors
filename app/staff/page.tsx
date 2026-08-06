@@ -1,3 +1,4 @@
+import Link from 'next/link';
 export default function Page() {
   return (
     <div className="h-full flex antialiased text-on-background font-body-md bg-surface-container-low">

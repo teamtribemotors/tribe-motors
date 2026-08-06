@@ -1,4 +1,12 @@
-export default function Page() {
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { dummyInventory } from '../../lib/dummy-data';
+
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const vehicle = dummyInventory.find(v => v.id === id);
+  if (!vehicle) return notFound();
+
   return (
     <div className="bg-background text-on-background antialiased min-h-screen flex flex-col font-body-md text-body-md">
 
@@ -8,8 +16,8 @@ export default function Page() {
             Tribe Motors
         </div>
 <div className="hidden md:flex gap-gutter items-center">
-<a className="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim font-label-bold text-label-bold hover:opacity-80 transition-opacity scale-95 duration-150 ease-in-out" href="#">Browse Cars</a>
-<a className="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim font-label-bold text-label-bold hover:opacity-80 transition-opacity scale-95 duration-150 ease-in-out" href="#">How it Works</a>
+<Link className="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim font-label-bold text-label-bold hover:opacity-80 transition-opacity scale-95 duration-150 ease-in-out" href="/browse">Browse Cars</Link>
+<Link className="text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim font-label-bold text-label-bold hover:opacity-80 transition-opacity scale-95 duration-150 ease-in-out" href="/">How it Works</Link>
 
 </div>
 <div className="flex items-center gap-stack-sm">
@@ -138,10 +146,10 @@ export default function Page() {
             Tribe Motors
         </div>
 <div className="flex gap-gutter mb-6">
-<a className="font-label-sm text-label-sm text-on-primary-container opacity-80 hover:opacity-100 hover:underline decoration-secondary-fixed transition-all duration-300" href="#">Privacy Policy</a>
-<a className="font-label-sm text-label-sm text-on-primary-container opacity-80 hover:opacity-100 hover:underline decoration-secondary-fixed transition-all duration-300" href="#">Terms of Service</a>
+<Link className="font-label-sm text-label-sm text-on-primary-container opacity-80 hover:opacity-100 hover:underline decoration-secondary-fixed transition-all duration-300" href="/">Privacy Policy</Link>
+<Link className="font-label-sm text-label-sm text-on-primary-container opacity-80 hover:opacity-100 hover:underline decoration-secondary-fixed transition-all duration-300" href="/">Terms of Service</Link>
 
-<a className="font-label-sm text-label-sm text-on-primary-container opacity-80 hover:opacity-100 hover:underline decoration-secondary-fixed transition-all duration-300" href="#">Dealer License</a>
+<Link className="font-label-sm text-label-sm text-on-primary-container opacity-80 hover:opacity-100 hover:underline decoration-secondary-fixed transition-all duration-300" href="/">Dealer License</Link>
 </div>
 <div className="font-body-md text-body-md text-on-primary-container opacity-60 text-sm">
             © 2024 Tribe Motors. Premium Pre-Owned Excellence.

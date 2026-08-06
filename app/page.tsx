@@ -1,3 +1,4 @@
+import Link from 'next/link';
 export default function Page() {
   return (
     <div className="text-on-background font-body-md antialiased min-h-screen flex flex-col">
@@ -5,12 +6,12 @@ export default function Page() {
 
 <header className="docked full-width top-0 z-50 sticky shadow-sm dark:shadow-none bg-surface dark:bg-on-background">
 <div className="flex justify-between items-center px-margin-desktop h-20 w-full max-w-container-max mx-auto">
-<a className="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim" href="#">
-                Tribe Motors
-            </a>
+<Link className="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim" href="/">
+Tribe Motors
+</Link>
 <nav className="hidden md:flex gap-gutter">
-<a className="font-label-bold text-label-bold text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim hover:opacity-80 transition-opacity scale-95 duration-150 ease-in-out" href="#">Browse Cars</a>
-<a className="font-label-bold text-label-bold text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim hover:opacity-80 transition-opacity scale-95 duration-150 ease-in-out" href="#">How it Works</a>
+<Link className="font-label-bold text-label-bold text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim hover:opacity-80 transition-opacity scale-95 duration-150 ease-in-out" href="/browse">Browse Cars</Link>
+<Link className="font-label-bold text-label-bold text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim hover:opacity-80 transition-opacity scale-95 duration-150 ease-in-out" href="/">How it Works</Link>
 
 </nav>
 <div className="flex items-center gap-base">
@@ -101,9 +102,9 @@ export default function Page() {
 <section className="py-stack-lg px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
 <div className="flex justify-between items-end mb-stack-md">
 <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">Featured Vehicles</h2>
-<a className="font-label-bold text-label-bold text-primary hover:underline flex items-center gap-1" href="#">
+<Link className="font-label-bold text-label-bold text-primary hover:underline flex items-center gap-1" href="/">
                     View all <span className="material-symbols-outlined text-sm">arrow_forward</span>
-</a>
+</Link>
 </div>
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
 
@@ -185,8 +186,8 @@ export default function Page() {
             Tribe Motors
         </div>
 <nav className="flex flex-wrap justify-center gap-6 mb-4">
-<a className="font-label-sm text-label-sm text-on-primary-container opacity-80 hover:opacity-100 hover:underline decoration-secondary-fixed transition-all duration-300" href="#">Privacy Policy</a>
-<a className="font-label-sm text-label-sm text-on-primary-container opacity-80 hover:opacity-100 hover:underline decoration-secondary-fixed transition-all duration-300" href="#">Terms of Service</a>
+<Link className="font-label-sm text-label-sm text-on-primary-container opacity-80 hover:opacity-100 hover:underline decoration-secondary-fixed transition-all duration-300" href="/">Privacy Policy</Link>
+<Link className="font-label-sm text-label-sm text-on-primary-container opacity-80 hover:opacity-100 hover:underline decoration-secondary-fixed transition-all duration-300" href="/">Terms of Service</Link>
 
 
 </nav>

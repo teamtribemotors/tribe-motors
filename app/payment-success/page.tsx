@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Page() {
   return (
     <div className="bg-background min-h-screen flex flex-col items-center justify-center font-body-md text-on-background antialiased relative overflow-hidden">
