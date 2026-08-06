@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { dummyInventory } from '../../lib/dummy-data';
 
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const vehicle = dummyInventory.find(v => v.id === id);
@@ -141,20 +143,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 </section>
 </main>
 
-<footer className="bg-primary dark:bg-primary-container mt-stack-lg w-full py-stack-lg px-margin-desktop flex flex-col items-center gap-base">
-<div className="font-headline-md text-headline-md font-bold text-on-primary dark:text-on-primary-container mb-4">
-            Tribe Motors
-        </div>
-<div className="flex gap-gutter mb-6">
-<Link className="font-label-sm text-label-sm text-on-primary-container opacity-80 hover:opacity-100 hover:underline decoration-secondary-fixed transition-all duration-300" href="/">Privacy Policy</Link>
-<Link className="font-label-sm text-label-sm text-on-primary-container opacity-80 hover:opacity-100 hover:underline decoration-secondary-fixed transition-all duration-300" href="/">Terms of Service</Link>
-
-<Link className="font-label-sm text-label-sm text-on-primary-container opacity-80 hover:opacity-100 hover:underline decoration-secondary-fixed transition-all duration-300" href="/">Dealer License</Link>
-</div>
-<div className="font-body-md text-body-md text-on-primary-container opacity-60 text-sm">
-            © 2024 Tribe Motors. Premium Pre-Owned Excellence.
-        </div>
-</footer>
+<Footer />
 
 
 

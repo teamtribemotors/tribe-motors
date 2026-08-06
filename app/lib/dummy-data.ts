@@ -14,7 +14,7 @@ export const dummyInventory: Vehicle[] = [
   {
     id: "1",
     title: "2022 Volvo XC90",
-    price: "$54,900",
+    price: "₹4,600,000",
     mileage: "24,500 km",
     fuelType: "Petrol",
     transmission: "Automatic",
@@ -25,7 +25,7 @@ export const dummyInventory: Vehicle[] = [
   {
     id: "2",
     title: "2021 BMW 3 Series",
-    price: "$42,500",
+    price: "₹3,570,000",
     mileage: "38,200 km",
     fuelType: "Diesel",
     transmission: "Automatic",
@@ -36,7 +36,7 @@ export const dummyInventory: Vehicle[] = [
   {
     id: "3",
     title: "2023 Tesla Model Y",
-    price: "$48,900",
+    price: "₹4,100,000",
     mileage: "12,000 km",
     fuelType: "EV",
     transmission: "Automatic",
@@ -47,7 +47,7 @@ export const dummyInventory: Vehicle[] = [
   {
     id: "4",
     title: "2020 Audi Q5",
-    price: "$39,500",
+    price: "₹3,310,000",
     mileage: "55,000 km",
     fuelType: "Petrol",
     transmission: "Automatic",

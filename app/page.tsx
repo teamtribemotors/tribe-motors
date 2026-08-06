@@ -1,29 +1,12 @@
 import Link from 'next/link';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 export default function Page() {
   return (
     <div className="text-on-background font-body-md antialiased min-h-screen flex flex-col">
 
 
-<header className="docked full-width top-0 z-50 sticky shadow-sm dark:shadow-none bg-surface dark:bg-on-background">
-<div className="flex justify-between items-center px-margin-desktop h-20 w-full max-w-container-max mx-auto">
-<Link className="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim" href="/">
-Tribe Motors
-</Link>
-<nav className="hidden md:flex gap-gutter">
-<Link className="font-label-bold text-label-bold text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim hover:opacity-80 transition-opacity scale-95 duration-150 ease-in-out" href="/browse">Browse Cars</Link>
-<Link className="font-label-bold text-label-bold text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim hover:opacity-80 transition-opacity scale-95 duration-150 ease-in-out" href="/">How it Works</Link>
-
-</nav>
-<div className="flex items-center gap-base">
-<button className="md:hidden text-on-surface">
-<span className="material-symbols-outlined">menu</span>
-</button>
-<button className="hidden md:inline-flex items-center justify-center bg-primary text-on-primary font-label-bold text-label-bold px-6 py-2 rounded font-bold hover:opacity-80 transition-opacity">
-                    Sign In
-                </button>
-</div>
-</div>
-</header>
+<Navbar />
 <main className="flex-grow">
 
 <section className="relative pt-stack-lg pb-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto overflow-hidden">
@@ -181,20 +164,7 @@ Tribe Motors
 </section>
 </main>
 
-<footer className="full-width bg-primary dark:bg-primary-container mt-stack-lg flex flex-col items-center gap-base py-stack-lg px-margin-desktop w-full">
-<div className="font-headline-md text-headline-md font-bold text-on-primary dark:text-on-primary-container mb-4">
-            Tribe Motors
-        </div>
-<nav className="flex flex-wrap justify-center gap-6 mb-4">
-<Link className="font-label-sm text-label-sm text-on-primary-container opacity-80 hover:opacity-100 hover:underline decoration-secondary-fixed transition-all duration-300" href="/">Privacy Policy</Link>
-<Link className="font-label-sm text-label-sm text-on-primary-container opacity-80 hover:opacity-100 hover:underline decoration-secondary-fixed transition-all duration-300" href="/">Terms of Service</Link>
-
-
-</nav>
-<p className="font-body-md text-body-md text-on-primary dark:text-on-primary-container opacity-60 text-center">
-            © 2024 Tribe Motors. Premium Pre-Owned Excellence.
-        </p>
-</footer>
+<Footer />
 
 
 
