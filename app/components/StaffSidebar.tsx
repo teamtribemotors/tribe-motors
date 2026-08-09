@@ -1,6 +1,24 @@
+"use client";
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function StaffSidebar() {
+    const pathname = usePathname();
+
+    const getLinkClass = (path: string) => {
+        // Exact match for /staff, otherwise prefix match for others like /staff/inventory
+        const isActive = path === '/staff' ? pathname === '/staff' : pathname.startsWith(path);
+        return isActive
+            ? "flex items-center gap-3 px-4 py-3 bg-primary text-on-primary rounded-lg mx-2 transition-colors duration-200 shadow-sm"
+            : "flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant mx-2 rounded-lg transition-colors duration-200 group";
+    };
+
+    const getIconStyle = (path: string) => {
+        const isActive = path === '/staff' ? pathname === '/staff' : pathname.startsWith(path);
+        return isActive ? { fontVariationSettings: "'FILL' 1" } : { fontVariationSettings: "'FILL' 0" };
+    };
+
     return (
         <nav className="fixed left-0 top-0 h-full w-64 bg-surface-container flex flex-col border-r border-outline-variant z-20">
             <div className="px-6 py-8">
@@ -15,28 +33,28 @@ export default function StaffSidebar() {
             </div>
 
             <div className="flex-1 overflow-y-auto px-2 space-y-1">
-                <Link className="flex items-center gap-3 px-4 py-3 bg-primary text-on-primary rounded-lg mx-2 transition-colors duration-200" href="/staff">
-                    <span className="material-symbols-outlined" style={{ "fontVariationSettings": "'FILL' 1" }}>dashboard</span>
+                <Link className={getLinkClass('/staff')} href="/staff">
+                    <span className="material-symbols-outlined" style={getIconStyle('/staff')}>dashboard</span>
                     <span className="font-label-bold text-label-bold">Dashboard</span>
                 </Link>
-                <Link className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant mx-2 rounded-lg transition-colors duration-200" href="/staff">
-                    <span className="material-symbols-outlined">directions_car</span>
+                <Link className={getLinkClass('/staff/inventory')} href="/staff/inventory">
+                    <span className="material-symbols-outlined" style={getIconStyle('/staff/inventory')}>directions_car</span>
                     <span className="font-label-bold text-label-bold">Inventory</span>
                 </Link>
-                <Link className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant mx-2 rounded-lg transition-colors duration-200" href="/staff">
-                    <span className="material-symbols-outlined">fact_check</span>
+                <Link className={getLinkClass('/staff/inspections')} href="/staff">
+                    <span className="material-symbols-outlined" style={getIconStyle('/staff/inspections')}>fact_check</span>
                     <span className="font-label-bold text-label-bold">Inspections</span>
                 </Link>
-                <Link className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant mx-2 rounded-lg transition-colors duration-200" href="/staff">
-                    <span className="material-symbols-outlined">build</span>
+                <Link className={getLinkClass('/staff/service-records')} href="/staff">
+                    <span className="material-symbols-outlined" style={getIconStyle('/staff/service-records')}>build</span>
                     <span className="font-label-bold text-label-bold">Service Records</span>
                 </Link>
-                <Link className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant mx-2 rounded-lg transition-colors duration-200" href="/staff">
-                    <span className="material-symbols-outlined">workspace_premium</span>
+                <Link className={getLinkClass('/staff/fulfillment')} href="/staff">
+                    <span className="material-symbols-outlined" style={getIconStyle('/staff/fulfillment')}>workspace_premium</span>
                     <span className="font-label-bold text-label-bold">Fulfillment</span>
                 </Link>
-                <Link className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant mx-2 rounded-lg transition-colors duration-200" href="/staff/new">
-                    <span className="material-symbols-outlined">person_add</span>
+                <Link className={getLinkClass('/staff/new')} href="/staff/new">
+                    <span className="material-symbols-outlined" style={getIconStyle('/staff/new')}>person_add</span>
                     <span className="font-label-bold text-label-bold">Add Staff</span>
                 </Link>
             </div>
