@@ -1,11 +1,25 @@
+"use client";
+
 import Link from 'next/link';
-import { dummyInventory } from '../../lib/dummy-data';
 import StaffSidebar from '../../components/StaffSidebar';
+import { useInventory } from '../../lib/useInventory';
 
 export default function Page() {
+  const { vehicles, isLoaded, deleteVehicle } = useInventory();
+
+  if (!isLoaded) {
+    return (
+      <div className="bg-background text-on-background h-screen overflow-hidden flex font-body-md">
+        <StaffSidebar />
+        <main className="flex-1 overflow-y-auto bg-background relative z-0 ml-64 p-margin-desktop">
+          <p>Loading inventory...</p>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-background text-on-background h-screen overflow-hidden flex font-body-md">
-
       <StaffSidebar />
 
       <main className="flex-1 overflow-y-auto bg-background relative z-0 ml-64">
@@ -29,11 +43,16 @@ export default function Page() {
                 <option value="price_desc">Price: High - Low</option>
                 <option value="price_asc">Price: Low - High</option>
               </select>
+
+              <Link href="/staff/inventory/new" className="hidden md:flex ml-4 bg-primary text-on-primary font-label-bold text-label-bold py-2 px-4 rounded-lg shadow-sm hover:opacity-90 transition-opacity items-center gap-2">
+                <span className="material-symbols-outlined">add</span>
+                Add Vehicle
+              </Link>
             </div>
           </header>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter pb-12">
-            {dummyInventory.map((vehicle) => {
+            {vehicles.map((vehicle) => {
               let badgeColor = "bg-secondary-container text-on-secondary-container";
               if (vehicle.status === "Draft") badgeColor = "bg-surface-dim text-on-surface";
               if (vehicle.status === "Sold") badgeColor = "bg-surface-tint text-on-primary";
@@ -61,9 +80,34 @@ export default function Page() {
                     </div>
                     <div className="mt-auto pt-4 border-t border-outline-variant flex justify-between items-center">
                       <div className={`font-headline-md text-headline-md font-bold ${vehicle.status === 'Sold' ? 'text-outline line-through' : 'text-primary'}`}>{vehicle.price}</div>
-                      <button aria-label={vehicle.status === 'Sold' ? 'View Details' : 'Edit Vehicle'} className={`${vehicle.status === 'Sold' ? 'text-on-surface-variant hover:bg-surface-variant' : 'text-primary hover:bg-primary-container'} p-2 rounded-full transition-colors`}>
-                        <span className="material-symbols-outlined">{vehicle.status === 'Sold' ? 'visibility' : 'edit'}</span>
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          aria-label="Delete Vehicle"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (confirm('Are you sure you want to delete this vehicle?')) {
+                              deleteVehicle(vehicle.id);
+                            }
+                          }}
+                          className="text-on-surface-variant hover:text-error hover:bg-error-container w-10 h-10 flex items-center justify-center rounded-full transition-colors"
+                        >
+                          <span className="material-symbols-outlined">delete</span>
+                        </button>
+                        {vehicle.status !== 'Sold' && (
+                          <Link
+                            href={`/staff/inventory/edit/${vehicle.id}`}
+                            aria-label="Edit Vehicle"
+                            className="text-on-surface-variant hover:text-primary hover:bg-surface-variant w-10 h-10 flex items-center justify-center rounded-full transition-colors"
+                          >
+                            <span className="material-symbols-outlined">edit</span>
+                          </Link>
+                        )}
+                        {vehicle.status === 'Sold' && (
+                          <button aria-label="View Details" className="text-on-surface-variant hover:bg-surface-variant w-10 h-10 flex items-center justify-center rounded-full transition-colors">
+                            <span className="material-symbols-outlined">visibility</span>
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </article>

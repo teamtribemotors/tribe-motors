@@ -90,7 +90,7 @@ export default function Page() {
 <input className="w-full bg-surface-bright border border-outline-variant rounded-lg px-4 py-3 font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-colors" placeholder="Item Description (e.g. Synthetic Oil Change)" type="text"/>
 </div>
 <div className="w-32 relative">
-<span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-label-bold">$</span>
+<span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-label-bold">₹</span>
 <input className="w-full bg-surface-bright border border-outline-variant rounded-lg pl-8 pr-4 py-3 font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-colors" placeholder="Cost" type="number"/>
 </div>
 <button className="p-3 text-on-surface-variant hover:text-error transition-colors mt-1" type="button">
@@ -103,7 +103,7 @@ export default function Page() {
 <input className="w-full bg-surface-bright border border-outline-variant rounded-lg px-4 py-3 font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-colors" placeholder="Item Description" type="text"/>
 </div>
 <div className="w-32 relative">
-<span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-label-bold">$</span>
+<span className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-label-bold">₹</span>
 <input className="w-full bg-surface-bright border border-outline-variant rounded-lg pl-8 pr-4 py-3 font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-colors" placeholder="Cost" type="number"/>
 </div>
 <button className="p-3 text-on-surface-variant hover:text-error transition-colors mt-1" type="button">

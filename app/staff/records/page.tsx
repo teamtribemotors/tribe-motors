@@ -160,7 +160,7 @@ export default function Page() {
                                         Major Service
                                     </span>
 </td>
-<td className="py-4 px-6 font-body-md text-body-md font-semibold text-on-surface text-right">$1,250.00</td>
+<td className="py-4 px-6 font-body-md text-body-md font-semibold text-on-surface text-right">₹1,250.00</td>
 <td className="py-4 px-6">
 <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
 <button className="p-2 text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-variant" title="View Details">
@@ -196,7 +196,7 @@ export default function Page() {
                                         Inspection
                                     </span>
 </td>
-<td className="py-4 px-6 font-body-md text-body-md font-semibold text-on-surface text-right">$350.00</td>
+<td className="py-4 px-6 font-body-md text-body-md font-semibold text-on-surface text-right">₹350.00</td>
 <td className="py-4 px-6">
 <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
 <button className="p-2 text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-variant" title="View Details">
@@ -232,7 +232,7 @@ export default function Page() {
                                         Engine Rebuild
                                     </span>
 </td>
-<td className="py-4 px-6 font-body-md text-body-md font-semibold text-on-surface text-right">$4,800.00</td>
+<td className="py-4 px-6 font-body-md text-body-md font-semibold text-on-surface text-right">₹4,800.00</td>
 <td className="py-4 px-6">
 <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
 <button className="p-2 text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-variant" title="View Details">

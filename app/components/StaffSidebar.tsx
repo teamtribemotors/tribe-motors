@@ -60,10 +60,10 @@ export default function StaffSidebar() {
             </div>
 
             <div className="p-4">
-                <button className="w-full bg-primary text-on-primary font-label-bold text-label-bold py-3 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                <Link href="/staff/inventory/new" className="w-full bg-primary text-on-primary font-label-bold text-label-bold py-3 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
                     <span className="material-symbols-outlined">add</span>
                     Add New Vehicle
-                </button>
+                </Link>
             </div>
 
             <div className="p-4 border-t border-outline-variant space-y-1">

@@ -203,9 +203,9 @@ export default function Page() {
                         </h3>
 <div className="space-y-6">
 <div>
-<label className="custom-label" htmlFor="price">Listing Price ($)</label>
+<label className="custom-label" htmlFor="price">Listing Price (₹)</label>
 <div className="relative">
-<span className="absolute left-4 top-3 text-on-surface-variant font-body-md">$</span>
+<span className="absolute left-4 top-3 text-on-surface-variant font-body-md">₹</span>
 <input className="custom-input pl-8 text-lg font-bold text-primary" id="price" placeholder="0.00" type="number"/>
 </div>
 </div>

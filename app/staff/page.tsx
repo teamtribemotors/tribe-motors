@@ -82,7 +82,7 @@ export default function Page() {
                     </div>
                   </td>
                   <td className="py-4 px-6 text-on-surface-variant">WPOAA299...</td>
-                  <td className="py-4 px-6 font-label-bold text-primary">$105,900</td>
+                  <td className="py-4 px-6 font-label-bold text-primary">₹105,900</td>
                   <td className="py-4 px-6">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm font-label-bold bg-secondary-container text-on-secondary-container">
                       Live
@@ -105,7 +105,7 @@ export default function Page() {
                     </div>
                   </td>
                   <td className="py-4 px-6 text-on-surface-variant">SALCA2...</td>
-                  <td className="py-4 px-6 font-label-bold text-primary">$82,500</td>
+                  <td className="py-4 px-6 font-label-bold text-primary">₹82,500</td>
                   <td className="py-4 px-6">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm font-label-bold bg-surface-variant text-on-surface-variant">
                       Draft
@@ -128,7 +128,7 @@ export default function Page() {
                     </div>
                   </td>
                   <td className="py-4 px-6 text-on-surface-variant">WBSJF0C...</td>
-                  <td className="py-4 px-6 font-label-bold text-primary">$78,000</td>
+                  <td className="py-4 px-6 font-label-bold text-primary">₹78,000</td>
                   <td className="py-4 px-6">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm font-label-bold bg-tertiary-container text-on-tertiary-container">
                       Pending
