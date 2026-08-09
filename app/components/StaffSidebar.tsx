@@ -41,7 +41,7 @@ export default function StaffSidebar() {
                     <span className="material-symbols-outlined" style={getIconStyle('/staff/inventory')}>directions_car</span>
                     <span className="font-label-bold text-label-bold">Inventory</span>
                 </Link>
-                <Link className={getLinkClass('/staff/inspections')} href="/staff">
+                <Link className={getLinkClass('/staff/inspections')} href="/staff/inspections">
                     <span className="material-symbols-outlined" style={getIconStyle('/staff/inspections')}>fact_check</span>
                     <span className="font-label-bold text-label-bold">Inspections</span>
                 </Link>

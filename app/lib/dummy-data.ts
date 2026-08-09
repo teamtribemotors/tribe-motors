@@ -10,6 +10,7 @@ export interface Vehicle {
   imageAlt: string;
   vin: string;
   status: 'Live' | 'Draft' | 'Sold';
+  dateAdded?: string;
 }
 
 export const dummyInventory: Vehicle[] = [
@@ -71,4 +72,22 @@ export const dummyStaffRecords = [
   { id: "SR-101", vehicle: "2022 Volvo XC90", date: "2026-08-01", status: "Completed", type: "Full Service" },
   { id: "SR-102", vehicle: "2021 BMW 3 Series", date: "2026-08-04", status: "Pending", type: "Inspection" },
   { id: "SR-103", vehicle: "2023 Tesla Model Y", date: "2026-08-05", status: "In Progress", type: "Battery Check" },
+];
+
+export interface Inspection {
+  id: string;
+  vehicleTitle: string;
+  vin: string;
+  inspector: string;
+  date: string;
+  status: 'Passed' | 'Failed' | 'Pending';
+  score: string;
+}
+
+export const dummyInspections: Inspection[] = [
+  { id: "INS-201", vehicleTitle: "2022 Volvo XC90", vin: "YV1LF6104H1XXXXXX", inspector: "John Smith", date: "Oct 12, 2023", status: "Passed", score: "98/100" },
+  { id: "INS-202", vehicleTitle: "2021 BMW 3 Series", vin: "WBA5U7C50M8XXXXXX", inspector: "Alice Wong", date: "Oct 14, 2023", status: "Failed", score: "65/100" },
+  { id: "INS-203", vehicleTitle: "2024 Honda Civic", vin: "2HGFC2F51MHXXXXXX", inspector: "Unassigned", date: "Oct 16, 2023", status: "Pending", score: "N/A" },
+  { id: "INS-204", vehicleTitle: "2020 Audi Q5", vin: "WA1AAAFY0L2XXXXXX", inspector: "John Smith", date: "Oct 10, 2023", status: "Passed", score: "92/100" },
+  { id: "INS-205", vehicleTitle: "2019 Toyota RAV4", vin: "JTMDFREV2KDXXXXXX", inspector: "Sarah Connor", date: "Oct 15, 2023", status: "Pending", score: "N/A" }
 ];
