@@ -1,257 +1,187 @@
+"use client";
+
 import Link from 'next/link';
-export default function Page() {
-  return (
-    <div className="flex bg-surface min-h-screen font-body-md text-on-surface">
+import { useRouter } from 'next/navigation';
+import StaffSidebar from '../../components/StaffSidebar';
+import { useFulfillment } from '../../lib/useFulfillment';
+import { useState, useEffect } from 'react';
 
+export default function FulfillmentPage() {
+    const router = useRouter();
+    const { requests, isLoaded, deleteRequest } = useFulfillment();
+    const [searchQuery, setSearchQuery] = useState('');
+    const [statusFilter, setStatusFilter] = useState('All');
+    const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
-<nav className="hidden md:flex flex-col fixed left-0 top-0 h-full w-64 bg-surface-container dark:bg-surface-container-highest border-r border-outline-variant dark:border-outline z-50 shadow-sm">
-<div className="px-6 py-8">
-<h1 className="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">Staff Portal</h1>
-<p className="font-body-md text-body-md text-on-surface-variant">Tribe Motors Admin</p>
-</div>
-<div className="px-margin-mobile mb-stack-md">
-<button className="w-full flex items-center justify-center gap-2 bg-primary text-on-primary font-label-bold text-label-bold py-3 px-4 rounded-lg hover:bg-primary-container transition-colors">
-<span className="material-symbols-outlined">add</span>
-                Add New Vehicle
-            </button>
-</div>
-<ul className="flex flex-col gap-1 flex-1 overflow-y-auto px-2">
-<li>
-<Link className="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-inverse-surface rounded-lg transition-colors font-label-bold text-label-bold mx-2" href="/staff">
-<span className="material-symbols-outlined" data-icon="dashboard">dashboard</span>
-Dashboard
-</Link>
-</li>
-<li>
-<Link className="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-inverse-surface rounded-lg transition-colors font-label-bold text-label-bold mx-2" href="/staff/inventory">
-<span className="material-symbols-outlined" data-icon="directions_car">directions_car</span>
-Inventory
-</Link>
-</li>
-<li>
-<a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-inverse-surface rounded-lg transition-colors font-label-bold text-label-bold mx-2" href="#">
-<span className="material-symbols-outlined" data-icon="fact_check">fact_check</span>
-                    Inspections
-                </a>
-</li>
-<li>
-<Link className="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-inverse-surface rounded-lg transition-colors font-label-bold text-label-bold mx-2" href="/staff/records">
-<span className="material-symbols-outlined" data-icon="build">build</span>
-Service Records
-</Link>
-</li>
-<li>
-<a className="flex items-center gap-3 px-4 py-3 bg-primary dark:bg-primary-container text-on-primary dark:text-on-primary-container rounded-lg mx-2 font-label-bold text-label-bold active:translate-x-1 duration-200" href="#">
-<span className="material-symbols-outlined filled-icon" data-icon="workspace_premium">workspace_premium</span>
-                    Fulfillment
-                </a>
-</li>
-</ul>
-<div className="mt-auto px-2 pb-6 border-t border-outline-variant pt-4">
-<ul className="flex flex-col gap-1">
-<li>
-<a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-inverse-surface rounded-lg transition-colors font-label-bold text-label-bold mx-2" href="#">
-<span className="material-symbols-outlined" data-icon="settings">settings</span>
-                        Settings
-                    </a>
-</li>
-<li>
-<a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant dark:hover:bg-inverse-surface rounded-lg transition-colors font-label-bold text-label-bold mx-2" href="#">
-<span className="material-symbols-outlined" data-icon="logout">logout</span>
-                        Logout
-                    </a>
-</li>
-</ul>
-</div>
-</nav>
+    useEffect(() => {
+        const handleClick = () => setActiveDropdown(null);
+        document.addEventListener('click', handleClick);
+        return () => document.removeEventListener('click', handleClick);
+    }, []);
 
-<main className="flex-1 md:ml-64 p-margin-mobile md:p-margin-desktop max-w-[1440px] mx-auto w-full flex flex-col gap-stack-lg">
+    if (!isLoaded) {
+        return (
+            <div className="bg-background text-on-background h-screen overflow-hidden flex font-body-md">
+                <StaffSidebar />
+                <main className="flex-1 bg-background relative z-0 ml-64 p-margin-desktop">
+                    <p>Loading fulfillment queue...</p>
+                </main>
+            </div>
+        );
+    }
 
-<header className="flex flex-col md:flex-row md:items-end justify-between gap-stack-md pt-4">
-<div>
-<h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background mb-2">Fulfillment Queue</h2>
-<p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Manage and dispatch pending unlock reports to buyers. Ensure timely delivery to maintain premium service standards.</p>
-</div>
-<div className="flex gap-4">
-<div className="relative w-full md:w-64">
-<span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-<input className="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-body-md text-body-md transition-colors" placeholder="Search buyers or vehicles..." type="text"/>
-</div>
-<button className="p-2 border border-outline-variant rounded-lg hover:bg-surface-variant transition-colors flex items-center justify-center text-on-surface-variant" title="Filter">
-<span className="material-symbols-outlined">filter_list</span>
-</button>
-</div>
-</header>
+    const filteredRequests = requests.filter(req => {
+        const matchesSearch = req.buyerName.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                              req.vehicle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                              req.id.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesStatus = statusFilter === 'All' || req.status === statusFilter;
+        return matchesSearch && matchesStatus;
+    });
 
-<div className="flex border-b border-outline-variant">
-<button className="px-6 py-3 font-label-bold text-label-bold tab-active transition-colors flex items-center gap-2">
-                Pending Requests
-                <span className="bg-primary text-on-primary rounded-full px-2 py-0.5 text-[10px] leading-tight">4</span>
-</button>
-<button className="px-6 py-3 font-label-bold text-label-bold tab-inactive hover:text-primary transition-colors">
-                Completed
-            </button>
-</div>
+    const getStatusBadgeColor = (status: string) => {
+        switch(status) {
+            case 'Completed': return 'bg-secondary-container text-on-secondary-container';
+            case 'Pending': return 'bg-surface-variant text-on-surface-variant';
+            case 'In Progress': return 'bg-primary-container text-on-primary-container';
+            default: return 'bg-surface-variant text-on-surface-variant';
+        }
+    };
 
-<div className="bg-surface-container-lowest rounded-xl ambient-shadow border border-outline-variant overflow-hidden">
-<div className="overflow-x-auto">
-<table className="w-full text-left border-collapse">
-<thead>
-<tr className="bg-surface-container-low border-b border-outline-variant font-label-bold text-label-bold text-on-surface-variant">
-<th className="p-4 whitespace-nowrap">Buyer Information</th>
-<th className="p-4 whitespace-nowrap">Vehicle Requested</th>
-<th className="p-4 whitespace-nowrap">Contact Details</th>
-<th className="p-4 whitespace-nowrap">Request Time</th>
-<th className="p-4 whitespace-nowrap text-right">Action</th>
-</tr>
-</thead>
-<tbody className="font-body-md text-body-md divide-y divide-outline-variant">
+    return (
+        <div className="bg-background text-on-background h-screen overflow-hidden flex font-body-md">
+            <StaffSidebar />
 
-<tr className="hover:bg-surface-container-low transition-colors group">
-<td className="p-4">
-<div className="flex items-center gap-3">
-<div className="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center text-primary font-headline-md text-headline-md">JD</div>
-<div>
-<p className="font-bold text-on-background">James Donovan</p>
-<p className="text-on-surface-variant text-sm">Premium Member</p>
-</div>
-</div>
-</td>
-<td className="p-4">
-<p className="font-bold text-on-background">2021 Porsche 911 Carrera S</p>
-<p className="text-on-surface-variant text-sm">VIN: WPOZZZ99ZMS2...</p>
-</td>
-<td className="p-4">
-<div className="flex items-center gap-2 text-on-background">
-<span className="material-symbols-outlined text-[#25D366] text-lg">chat</span>
-                                    +1 (555) 019-2834
-                                </div>
-</td>
-<td className="p-4">
-<div className="flex items-center gap-2">
-<span className="material-symbols-outlined text-error text-lg">schedule</span>
-<span className="text-error font-medium">10 mins ago</span>
-</div>
-</td>
-<td className="p-4 text-right">
-<button className="bg-primary text-on-primary font-label-bold text-label-bold py-2 px-4 rounded-lg hover:bg-primary-container transition-all hover:scale-[1.02] active:scale-[0.98] inline-flex items-center gap-2 shadow-sm" >
-<span className="material-symbols-outlined text-sm">send</span>
-                                    Mark as Sent
-                                </button>
-</td>
-</tr>
+            <main className="flex-1 overflow-y-auto bg-background relative z-0 ml-64 p-margin-desktop">
+                <div className="max-w-container-max mx-auto">
+                    <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-stack-md">
+                        <div>
+                            <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">Fulfillment Queue</h2>
+                            <p className="font-body-md text-body-md text-on-surface-variant">Manage buyer requests and deliveries.</p>
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                            <div className="relative w-full sm:w-64">
+                                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+                                <input 
+                                    className="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-10 pr-4 py-2 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors" 
+                                    placeholder="Search buyer or vehicle..." 
+                                    type="text" 
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                            </div>
+                            <select 
+                                className="bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2 font-label-bold text-label-bold text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors appearance-none"
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                            >
+                                <option value="All">Status: All</option>
+                                <option value="Pending">Pending</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                            
+                            <Link href="/staff/fulfillment/new" className="hidden md:flex ml-4 bg-primary text-on-primary font-label-bold text-label-bold py-2 px-4 rounded-lg shadow-sm hover:opacity-90 transition-opacity items-center gap-2">
+                                <span className="material-symbols-outlined">add</span>
+                                New Request
+                            </Link>
+                        </div>
+                    </header>
 
-<tr className="hover:bg-surface-container-low transition-colors group">
-<td className="p-4">
-<div className="flex items-center gap-3">
-<div className="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center text-primary font-headline-md text-headline-md">SL</div>
-<div>
-<p className="font-bold text-on-background">Sarah Lin</p>
-<p className="text-on-surface-variant text-sm">New Buyer</p>
-</div>
-</div>
-</td>
-<td className="p-4">
-<p className="font-bold text-on-background">2019 Range Rover Sport HSE</p>
-<p className="text-on-surface-variant text-sm">VIN: SALWA2EEXLA...</p>
-</td>
-<td className="p-4">
-<div className="flex items-center gap-2 text-on-background">
-<span className="material-symbols-outlined text-[#25D366] text-lg">chat</span>
-                                    +1 (555) 847-9201
-                                </div>
-</td>
-<td className="p-4">
-<div className="flex items-center gap-2 text-on-surface-variant">
-<span className="material-symbols-outlined text-lg">schedule</span>
-<span>45 mins ago</span>
-</div>
-</td>
-<td className="p-4 text-right">
-<button className="bg-primary text-on-primary font-label-bold text-label-bold py-2 px-4 rounded-lg hover:bg-primary-container transition-all hover:scale-[1.02] active:scale-[0.98] inline-flex items-center gap-2 shadow-sm" >
-<span className="material-symbols-outlined text-sm">send</span>
-                                    Mark as Sent
-                                </button>
-</td>
-</tr>
-
-<tr className="hover:bg-surface-container-low transition-colors group">
-<td className="p-4">
-<div className="flex items-center gap-3">
-<div className="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center text-primary font-headline-md text-headline-md">MW</div>
-<div>
-<p className="font-bold text-on-background">Michael Wright</p>
-<p className="text-on-surface-variant text-sm">Returning Client</p>
-</div>
-</div>
-</td>
-<td className="p-4">
-<p className="font-bold text-on-background">2022 BMW M4 Competition</p>
-<p className="text-on-surface-variant text-sm">VIN: WBS43AW0XNC...</p>
-</td>
-<td className="p-4">
-<div className="flex items-center gap-2 text-on-background">
-<span className="material-symbols-outlined text-[#25D366] text-lg">chat</span>
-                                    +44 7700 900077
-                                </div>
-</td>
-<td className="p-4">
-<div className="flex items-center gap-2 text-on-surface-variant">
-<span className="material-symbols-outlined text-lg">schedule</span>
-<span>2 hours ago</span>
-</div>
-</td>
-<td className="p-4 text-right">
-<button className="bg-primary text-on-primary font-label-bold text-label-bold py-2 px-4 rounded-lg hover:bg-primary-container transition-all hover:scale-[1.02] active:scale-[0.98] inline-flex items-center gap-2 shadow-sm" >
-<span className="material-symbols-outlined text-sm">send</span>
-                                    Mark as Sent
-                                </button>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-<div className="border-t border-outline-variant p-4 flex items-center justify-between bg-surface-container-lowest">
-<span className="text-on-surface-variant font-body-md text-body-md text-sm">Showing 1 to 3 of 4 entries</span>
-<div className="flex gap-2">
-<button className="px-3 py-1 border border-outline-variant rounded hover:bg-surface-variant transition-colors text-on-surface-variant disabled:opacity-50" disabled={true}>Previous</button>
-<button className="px-3 py-1 border border-outline-variant rounded hover:bg-surface-variant transition-colors text-on-surface-variant">Next</button>
-</div>
-</div>
-</div>
-</main>
-
-<nav className="md:hidden fixed bottom-0 left-0 w-full bg-surface dark:bg-on-background border-t border-outline-variant shadow-[0_-4px_16px_rgba(0,0,0,0.05)] z-50 pb-safe">
-<ul className="flex justify-around items-center h-16">
-<li>
-<a className="flex flex-col items-center justify-center w-16 h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
-<span className="material-symbols-outlined text-2xl">dashboard</span>
-<span className="text-[10px] mt-1 font-label-sm">Dash</span>
-</a>
-</li>
-<li>
-<a className="flex flex-col items-center justify-center w-16 h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
-<span className="material-symbols-outlined text-2xl">directions_car</span>
-<span className="text-[10px] mt-1 font-label-sm">Inventory</span>
-</a>
-</li>
-<li>
-<a className="flex flex-col items-center justify-center w-16 h-full text-primary" href="#">
-<span className="material-symbols-outlined filled-icon text-2xl">workspace_premium</span>
-<span className="text-[10px] mt-1 font-label-sm font-bold">Queue</span>
-</a>
-</li>
-<li>
-<a className="flex flex-col items-center justify-center w-16 h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
-<span className="material-symbols-outlined text-2xl">settings</span>
-<span className="text-[10px] mt-1 font-label-sm">Settings</span>
-</a>
-</li>
-</ul>
-</nav>
-
-
-    </div>
-  );
+                    <div className="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-visible shadow-sm">
+                        <div className="overflow-visible min-h-[400px]">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="bg-surface-container-low border-b border-outline-variant">
+                                        <th className="py-3 px-4 font-label-bold text-label-bold text-on-surface-variant whitespace-nowrap">ID</th>
+                                        <th className="py-3 px-4 font-label-bold text-label-bold text-on-surface-variant whitespace-nowrap">Buyer Name</th>
+                                        <th className="py-3 px-4 font-label-bold text-label-bold text-on-surface-variant whitespace-nowrap">Requested Vehicle</th>
+                                        <th className="py-3 px-4 font-label-bold text-label-bold text-on-surface-variant whitespace-nowrap">Contact</th>
+                                        <th className="py-3 px-4 font-label-bold text-label-bold text-on-surface-variant whitespace-nowrap">Time</th>
+                                        <th className="py-3 px-4 font-label-bold text-label-bold text-on-surface-variant whitespace-nowrap">Status</th>
+                                        <th className="py-3 px-4 font-label-bold text-label-bold text-on-surface-variant text-right whitespace-nowrap w-24">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredRequests.map((req) => (
+                                        <tr 
+                                            key={req.id} 
+                                            onClick={() => router.push(`/staff/fulfillment/${req.id}`)}
+                                            className="border-b border-outline-variant hover:bg-surface transition-colors last:border-b-0 cursor-pointer group"
+                                        >
+                                            <td className="py-3 px-4 font-body-md text-on-surface-variant font-mono text-sm">{req.id}</td>
+                                            <td className="py-3 px-4 font-label-bold text-on-surface">
+                                                {req.buyerName}
+                                                <span className="block font-body-md text-xs text-on-surface-variant mt-0.5">{req.buyerType}</span>
+                                            </td>
+                                            <td className="py-3 px-4 font-body-md text-on-surface">{req.vehicle}</td>
+                                            <td className="py-3 px-4 font-body-md text-on-surface-variant">{req.contact}</td>
+                                            <td className="py-3 px-4 font-body-md text-on-surface-variant">{req.requestTime}</td>
+                                            <td className="py-3 px-4">
+                                                <span className={`px-3 py-1 rounded font-label-bold text-xs shadow-sm ${getStatusBadgeColor(req.status)}`}>
+                                                    {req.status}
+                                                </span>
+                                            </td>
+                                            <td className="py-3 px-4 text-right relative">
+                                                <button 
+                                                    aria-label="Actions" 
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        e.nativeEvent.stopImmediatePropagation();
+                                                        setActiveDropdown(activeDropdown === req.id ? null : req.id);
+                                                    }}
+                                                    className="text-on-surface-variant hover:text-primary hover:bg-surface-variant w-8 h-8 inline-flex items-center justify-center rounded-full transition-colors"
+                                                >
+                                                    <span className="material-symbols-outlined text-[20px]">more_vert</span>
+                                                </button>
+                                                
+                                                {activeDropdown === req.id && (
+                                                    <div className="absolute right-8 top-10 w-40 bg-surface-container-lowest border border-outline-variant rounded-lg shadow-lg z-50 overflow-hidden text-left" onClick={(e) => e.stopPropagation()}>
+                                                        <Link 
+                                                            href={`/staff/fulfillment/${req.id}`}
+                                                            className="flex items-center gap-3 px-4 py-2 hover:bg-surface-variant text-on-surface font-body-md transition-colors"
+                                                        >
+                                                            <span className="material-symbols-outlined text-[20px]">visibility</span>
+                                                            View
+                                                        </Link>
+                                                        <Link 
+                                                            href={`/staff/fulfillment/edit/${req.id}`}
+                                                            className="flex items-center gap-3 px-4 py-2 hover:bg-surface-variant text-on-surface font-body-md transition-colors"
+                                                        >
+                                                            <span className="material-symbols-outlined text-[20px]">edit</span>
+                                                            Edit
+                                                        </Link>
+                                                        <div className="h-px bg-outline-variant w-full my-1"></div>
+                                                        <button 
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                if(confirm('Are you sure you want to delete this request?')) {
+                                                                    deleteRequest(req.id);
+                                                                    setActiveDropdown(null);
+                                                                }
+                                                            }}
+                                                            className="flex w-full items-center gap-3 px-4 py-2 hover:bg-error-container text-error font-body-md transition-colors"
+                                                        >
+                                                            <span className="material-symbols-outlined text-[20px]">delete</span>
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {filteredRequests.length === 0 && (
+                                        <tr>
+                                            <td colSpan={7} className="py-8 text-center text-on-surface-variant">
+                                                No fulfillment requests found matching your criteria.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
 }

@@ -68,10 +68,20 @@ export const dummyInventory: Vehicle[] = [
   }
 ];
 
-export const dummyStaffRecords = [
-  { id: "SR-101", vehicle: "2022 Volvo XC90", date: "2026-08-01", status: "Completed", type: "Full Service" },
-  { id: "SR-102", vehicle: "2021 BMW 3 Series", date: "2026-08-04", status: "Pending", type: "Inspection" },
-  { id: "SR-103", vehicle: "2023 Tesla Model Y", date: "2026-08-05", status: "In Progress", type: "Battery Check" },
+export interface ServiceRecord {
+  id: string;
+  vehicle: string;
+  date: string;
+  status: 'Completed' | 'Pending' | 'In Progress';
+  type: string;
+  cost?: string;
+  technician?: string;
+}
+
+export const dummyStaffRecords: ServiceRecord[] = [
+  { id: "SR-101", vehicle: "2022 Volvo XC90", date: "Aug 01, 2026", status: "Completed", type: "Full Service", cost: "₹1,250", technician: "Mike R." },
+  { id: "SR-102", vehicle: "2021 BMW 3 Series", date: "Aug 04, 2026", status: "Pending", type: "Inspection", cost: "₹350", technician: "Unassigned" },
+  { id: "SR-103", vehicle: "2023 Tesla Model Y", date: "Aug 05, 2026", status: "In Progress", type: "Battery Check", cost: "₹4,800", technician: "Sarah Connor" },
 ];
 
 export interface Inspection {
@@ -90,4 +100,20 @@ export const dummyInspections: Inspection[] = [
   { id: "INS-203", vehicleTitle: "2024 Honda Civic", vin: "2HGFC2F51MHXXXXXX", inspector: "Unassigned", date: "Oct 16, 2023", status: "Pending", score: "N/A" },
   { id: "INS-204", vehicleTitle: "2020 Audi Q5", vin: "WA1AAAFY0L2XXXXXX", inspector: "John Smith", date: "Oct 10, 2023", status: "Passed", score: "92/100" },
   { id: "INS-205", vehicleTitle: "2019 Toyota RAV4", vin: "JTMDFREV2KDXXXXXX", inspector: "Sarah Connor", date: "Oct 15, 2023", status: "Pending", score: "N/A" }
+];
+
+export interface FulfillmentRequest {
+  id: string;
+  buyerName: string;
+  buyerType: string;
+  vehicle: string;
+  contact: string;
+  requestTime: string;
+  status: 'Pending' | 'In Progress' | 'Completed';
+}
+
+export const dummyFulfillment: FulfillmentRequest[] = [
+  { id: "FUL-301", buyerName: "James Donovan", buyerType: "Premium Member", vehicle: "2021 Porsche 911 Carrera S", contact: "+1 (555) 019-2834", requestTime: "10 mins ago", status: "Pending" },
+  { id: "FUL-302", buyerName: "Sarah Lin", buyerType: "New Buyer", vehicle: "2023 Tesla Model Y", contact: "sarah.lin@example.com", requestTime: "2 hours ago", status: "In Progress" },
+  { id: "FUL-303", buyerName: "Marcus West", buyerType: "Standard", vehicle: "2020 Audi Q5", contact: "+1 (555) 832-9912", requestTime: "1 day ago", status: "Completed" }
 ];
