@@ -45,11 +45,11 @@ export default function StaffSidebar() {
                     <span className="material-symbols-outlined" style={getIconStyle('/staff/inspections')}>fact_check</span>
                     <span className="font-label-bold text-label-bold">Inspections</span>
                 </Link>
-                <Link className={getLinkClass('/staff/service-records')} href="/staff">
-                    <span className="material-symbols-outlined" style={getIconStyle('/staff/service-records')}>build</span>
+                <Link className={getLinkClass('/staff/records')} href="/staff/records">
+                    <span className="material-symbols-outlined" style={getIconStyle('/staff/records')}>build</span>
                     <span className="font-label-bold text-label-bold">Service Records</span>
                 </Link>
-                <Link className={getLinkClass('/staff/fulfillment')} href="/staff">
+                <Link className={getLinkClass('/staff/fulfillment')} href="/staff/fulfillment">
                     <span className="material-symbols-outlined" style={getIconStyle('/staff/fulfillment')}>workspace_premium</span>
                     <span className="font-label-bold text-label-bold">Fulfillment</span>
                 </Link>
