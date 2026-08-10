@@ -24,7 +24,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                   </div>
                   <h2 className="text-[#181210] text-lg font-bold leading-tight tracking-[-0.015em]">Checkout</h2>
                 </div>
-                <Link href={`/vehicle/${vehicle.id}`}  className="flex cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 bg-[#f1ebea] text-[#181210] transition-colors hover:bg-surface-dim">
+                <Link href={`/vehicle/${vehicle.id}`} className="flex cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 bg-[#f1ebea] text-[#181210] transition-colors hover:bg-surface-dim">
                   <div className="text-[#181210]" data-icon="X" data-size="20px" data-weight="regular">
                     <svg fill="currentColor" height="20px" viewBox="0 0 256 256" width="20px" xmlns="http://www.w3.org/2000/svg">
                       <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z" />
@@ -54,11 +54,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                     <h4 className="text-on-surface text-base font-bold leading-tight mb-4">Payment Summary</h4>
                     <div className="flex justify-between items-center py-2 border-b border-dashed border-outline-variant">
                       <span className="text-on-surface/70 text-sm">Booking Fee</span>
-                      <span className="text-on-surface font-semibold">₹499.00</span>
+                      <span className="text-on-surface font-semibold">₹199.00</span>
                     </div>
                     <div className="flex justify-between items-center py-4">
                       <span className="text-on-surface font-bold">Total Amount</span>
-                      <span className="text-primary-container text-2xl font-bold">₹499</span>
+                      <span className="text-primary-container text-2xl font-bold">₹199</span>
                     </div>
                   </div>
 
@@ -86,7 +86,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                   <div className="pt-4">
                     <button className="group relative flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 bg-primary-container text-[#fbf9f9] text-base font-bold leading-normal tracking-[0.015em] transition-all hover:bg-primary hover:shadow-lg active:scale-[0.98]">
                       <span className="relative z-10 flex items-center gap-2">
-                        Confirm &amp; Pay ₹499
+                        Confirm &amp; Pay ₹199
                         <span className="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
                       </span>
                     </button>

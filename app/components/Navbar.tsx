@@ -2,17 +2,21 @@ import Link from 'next/link';
 
 export default function Navbar() {
   return (
-    <header className="docked w-full top-0 z-50 sticky shadow-sm bg-surface">
-      <div className="flex justify-between items-center px-margin-desktop h-20 w-full max-w-container-max mx-auto">
-        <Link className="font-headline-md text-headline-md font-bold text-primary" href="/">
-          Tribe Motors
-        </Link>
-        <nav className="hidden md:flex gap-gutter">
-          <Link className="font-label-bold text-label-bold text-on-surface-variant hover:text-primary hover:opacity-80 transition-opacity scale-95 duration-150 ease-in-out" href="/browse">Browse Cars</Link>
-          <Link className="font-label-bold text-label-bold text-on-surface-variant hover:text-primary hover:opacity-80 transition-opacity scale-95 duration-150 ease-in-out" href="/how-it-works">How it Works</Link>
+    <header className="docked w-full top-0 z-50 sticky shadow-md bg-[#0A0A0A]">
+      <div className="flex justify-between items-center px-margin-desktop h-20 w-full max-w-container-max mx-auto relative">
+        <div className="w-1/3 flex justify-start">
+          <Link className="font-headline-md text-headline-md font-bold text-white hover:text-gray-300 transition-colors" href="/">
+            Tribe Motors
+          </Link>
+        </div>
+        
+        <nav className="hidden md:flex justify-center w-1/3 gap-8">
+          <Link className="font-label-bold text-label-bold text-gray-400 hover:text-white transition-colors duration-150 ease-in-out uppercase tracking-wider text-sm" href="/browse">Browse Cars</Link>
+          <Link className="font-label-bold text-label-bold text-gray-400 hover:text-white transition-colors duration-150 ease-in-out uppercase tracking-wider text-sm" href="/how-it-works">How it Works</Link>
         </nav>
-        <div className="flex items-center gap-base">
-          <button className="md:hidden text-on-surface">
+
+        <div className="w-1/3 flex justify-end items-center gap-base">
+          <button className="md:hidden text-white">
             <span className="material-symbols-outlined">menu</span>
           </button>
         </div>

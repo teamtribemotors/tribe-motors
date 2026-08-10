@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, integer, boolean, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, integer, boolean, uuid, index } from 'drizzle-orm/pg-core';
 
 export const vehicles = pgTable('vehicles', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -20,6 +20,14 @@ export const vehicles = pgTable('vehicles', {
   imageAlt: text('image_alt').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => {
+  return {
+    statusIdx: index('vehicles_status_idx').on(table.status),
+    priceIdx: index('vehicles_price_idx').on(table.price),
+    yearIdx: index('vehicles_year_idx').on(table.year),
+    makeIdx: index('vehicles_make_idx').on(table.make),
+    createdAtIdx: index('vehicles_created_at_idx').on(table.createdAt),
+  };
 });
 
 export const enquiries = pgTable('enquiries', {
@@ -30,6 +38,12 @@ export const enquiries = pgTable('enquiries', {
   vehicleModel: text('vehicle_model').notNull(),
   status: text('status').notNull().default('New'), // New, Contacted
   createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (table) => {
+  return {
+    vehicleIdIdx: index('enquiries_vehicle_id_idx').on(table.vehicleId),
+    statusIdx: index('enquiries_status_idx').on(table.status),
+    createdAtIdx: index('enquiries_created_at_idx').on(table.createdAt),
+  };
 });
 
 export const staff = pgTable('staff', {

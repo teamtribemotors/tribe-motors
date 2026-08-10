@@ -87,14 +87,15 @@ export default function Page() {
                 <section className="py-stack-lg px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
                     <div className="flex justify-between items-end mb-stack-md">
                         <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">Featured Vehicles</h2>
-                        <Link className="font-label-bold text-label-bold text-primary hover:underline flex items-center gap-1" href="/">
+                        <Link className="font-label-bold text-label-bold text-primary hover:underline flex items-center gap-1" href="/browse">
                             View all <span className="material-symbols-outlined text-sm">arrow_forward</span>
                         </Link>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
                         {dummyInventory.slice(0, 3).map((vehicle) => (
                             <VehicleCard key={vehicle.id} vehicle={vehicle} />
                         ))}
-                    </div>      </div>
+                    </div>
                 </section>
             </main>
 

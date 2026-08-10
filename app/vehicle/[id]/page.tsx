@@ -4,6 +4,7 @@ import { dummyInventory } from '../../lib/dummy-data';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import ContactDealerModal from '../../components/ContactDealerModal';
+import Link from 'next/link';
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -31,7 +32,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
             </div>
             <div className="text-left md:text-right">
               <p className="font-display-lg text-[32px] md:text-[40px] text-primary font-bold">₹ 58,50,000</p>
-              <button className="mt-4 bg-primary text-on-primary font-label-bold text-label-bold px-8 py-3 rounded-lg hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-ambient">Contact Dealer</button>
             </div>
           </div>
 
@@ -113,17 +113,17 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 <Link href={`/vehicle/${id}/unlock-report`} className="w-full bg-primary text-on-primary font-label-bold text-label-bold py-4 rounded-lg flex items-center justify-center gap-3 hover:bg-primary-container transition-colors shadow-md relative overflow-hidden group">
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#D4AF37]"></div>
                   <span className="material-symbols-outlined text-[#D4AF37]" data-icon="key">key</span>
-                  Unlock Report — ₹499
+                  Unlock Report — ₹199
                 </Link>
                 <ContactDealerModal vehicleId={vehicle.id} vehicleModel={`${vehicle.year} ${vehicle.make} ${vehicle.model}`} />
               </div>
             </div>
 
-            <div className="bg-green-800 bg-opacity-10 rounded-xl p-6 border border-green-800 border-opacity-20 flex items-start gap-4 shadow-ambient-sm">
+            <div className="bg-[#0A3622] rounded-xl p-6 border border-[#145C3A] flex items-start gap-4 shadow-ambient-sm">
               <span className="material-symbols-outlined text-[#D4AF37] text-3xl filled-icon" data-icon="verified">verified</span>
               <div>
-                <h4 className="font-label-bold text-label-bold text-green-900 mb-1">Tribe Certified Excellence</h4>
-                <p className="font-body-md text-body-md text-on-surface-variant text-sm">This vehicle has passed our rigorous physical and mechanical vetting process.</p>
+                <h4 className="font-label-bold text-label-bold text-white mb-1">Tribe Certified Excellence</h4>
+                <p className="font-body-md text-body-md text-green-100 text-sm">This vehicle has passed our rigorous physical and mechanical vetting process.</p>
               </div>
             </div>
           </div>

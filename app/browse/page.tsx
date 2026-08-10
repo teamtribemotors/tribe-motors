@@ -15,14 +15,15 @@ import { Suspense } from 'react';
 export default async function Page({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const minPrice = searchParams.minPrice ? Number(searchParams.minPrice) : undefined;
-  const maxPrice = searchParams.maxPrice ? Number(searchParams.maxPrice) : undefined;
-  const year = searchParams.year ? Number(searchParams.year) : undefined;
-  const sort = typeof searchParams.sort === 'string' ? searchParams.sort : undefined;
+  const resolvedSearchParams = await searchParams;
+  const minPrice = resolvedSearchParams.minPrice ? Number(resolvedSearchParams.minPrice) : undefined;
+  const maxPrice = resolvedSearchParams.maxPrice ? Number(resolvedSearchParams.maxPrice) : undefined;
+  const year = resolvedSearchParams.year ? Number(resolvedSearchParams.year) : undefined;
+  const sort = typeof resolvedSearchParams.sort === 'string' ? resolvedSearchParams.sort : undefined;
   
-  const page = searchParams.page ? Number(searchParams.page) : 1;
+  const page = resolvedSearchParams.page ? Number(resolvedSearchParams.page) : 1;
   const pageSize = 6;
   const offset = (page - 1) * pageSize;
 
