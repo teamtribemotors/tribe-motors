@@ -1,6 +1,3 @@
-import Link from 'next/link';
-import { dummyInventory } from '../lib/dummy-data';
-
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import VehicleCard from '../components/VehicleCard';
@@ -22,7 +19,7 @@ export default async function Page({
   const maxPrice = resolvedSearchParams.maxPrice ? Number(resolvedSearchParams.maxPrice) : undefined;
   const year = resolvedSearchParams.year ? Number(resolvedSearchParams.year) : undefined;
   const sort = typeof resolvedSearchParams.sort === 'string' ? resolvedSearchParams.sort : undefined;
-  
+
   const page = resolvedSearchParams.page ? Number(resolvedSearchParams.page) : 1;
   const pageSize = 6;
   const offset = (page - 1) * pageSize;
