@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Navbar() {
   return (
-    <header className="docked full-width top-0 z-50 sticky shadow-sm dark:shadow-none bg-surface dark:bg-on-background">
+    <header className="docked w-full top-0 z-50 sticky shadow-sm dark:shadow-none bg-surface dark:bg-on-background">
       <div className="flex justify-between items-center px-margin-desktop h-20 w-full max-w-container-max mx-auto">
         <Link className="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim" href="/">
           Tribe Motors
@@ -14,9 +14,6 @@ export default function Navbar() {
         <div className="flex items-center gap-base">
           <button className="md:hidden text-on-surface">
             <span className="material-symbols-outlined">menu</span>
-          </button>
-          <button className="hidden md:inline-flex items-center justify-center bg-primary text-on-primary font-label-bold text-label-bold px-6 py-2 rounded font-bold hover:opacity-80 transition-opacity">
-            <Link href="/staff">Sign In</Link>
           </button>
         </div>
       </div>
