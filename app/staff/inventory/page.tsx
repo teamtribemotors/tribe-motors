@@ -1,22 +1,12 @@
-"use client";
-
 import Link from 'next/link';
 import StaffSidebar from '../../components/StaffSidebar';
-import { useInventory } from '../../lib/useInventory';
+import { db } from '../../../db';
+import { vehicles } from '../../../db/schema';
+import { desc } from 'drizzle-orm';
+import { deleteVehicle } from './actions';
 
-export default function Page() {
-  const { vehicles, isLoaded, deleteVehicle } = useInventory();
-
-  if (!isLoaded) {
-    return (
-      <div className="bg-background text-on-background h-screen overflow-hidden flex font-body-md">
-        <StaffSidebar />
-        <main className="flex-1 overflow-y-auto bg-background relative z-0 ml-64 p-margin-desktop">
-          <p>Loading inventory...</p>
-        </main>
-      </div>
-    );
-  }
+export default async function Page() {
+  const data = await db.select().from(vehicles).orderBy(desc(vehicles.createdAt));
 
   return (
     <div className="bg-background text-on-background h-screen overflow-hidden flex font-body-md">
@@ -52,13 +42,18 @@ export default function Page() {
           </header>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter pb-12">
-            {vehicles.map((vehicle) => {
+            {data.map((vehicle) => {
               let badgeColor = "bg-secondary-container text-on-secondary-container";
               if (vehicle.status === "Draft") badgeColor = "bg-surface-dim text-on-surface";
               if (vehicle.status === "Sold") badgeColor = "bg-surface-tint text-on-primary";
 
+              const formattedPrice = new Intl.NumberFormat('en-IN', {
+                style: 'currency', currency: 'INR',
+                maximumFractionDigits: 0
+              }).format(Number(vehicle.price));
+
               return (
-                <article key={vehicle.id} className={`bg-surface-container-lowest rounded-xl ambient-shadow overflow-hidden flex flex-col group cursor-pointer hover:shadow-lg transition-shadow duration-300 ${vehicle.status === 'Sold' ? 'opacity-75' : ''}`}>
+                <article key={vehicle.id} className={`bg-surface-container-lowest rounded-xl ambient-shadow overflow-hidden flex flex-col group hover:shadow-lg transition-shadow duration-300 ${vehicle.status === 'Sold' ? 'opacity-75' : ''}`}>
                   <div className="relative aspect-[3/2] overflow-hidden bg-surface-variant">
                     <img alt={vehicle.imageAlt} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${vehicle.status === 'Sold' ? 'grayscale' : ''}`} src={vehicle.imageUrl} />
                     {vehicle.status === 'Sold' && (
@@ -72,27 +67,26 @@ export default function Page() {
                     <div className="flex justify-between items-start gap-4">
                       <h3 className="font-headline-md text-headline-md text-on-surface line-clamp-2">{vehicle.title}</h3>
                     </div>
-                    <div className="font-body-md text-body-md text-on-surface-variant mb-2">VIN: {vehicle.vin}</div>
                     <div className="flex flex-wrap gap-2 mb-4">
                       <span className="bg-surface-container px-2 py-1 rounded font-label-sm text-label-sm text-on-surface">{vehicle.transmission}</span>
                       <span className="bg-surface-container px-2 py-1 rounded font-label-sm text-label-sm text-on-surface">{vehicle.fuelType}</span>
-                      <span className="bg-surface-container px-2 py-1 rounded font-label-sm text-label-sm text-on-surface">{vehicle.mileage}</span>
+                      <span className="bg-surface-container px-2 py-1 rounded font-label-sm text-label-sm text-on-surface">{vehicle.mileage.toLocaleString()} km</span>
                     </div>
                     <div className="mt-auto pt-4 border-t border-outline-variant flex justify-between items-center">
-                      <div className={`font-headline-md text-headline-md font-bold ${vehicle.status === 'Sold' ? 'text-outline line-through' : 'text-primary'}`}>{vehicle.price}</div>
+                      <div className={`font-headline-md text-headline-md font-bold ${vehicle.status === 'Sold' ? 'text-outline line-through' : 'text-primary'}`}>{formattedPrice}</div>
                       <div className="flex gap-2">
-                        <button
-                          aria-label="Delete Vehicle"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (confirm('Are you sure you want to delete this vehicle?')) {
-                              deleteVehicle(vehicle.id);
-                            }
-                          }}
-                          className="text-on-surface-variant hover:text-error hover:bg-error-container w-10 h-10 flex items-center justify-center rounded-full transition-colors"
-                        >
-                          <span className="material-symbols-outlined">delete</span>
-                        </button>
+                        <form action={async () => {
+                          'use server';
+                          await deleteVehicle(vehicle.id);
+                        }}>
+                          <button
+                            aria-label="Delete Vehicle"
+                            type="submit"
+                            className="text-on-surface-variant hover:text-error hover:bg-error-container w-10 h-10 flex items-center justify-center rounded-full transition-colors"
+                          >
+                            <span className="material-symbols-outlined">delete</span>
+                          </button>
+                        </form>
                         {vehicle.status !== 'Sold' && (
                           <Link
                             href={`/staff/inventory/edit/${vehicle.id}`}

@@ -10,7 +10,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   return (
     <div className="text-on-background">
 
-      <div className="relative flex h-auto min-h-screen w-full flex-col bg-[#fbf9f9] group/design-root overflow-x-hidden" style={{ "fontFamily": "\"Be Vietnam Pro\", \"Noto Sans\", sans-serif" }}>
+      <div className="relative flex h-auto min-h-screen w-full flex-col bg-[#fbf9f9] group/design-root overflow-x-hidden font-['Be_Vietnam_Pro','Noto_Sans',sans-serif]">
         <div className="layout-container flex h-full grow flex-col">
           <div className="px-4 md:px-40 flex flex-1 justify-center py-5">
             <div className="layout-content-container flex flex-col max-w-[480px] flex-1 bg-white rounded-xl checkout-card border border-surface-container overflow-hidden">
@@ -44,7 +44,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                         <p className="text-outline text-xs font-medium">Standard Maintenance Package</p>
                       </div>
                     </div>
-                    <div className="w-24 h-24 bg-center bg-no-repeat bg-cover rounded-lg shadow-sm border border-white" data-alt={vehicle.imageAlt} style={{ "backgroundImage": "url(\"https://lh3.googleusercontent.com/aida-public/AB6AXuBEEwTB0R2jrUs0Td1GoqGFjWP5QP0himxrHHOHCCE4njS050l-sg0G-0tg8ww25bP20tFGpW_NZbchVRwqb6pWYujV_Xl9ACi1CkhrNW1ACx1tIQyNoZe1aH-tkUCrlahSJtZkgZifZucsc01VTDerm8NVoFJOcAj0ly5YDORs1zrdHIBeBeKldXeAZSodnRFFf4hsK-pK4hxCd4v5NGso93-0nvYtV6vj1nYOchoe9_hauHsPT0k\")" }}>
+                    <div className="w-24 h-24 bg-center bg-no-repeat bg-cover rounded-lg shadow-sm border border-white" data-alt={vehicle.imageAlt} style={{ backgroundImage: `url(${vehicle.imageUrl})` }}>
                     </div>
                   </div>
                 </div>

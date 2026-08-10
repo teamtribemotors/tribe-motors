@@ -12,6 +12,8 @@ const hankenGrotesk = Hanken_Grotesk({
   subsets: ["latin"],
 });
 
+import { Toaster } from 'react-hot-toast';
+
 export const metadata: Metadata = {
   title: "Tribe Motors",
   description: "Premium Pre-Owned Excellence",
@@ -26,7 +28,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
       </head>
-      <body className="">{children}</body>
+      <body className="">
+        {children}
+        <Toaster position="bottom-right" />
+      </body>
     </html>
   );
 }

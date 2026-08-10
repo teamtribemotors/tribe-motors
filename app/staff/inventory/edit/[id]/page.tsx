@@ -1,33 +1,17 @@
-"use client";
-
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import StaffSidebar from '../../../../components/StaffSidebar';
 import VehicleForm from '../../../../components/VehicleForm';
-import { useInventory } from '../../../../lib/useInventory';
-import { use } from 'react';
+import { db } from '../../../../db';
+import { vehicles } from '../../../../db/schema';
+import { eq } from 'drizzle-orm';
 
-export default function EditVehiclePage({ params }: { params: Promise<{ id: string }> }) {
-    const router = useRouter();
-    const { getVehicle, updateVehicle, isLoaded } = useInventory();
+export default async function EditVehiclePage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
 
-    // In Next.js 15, params is a Promise that needs to be unwrapped with React.use()
-    const { id } = use(params);
+    const vehicle = await db.select().from(vehicles).where(eq(vehicles.id, id)).limit(1);
 
-    if (!isLoaded) {
-        return (
-            <div className="bg-background text-on-background h-screen overflow-hidden flex font-body-md">
-                <StaffSidebar />
-                <main className="flex-1 overflow-y-auto bg-background relative z-0 ml-64 p-margin-desktop">
-                    <p>Loading vehicle data...</p>
-                </main>
-            </div>
-        );
-    }
-
-    const vehicle = getVehicle(id);
-
-    if (!vehicle) {
+    if (!vehicle || vehicle.length === 0) {
         return (
             <div className="bg-background text-on-background h-screen overflow-hidden flex font-body-md">
                 <StaffSidebar />
@@ -39,11 +23,7 @@ export default function EditVehiclePage({ params }: { params: Promise<{ id: stri
         );
     }
 
-    const handleSave = (vehicleData: any) => {
-        updateVehicle(id, vehicleData);
-        router.push('/staff/inventory');
-    };
-
+    // Server Action embedded or pass initialData directly since it's a Client Component
     return (
         <div className="bg-background text-on-background h-screen overflow-hidden flex font-body-md">
             <StaffSidebar />
@@ -67,8 +47,12 @@ export default function EditVehiclePage({ params }: { params: Promise<{ id: stri
                     </div>
                 </header>
 
-                <VehicleForm initialData={vehicle} onSubmit={handleSave} />
+                {/* We just need to handle the success redirect from client side. But actually VehicleForm is client so we can just let it handle. Wait, we can't pass a function to a Client Component from a Server Component. We will redirect via a Server Action or we can use next/navigation in the Client Component. */}
+                {/* Wait, VehicleForm takes onSuccess as a prop. Since VehicleForm is "use client", we can't pass a Server function unless it's a Server Action. */}
+                <VehicleForm initialData={vehicle[0]} />
             </main>
         </div>
     );
 }
+
+{/* Wait, let me just replace this entirely by making a small client wrapper or moving `useRouter` to VehicleForm. */}

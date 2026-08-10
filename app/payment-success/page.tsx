@@ -5,7 +5,7 @@ export default function Page() {
     <div className="bg-background min-h-screen flex flex-col items-center justify-center font-body-md text-on-background antialiased relative overflow-hidden">
 
 
-<div className="absolute inset-0 pointer-events-none opacity-5 z-0" style={{"backgroundImage":"radial-gradient(circle at 50% 50%, #6d281a 1px, transparent 1px)","backgroundSize":"32px 32px"}}></div>
+<div className="absolute inset-0 pointer-events-none opacity-5 z-0 bg-[radial-gradient(circle_at_50%_50%,#6d281a_1px,transparent_1px)] bg-[length:32px_32px]"></div>
 
 <main className="w-full max-w-2xl px-margin-mobile md:px-margin-desktop py-stack-lg relative z-10 flex flex-col items-center">
 
@@ -13,11 +13,11 @@ export default function Page() {
 
 <div className="relative mb-stack-md">
 <div className="w-24 h-24 bg-primary-container rounded-full flex items-center justify-center success-pulse">
-<span className="material-symbols-outlined text-[48px] text-on-primary-container" data-icon="check_circle" style={{"fontVariationSettings":"'FILL' 1"}}>check_circle</span>
+<span className="material-symbols-outlined text-[48px] text-on-primary-container filled-icon" data-icon="check_circle">check_circle</span>
 </div>
 
-<span className="material-symbols-outlined absolute -top-2 -right-2 text-tertiary-container animate-bounce" data-icon="sparkle" style={{"animationDelay":"0.1s"}}>drive_file_rename_outline</span>
-<span className="material-symbols-outlined absolute bottom-4 -left-4 text-tertiary-container animate-bounce" data-icon="sparkle" style={{"animationDelay":"0.3s","fontSize":"16px"}}>drive_file_rename_outline</span>
+<span className="material-symbols-outlined absolute -top-2 -right-2 text-tertiary-container animate-bounce delay-100" data-icon="sparkle">drive_file_rename_outline</span>
+<span className="material-symbols-outlined absolute bottom-4 -left-4 text-tertiary-container animate-bounce delay-300 text-[16px]" data-icon="sparkle">drive_file_rename_outline</span>
 </div>
 
 <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background mb-stack-sm tracking-tight">

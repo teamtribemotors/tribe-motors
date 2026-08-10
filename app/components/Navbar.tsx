@@ -2,14 +2,14 @@ import Link from 'next/link';
 
 export default function Navbar() {
   return (
-    <header className="docked w-full top-0 z-50 sticky shadow-sm dark:shadow-none bg-surface dark:bg-on-background">
+    <header className="docked w-full top-0 z-50 sticky shadow-sm bg-surface">
       <div className="flex justify-between items-center px-margin-desktop h-20 w-full max-w-container-max mx-auto">
-        <Link className="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim" href="/">
+        <Link className="font-headline-md text-headline-md font-bold text-primary" href="/">
           Tribe Motors
         </Link>
         <nav className="hidden md:flex gap-gutter">
-          <Link className="font-label-bold text-label-bold text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim hover:opacity-80 transition-opacity scale-95 duration-150 ease-in-out" href="/browse">Browse Cars</Link>
-          <Link className="font-label-bold text-label-bold text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed-dim hover:opacity-80 transition-opacity scale-95 duration-150 ease-in-out" href="/">How it Works</Link>
+          <Link className="font-label-bold text-label-bold text-on-surface-variant hover:text-primary hover:opacity-80 transition-opacity scale-95 duration-150 ease-in-out" href="/browse">Browse Cars</Link>
+          <Link className="font-label-bold text-label-bold text-on-surface-variant hover:text-primary hover:opacity-80 transition-opacity scale-95 duration-150 ease-in-out" href="/how-it-works">How it Works</Link>
         </nav>
         <div className="flex items-center gap-base">
           <button className="md:hidden text-on-surface">

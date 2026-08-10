@@ -4,18 +4,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import StaffSidebar from '../../../components/StaffSidebar';
 import VehicleForm from '../../../components/VehicleForm';
-import { useInventory } from '../../../lib/useInventory';
 
 export default function NewVehiclePage() {
-    const router = useRouter();
-    const { addVehicle } = useInventory();
-
-    const handleSave = (vehicleData: any) => {
-        const id = Math.random().toString(36).substr(2, 9);
-        addVehicle({ id, ...vehicleData });
-        router.push('/staff/inventory');
-    };
-
     return (
         <div className="bg-background text-on-background h-screen overflow-hidden flex font-body-md">
             <StaffSidebar />
@@ -39,7 +29,7 @@ export default function NewVehiclePage() {
                     </div>
                 </header>
                 
-                <VehicleForm onSubmit={handleSave} />
+                <VehicleForm />
             </main>
         </div>
     );

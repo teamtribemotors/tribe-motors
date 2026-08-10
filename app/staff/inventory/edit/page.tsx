@@ -4,7 +4,7 @@ export default function Page() {
     <div className="bg-background text-on-background min-h-screen flex selection:bg-primary-fixed selection:text-on-primary-fixed">
 
 
-<aside className="fixed left-0 top-0 h-full w-64 bg-surface-container dark:bg-surface-container-highest border-r border-outline-variant flex flex-col z-40">
+<aside className="fixed left-0 top-0 h-full w-64 bg-surface-container border-r border-outline-variant flex flex-col z-40">
 <div className="px-6 py-8">
 <h1 className="font-headline-md text-headline-md font-bold text-primary">Tribe Motors</h1>
 </div>

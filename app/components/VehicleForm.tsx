@@ -1,243 +1,250 @@
-"use client";
+'use client';
 
-import { useState } from 'react';
-import { Vehicle } from '../lib/dummy-data';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { saveVehicle } from '../staff/inventory/actions';
+import { useState, useTransition } from 'react';
+import toast from 'react-hot-toast';
 
-interface VehicleFormProps {
-    initialData?: Vehicle;
-    onSubmit: (data: Omit<Vehicle, 'id'>) => void;
-}
+export const vehicleSchema = z.object({
+  id: z.string().optional(),
+  make: z.string().min(1, "Make is required"),
+  model: z.string().min(1, "Model is required"),
+  year: z.coerce.number().min(1900, "Invalid year").max(2100, "Invalid year"),
+  price: z.coerce.number().min(0, "Price must be positive"),
+  mileage: z.coerce.number().min(0, "Mileage must be positive"),
+  fuelType: z.string().min(1, "Fuel type is required"),
+  transmission: z.string().min(1, "Transmission is required"),
+  bodyType: z.string().min(1, "Body type is required"),
+  owners: z.string().min(1, "Owners is required"),
+  color: z.string().min(1, "Color is required"),
+  isCertified: z.boolean().default(false),
+  status: z.enum(['Draft', 'Live', 'Pending', 'Sold']),
+  imageUrl: z.string().url("Invalid image URL"),
+  imageAlt: z.string().min(1, "Image Alt is required"),
+  description: z.string().optional(),
+});
 
-export default function VehicleForm({ initialData, onSubmit }: VehicleFormProps) {
+type VehicleFormValues = z.infer<typeof vehicleSchema>;
 
+import { useRouter } from 'next/navigation';
 
-    // Attempt to parse title into year, make, model (very basic)
-    let initialYear = "2024";
-    let initialMake = "porsche";
-    let initialModel = "";
-    if (initialData) {
-        const parts = initialData.title.split(' ');
-        initialYear = parts[0] || "";
-        initialMake = (parts[1] || "porsche").toLowerCase();
-        initialModel = parts.slice(2).join(' ') || "";
-    }
+export default function VehicleForm({ initialData }: { initialData?: any }) {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
-    const [make, setMake] = useState(initialMake);
-    const [model, setModel] = useState(initialModel);
-    const [year, setYear] = useState(initialYear);
-    const [vin, setVin] = useState(initialData?.vin || '');
-    const [mileage, setMileage] = useState(initialData?.mileage || '');
-    const [transmission, setTransmission] = useState(initialData?.transmission || 'Auto');
-    const [fuelType, setFuelType] = useState(initialData?.fuelType || 'Petrol');
-    const [price, setPrice] = useState(initialData?.price.replace(/[^0-9]/g, '') || '');
-    const [status, setStatus] = useState(initialData?.status || 'Draft');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<VehicleFormValues>({
+    resolver: zodResolver(vehicleSchema),
+    defaultValues: initialData || {
+      status: 'Draft',
+      isCertified: false,
+      owners: '1st Owner',
+      fuelType: 'Petrol',
+      transmission: 'Automatic',
+      bodyType: 'SUV',
+      color: 'Black',
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCin5fM3hME3Gke4YZYLcuVFT_G8lzTJmdUc683UYse4u13kiUqPe4UVlWx_0m1ewukmu5oFo2YCXMKNc6W8dsizEAagMWIRzNYB9u_jTxmK9Jh9UndGuZUVm9vs5AVxsIISX-pYIFsgvDaGf-AHkfwYkLiPN-4WgPJxeIPhWAAlIQkSTZEFnFU5vOevq8gv9qgPxJBDPI9kBxOJlnHjC_HyLGM6zye7XsjRB71Xf8gHrjYac_U5Qg',
+      imageAlt: 'New Vehicle',
+    },
+  });
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+  const onSubmit = (data: VehicleFormValues) => {
+    startTransition(async () => {
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        if (value !== undefined) {
+          formData.append(key, value.toString());
+        }
+      });
 
-        const title = `${year} ${make.charAt(0).toUpperCase() + make.slice(1)} ${model}`;
-        const formattedPrice = new Intl.NumberFormat('en-IN', {
-            style: 'currency', currency: 'INR',
-            maximumFractionDigits: 0
-        }).format(Number(price));
+      const res = await saveVehicle(null, formData);
+      if (res.success) {
+        toast.success(res.message);
+        router.push('/staff/inventory');
+      } else {
+        toast.error(res.message);
+      }
+    });
+  };
 
-        const vehicleData: Omit<Vehicle, 'id'> = {
-            title,
-            vin,
-            status: status as 'Live' | 'Draft' | 'Sold',
-            dateAdded: initialData?.dateAdded || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-            price: formattedPrice,
-            imageUrl: initialData?.imageUrl || "https://lh3.googleusercontent.com/aida-public/AB6AXuCin5fM3hME3Gke4YZYLcuVFT_G8lzTJmdUc683UYse4u13kiUqPe4UVlWx_0m1ewukmu5oFo2YCXMKNc6W8dsizEAagMWIRzNYB9u_jTxmK9Jh9UndGuZUVm9vs5AVxsIISX-pYIFsgvDaGf-AHkfwYkLiPN-4WgPJxeIPhWAAlIQkSTZEFnFU5vOevq8gv9qgPxJBDPI9kBxOJlnHjC_HyLGM6zye7XsjRB71Xf8gHrjYac_U5Qg",
-            imageAlt: initialData?.imageAlt || "New Vehicle",
-            mileage: typeof mileage === 'number' ? `${mileage.toLocaleString()} mi` : mileage,
-            transmission,
-            fuelType
-        };
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="max-w-5xl space-y-stack-md" id="vehicle-form">
+      {initialData?.id && <input type="hidden" {...register('id')} />}
 
-        onSubmit(vehicleData);
-    };
-
-    return (
-        <form onSubmit={handleSubmit} className="max-w-5xl space-y-stack-md" id="vehicle-form">
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-gutter">
-                <div className="xl:col-span-2 space-y-stack-md">
-
-                    <section className="bg-surface-container-lowest rounded-xl p-stack-md shadow-[0_4px_24px_rgba(139,62,47,0.04)] border border-surface-container">
-                        <h3 className="font-headline-md text-headline-md text-on-background mb-6 flex items-center gap-2">
-                            <span className="material-symbols-outlined text-primary">directions_car</span>
-                            Basic Details
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-gutter gap-y-6">
-                            <div>
-                                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2" htmlFor="make">Make</label>
-                                <select
-                                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface bg-none"
-                                    id="make"
-                                    value={make}
-                                    onChange={(e) => setMake(e.target.value)}
-                                    required
-                                >
-                                    <option disabled value="">Select Make</option>
-                                    <option value="audi">Audi</option>
-                                    <option value="bmw">BMW</option>
-                                    <option value="mercedes">Mercedes-Benz</option>
-                                    <option value="porsche">Porsche</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2" htmlFor="model">Model</label>
-                                <input
-                                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface"
-                                    id="model"
-                                    placeholder="e.g. 911 Carrera S"
-                                    type="text"
-                                    value={model}
-                                    onChange={(e) => setModel(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2" htmlFor="year">Year</label>
-                                <input
-                                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface"
-                                    id="year"
-                                    max="2025"
-                                    min="1990"
-                                    placeholder="YYYY"
-                                    type="number"
-                                    value={year}
-                                    onChange={(e) => setYear(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2" htmlFor="vin">VIN</label>
-                                <input
-                                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface uppercase font-mono"
-                                    id="vin"
-                                    placeholder="17-character VIN"
-                                    type="text"
-                                    value={vin}
-                                    onChange={(e) => setVin(e.target.value)}
-                                    required
-                                />
-                            </div>
-                        </div>
-                    </section>
-
-                    <section className="bg-surface-container-lowest rounded-xl p-stack-md shadow-[0_4px_24px_rgba(139,62,47,0.04)] border border-surface-container">
-                        <h3 className="font-headline-md text-headline-md text-on-background mb-6 flex items-center gap-2">
-                            <span className="material-symbols-outlined text-primary">settings_suggest</span>
-                            Specifications
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-gutter gap-y-6">
-                            <div>
-                                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2" htmlFor="mileage">Mileage (mi)</label>
-                                <input
-                                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface"
-                                    id="mileage"
-                                    placeholder="e.g. 12,450 mi"
-                                    type="text"
-                                    value={mileage}
-                                    onChange={(e) => setMileage(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2" htmlFor="transmission">Transmission</label>
-                                <select
-                                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface bg-none"
-                                    id="transmission"
-                                    value={transmission}
-                                    onChange={(e) => setTransmission(e.target.value)}
-                                >
-                                    <option value="Auto">Automatic</option>
-                                    <option value="Manual">Manual</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2" htmlFor="fuel">Fuel Type</label>
-                                <select
-                                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface bg-none"
-                                    id="fuel"
-                                    value={fuelType}
-                                    onChange={(e) => setFuelType(e.target.value)}
-                                >
-                                    <option value="Petrol">Petrol</option>
-                                    <option value="Diesel">Diesel</option>
-                                    <option value="Electric">Electric</option>
-                                    <option value="Hybrid">Hybrid</option>
-                                </select>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-
-                <div className="space-y-stack-md">
-                    <section className="bg-surface-container-lowest rounded-xl p-stack-md shadow-[0_4px_24px_rgba(139,62,47,0.04)] border border-surface-container">
-                        <h3 className="font-headline-md text-headline-md text-on-background mb-6 flex items-center gap-2">
-                            <span className="material-symbols-outlined text-primary">payments</span>
-                            Pricing & Status
-                        </h3>
-                        <div className="space-y-6">
-                            <div>
-                                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2" htmlFor="price">Listing Price (₹)</label>
-                                <div className="relative">
-                                    <span className="absolute left-4 top-3 text-on-surface-variant font-body-md">₹</span>
-                                    <input
-                                        className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface pl-8 text-lg font-bold text-primary"
-                                        id="price"
-                                        placeholder="0.00"
-                                        type="number"
-                                        value={price}
-                                        onChange={(e) => setPrice(e.target.value)}
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            <hr className="border-outline-variant" />
-                            <div>
-                                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-3">Inventory Status</label>
-                                <div className="space-y-3">
-                                    <label className="flex items-center gap-3 cursor-pointer p-3 rounded border border-outline-variant bg-surface-container-low hover:border-primary transition-colors">
-                                        <input
-                                            className="text-primary focus:ring-primary border-outline"
-                                            name="status"
-                                            type="radio"
-                                            value="Live"
-                                            checked={status === 'Live'}
-                                            onChange={(e) => setStatus(e.target.value)}
-                                        />
-                                        <span className="font-label-bold text-label-bold text-on-surface">Live (Available)</span>
-                                    </label>
-                                    <label className="flex items-center gap-3 cursor-pointer p-3 rounded border border-outline-variant hover:border-primary transition-colors">
-                                        <input
-                                            className="text-primary focus:ring-primary border-outline"
-                                            name="status"
-                                            type="radio"
-                                            value="Draft"
-                                            checked={status === 'Draft'}
-                                            onChange={(e) => setStatus(e.target.value)}
-                                        />
-                                        <span className="font-label-bold text-label-bold text-on-surface">Draft (Not Listed)</span>
-                                    </label>
-                                    <label className="flex items-center gap-3 cursor-pointer p-3 rounded border border-outline-variant hover:border-primary transition-colors">
-                                        <input
-                                            className="text-primary focus:ring-primary border-outline"
-                                            name="status"
-                                            type="radio"
-                                            value="Sold"
-                                            checked={status === 'Sold'}
-                                            onChange={(e) => setStatus(e.target.value)}
-                                        />
-                                        <span className="font-label-bold text-label-bold text-on-surface">Sold</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-gutter">
+        <div className="xl:col-span-2 space-y-stack-md">
+          <section className="bg-surface-container-lowest rounded-xl p-stack-md shadow-[0_4px_24px_rgba(139,62,47,0.04)] border border-surface-container">
+            <h3 className="font-headline-md text-headline-md text-on-background mb-6 flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary">directions_car</span>
+              Basic Details
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-gutter gap-y-6">
+              <div>
+                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Make</label>
+                <input
+                  className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface"
+                  placeholder="e.g. Audi"
+                  {...register('make')}
+                />
+                {errors.make && <p className="text-error text-sm mt-1">{errors.make.message}</p>}
+              </div>
+              <div>
+                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Model</label>
+                <input
+                  className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface"
+                  placeholder="e.g. Q5"
+                  {...register('model')}
+                />
+                {errors.model && <p className="text-error text-sm mt-1">{errors.model.message}</p>}
+              </div>
+              <div>
+                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Year</label>
+                <input
+                  className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface"
+                  placeholder="YYYY"
+                  type="number"
+                  {...register('year')}
+                />
+                {errors.year && <p className="text-error text-sm mt-1">{errors.year.message}</p>}
+              </div>
+              <div>
+                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Body Type</label>
+                <select
+                  className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface bg-none"
+                  {...register('bodyType')}
+                >
+                  <option value="SUV">SUV</option>
+                  <option value="Sedan">Sedan</option>
+                  <option value="Hatchback">Hatchback</option>
+                </select>
+              </div>
             </div>
-        </form>
-    );
+          </section>
+
+          <section className="bg-surface-container-lowest rounded-xl p-stack-md shadow-[0_4px_24px_rgba(139,62,47,0.04)] border border-surface-container">
+            <h3 className="font-headline-md text-headline-md text-on-background mb-6 flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary">settings_suggest</span>
+              Specifications
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-gutter gap-y-6">
+              <div>
+                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Mileage (km)</label>
+                <input
+                  className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface"
+                  placeholder="e.g. 12450"
+                  type="number"
+                  {...register('mileage')}
+                />
+                {errors.mileage && <p className="text-error text-sm mt-1">{errors.mileage.message}</p>}
+              </div>
+              <div>
+                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Transmission</label>
+                <select
+                  className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface bg-none"
+                  {...register('transmission')}
+                >
+                  <option value="Automatic">Automatic</option>
+                  <option value="Manual">Manual</option>
+                  <option value="DCT">DCT</option>
+                </select>
+              </div>
+              <div>
+                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Fuel Type</label>
+                <select
+                  className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface bg-none"
+                  {...register('fuelType')}
+                >
+                  <option value="Petrol">Petrol</option>
+                  <option value="Diesel">Diesel</option>
+                  <option value="EV">EV</option>
+                  <option value="Hybrid">Hybrid</option>
+                </select>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-gutter gap-y-6 mt-6">
+              <div>
+                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Color</label>
+                <input
+                  className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface"
+                  placeholder="e.g. Black"
+                  {...register('color')}
+                />
+              </div>
+              <div>
+                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Owners</label>
+                <select
+                  className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface bg-none"
+                  {...register('owners')}
+                >
+                  <option value="1st Owner">1st Owner</option>
+                  <option value="2nd Owner">2nd Owner</option>
+                  <option value="3rd Owner">3rd Owner</option>
+                </select>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div className="space-y-stack-md">
+          <section className="bg-surface-container-lowest rounded-xl p-stack-md shadow-[0_4px_24px_rgba(139,62,47,0.04)] border border-surface-container">
+            <h3 className="font-headline-md text-headline-md text-on-background mb-6 flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary">payments</span>
+              Pricing & Status
+            </h3>
+            <div className="space-y-6">
+              <div>
+                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Listing Price (₹)</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-3 text-on-surface-variant font-body-md">₹</span>
+                  <input
+                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface pl-8 text-lg font-bold text-primary"
+                    placeholder="0"
+                    type="number"
+                    {...register('price')}
+                  />
+                </div>
+                {errors.price && <p className="text-error text-sm mt-1">{errors.price.message}</p>}
+              </div>
+
+              <div>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" className="rounded border-outline-variant text-primary focus:ring-primary" {...register('isCertified')} />
+                  <span className="font-label-bold text-label-bold text-on-surface">Tribe Certified</span>
+                </label>
+              </div>
+
+              <hr className="border-outline-variant" />
+              <div>
+                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-3">Inventory Status</label>
+                <div className="space-y-3">
+                  {['Live', 'Draft', 'Pending', 'Sold'].map((s) => (
+                    <label key={s} className="flex items-center gap-3 cursor-pointer p-3 rounded border border-outline-variant hover:border-primary transition-colors">
+                      <input
+                        className="text-primary focus:ring-primary border-outline"
+                        type="radio"
+                        value={s}
+                        {...register('status')}
+                      />
+                      <span className="font-label-bold text-label-bold text-on-surface">{s}</span>
+                    </label>
+                  ))}
+                </div>
+                {errors.status && <p className="text-error text-sm mt-1">{errors.status.message}</p>}
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+      
+      {/* Hidden inputs to preserve default image for now */}
+      <input type="hidden" {...register('imageUrl')} />
+      <input type="hidden" {...register('imageAlt')} />
+      <button id="hidden-submit" type="submit" disabled={isPending} className="hidden" />
+    </form>
+  );
 }

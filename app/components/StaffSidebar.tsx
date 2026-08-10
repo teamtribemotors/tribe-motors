@@ -14,9 +14,9 @@ export default function StaffSidebar() {
             : "flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant mx-2 rounded-lg transition-colors duration-200 group";
     };
 
-    const getIconStyle = (path: string) => {
+    const getIconClass = (path: string) => {
         const isActive = path === '/staff' ? pathname === '/staff' : pathname.startsWith(path);
-        return isActive ? { fontVariationSettings: "'FILL' 1" } : { fontVariationSettings: "'FILL' 0" };
+        return isActive ? "material-symbols-outlined filled-icon" : "material-symbols-outlined";
     };
 
     return (
@@ -34,28 +34,36 @@ export default function StaffSidebar() {
 
             <div className="flex-1 overflow-y-auto px-2 space-y-1">
                 <Link className={getLinkClass('/staff')} href="/staff">
-                    <span className="material-symbols-outlined" style={getIconStyle('/staff')}>dashboard</span>
+                    <span className={getIconClass('/staff')}>dashboard</span>
                     <span className="font-label-bold text-label-bold">Dashboard</span>
                 </Link>
                 <Link className={getLinkClass('/staff/inventory')} href="/staff/inventory">
-                    <span className="material-symbols-outlined" style={getIconStyle('/staff/inventory')}>directions_car</span>
+                    <span className={getIconClass('/staff/inventory')}>directions_car</span>
                     <span className="font-label-bold text-label-bold">Inventory</span>
                 </Link>
                 <Link className={getLinkClass('/staff/inspections')} href="/staff/inspections">
-                    <span className="material-symbols-outlined" style={getIconStyle('/staff/inspections')}>fact_check</span>
+                    <span className={getIconClass('/staff/inspections')}>fact_check</span>
                     <span className="font-label-bold text-label-bold">Inspections</span>
                 </Link>
                 <Link className={getLinkClass('/staff/records')} href="/staff/records">
-                    <span className="material-symbols-outlined" style={getIconStyle('/staff/records')}>build</span>
+                    <span className={getIconClass('/staff/records')}>build</span>
                     <span className="font-label-bold text-label-bold">Service Records</span>
                 </Link>
                 <Link className={getLinkClass('/staff/fulfillment')} href="/staff/fulfillment">
-                    <span className="material-symbols-outlined" style={getIconStyle('/staff/fulfillment')}>workspace_premium</span>
+                    <span className={getIconClass('/staff/fulfillment')}>workspace_premium</span>
                     <span className="font-label-bold text-label-bold">Fulfillment</span>
                 </Link>
+                <Link className={getLinkClass('/staff/enquiries')} href="/staff/enquiries">
+                    <span className={getIconClass('/staff/enquiries')}>forum</span>
+                    <span className="font-label-bold text-label-bold">Enquiries</span>
+                </Link>
                 <Link className={getLinkClass('/staff/new')} href="/staff/new">
-                    <span className="material-symbols-outlined" style={getIconStyle('/staff/new')}>person_add</span>
+                    <span className={getIconClass('/staff/new')}>person_add</span>
                     <span className="font-label-bold text-label-bold">Add Staff</span>
+                </Link>
+                <Link className={getLinkClass('/staff/settings')} href="/staff/settings">
+                    <span className={getIconClass('/staff/settings')}>settings</span>
+                    <span className="font-label-bold text-label-bold">Settings</span>
                 </Link>
             </div>
 
