@@ -5,7 +5,7 @@ export default function Navbar() {
     <header className="docked w-full top-0 z-50 sticky shadow-md bg-[#0A0A0A]">
       <div className="flex justify-between items-center px-margin-desktop h-20 w-full max-w-container-max mx-auto relative">
         <div className="w-1/3 flex justify-start">
-          <Link className="font-headline-md text-headline-md font-bold text-white hover:text-gray-300 transition-colors" href="/">
+          <Link className="font-headline-md text-headline-md font-bold text-[#8b3e2f] hover:text-[#6d281a] transition-colors" href="/">
             Tribe Motors
           </Link>
         </div>
