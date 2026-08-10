@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation';
-import { dummyInventory } from '../../lib/dummy-data';
+import { db } from '../../../db';
+import { vehicles } from '../../../db/schema';
+import { eq } from 'drizzle-orm';
 
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
@@ -8,7 +10,8 @@ import Link from 'next/link';
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const vehicle = dummyInventory.find(v => v.id === id);
+  const vehicleRecord = await db.select().from(vehicles).where(eq(vehicles.id, id)).limit(1);
+  const vehicle = vehicleRecord[0];
   if (!vehicle) return notFound();
 
   return (

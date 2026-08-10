@@ -2,8 +2,13 @@ import Link from 'next/link';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import VehicleCard from './components/VehicleCard';
-import { dummyInventory } from './lib/dummy-data';
-export default function Page() {
+import { db } from '../db';
+import { vehicles } from '../db/schema';
+import { desc } from 'drizzle-orm';
+
+export default async function Page() {
+    const featuredVehicles = await db.select().from(vehicles).orderBy(desc(vehicles.createdAt)).limit(3);
+
     return (
         <div className="text-on-background font-body-md antialiased min-h-screen flex flex-col">
 
@@ -92,7 +97,7 @@ export default function Page() {
                         </Link>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-                        {dummyInventory.slice(0, 3).map((vehicle) => (
+                        {featuredVehicles.map((vehicle) => (
                             <VehicleCard key={vehicle.id} vehicle={vehicle} />
                         ))}
                     </div>
