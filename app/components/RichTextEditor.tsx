@@ -1,106 +1,66 @@
 'use client';
 
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Link from '@tiptap/extension-link';
-import Underline from '@tiptap/extension-underline';
-import { useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import 'react-quill/dist/quill.snow.css';
+
+const ReactQuill = dynamic(() => import('react-quill'), { 
+  ssr: false,
+  loading: () => <div className="min-h-[150px] p-4 text-on-surface-variant bg-surface-container-low rounded-md border border-outline-variant">Loading editor...</div>
+});
 
 interface RichTextEditorProps {
   value: string;
   onChange: (value: string) => void;
 }
 
+const modules = {
+  toolbar: [
+    [{ 'header': [2, 3, false] }],
+    ['bold', 'italic', 'underline', 'strike'],
+    [{'list': 'ordered'}, {'list': 'bullet'}],
+    ['link'],
+    ['clean']
+  ],
+};
+
+const formats = [
+  'header',
+  'bold', 'italic', 'underline', 'strike',
+  'list', 'bullet',
+  'link'
+];
+
 export default function RichTextEditor({ value, onChange }: RichTextEditorProps) {
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      Link.configure({
-        openOnClick: false,
-      }),
-    ],
-    content: value,
-    onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
-    },
-    editorProps: {
-      attributes: {
-        class: 'prose max-w-none focus:outline-none min-h-[150px] px-4 py-3 bg-surface-container-low border border-outline-variant rounded-b-md text-on-surface font-body-md',
-      },
-    },
-  });
-
-  useEffect(() => {
-    if (editor && editor.getHTML() !== value) {
-      editor.commands.setContent(value);
-    }
-  }, [value, editor]);
-
-  if (!editor) {
-    return null;
-  }
-
   return (
-    <div className="w-full flex flex-col rounded shadow-sm">
-      <div className="flex flex-wrap items-center gap-1 p-2 bg-surface-container-high border border-outline-variant border-b-0 rounded-t-md">
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`px-3 py-1 text-sm rounded transition-colors ${
-            editor.isActive('bold')
-              ? 'bg-primary text-on-primary font-label-bold'
-              : 'text-on-surface-variant hover:bg-surface-container-highest'
-          }`}
-        >
-          Bold
-        </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`px-3 py-1 text-sm rounded transition-colors ${
-            editor.isActive('italic')
-              ? 'bg-primary text-on-primary font-label-bold'
-              : 'text-on-surface-variant hover:bg-surface-container-highest'
-          }`}
-        >
-          Italic
-        </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleUnderline().run()}
-          className={`px-3 py-1 text-sm rounded transition-colors ${
-            editor.isActive('underline')
-              ? 'bg-primary text-on-primary font-label-bold'
-              : 'text-on-surface-variant hover:bg-surface-container-highest'
-          }`}
-        >
-          Underline
-        </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          className={`px-3 py-1 text-sm rounded transition-colors ${
-            editor.isActive('heading', { level: 3 })
-              ? 'bg-primary text-on-primary font-label-bold'
-              : 'text-on-surface-variant hover:bg-surface-container-highest'
-          }`}
-        >
-          H3
-        </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={`px-3 py-1 text-sm rounded transition-colors ${
-            editor.isActive('bulletList')
-              ? 'bg-primary text-on-primary font-label-bold'
-              : 'text-on-surface-variant hover:bg-surface-container-highest'
-          }`}
-        >
-          Bullets
-        </button>
-      </div>
-      <EditorContent editor={editor} />
+    <div className="w-full bg-surface-container-low border border-outline-variant rounded-md overflow-hidden font-body-md text-on-surface">
+      <style jsx global>{`
+        .quill {
+          display: flex;
+          flex-direction: column;
+        }
+        .ql-toolbar.ql-snow {
+          border: none;
+          border-bottom: 1px solid var(--color-outline-variant, #cac4d0);
+          background-color: var(--color-surface-container-high, #ece6f0);
+          padding: 8px;
+        }
+        .ql-container.ql-snow {
+          border: none;
+          min-height: 150px;
+          font-family: inherit;
+        }
+        .ql-editor {
+          min-height: 150px;
+          padding: 1rem;
+        }
+      `}</style>
+      <ReactQuill 
+        theme="snow" 
+        value={value} 
+        onChange={onChange} 
+        modules={modules}
+        formats={formats}
+      />
     </div>
   );
 }
