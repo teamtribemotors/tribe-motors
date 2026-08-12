@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect } from 'react';
+import { useActionState } from 'react';
 import { createStaff } from '../../actions/staff';
 import { useRouter } from 'next/navigation';
 import StaffSidebar from '../../components/StaffSidebar';
@@ -13,12 +13,6 @@ const initialState = {
 export default function CreateStaffPage() {
     const [state, formAction, isPending] = useActionState(createStaff, initialState);
     const router = useRouter();
-
-    useEffect(() => {
-        if (state.success) {
-            router.push('/staff');
-        }
-    }, [state.success, router]);
 
     return (
         <div className="h-full flex antialiased text-on-background font-body-md bg-surface-container-low">

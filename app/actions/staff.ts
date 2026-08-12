@@ -4,9 +4,15 @@ import { db } from '../../db';
 import { staff } from '../../db/schema';
 import { revalidatePath } from 'next/cache';
 import { requireAuth } from './auth';
+import { redirect } from 'next/navigation';
 
 export async function createStaff(prevState: any, formData: FormData) {
-  await requireAuth();
+  try {
+    await requireAuth();
+  } catch (e) {
+    return { success: false, error: 'Unauthorized. Please log in again.' };
+  }
+
   const firstName = formData.get('firstName') as string;
   const lastName = formData.get('lastName') as string;
   const email = formData.get('email') as string;
@@ -26,10 +32,11 @@ export async function createStaff(prevState: any, formData: FormData) {
       role,
       password,
     });
-    revalidatePath('/staff');
-    return { success: true };
   } catch (error) {
     console.error('Failed to create staff:', error);
-    return { success: false, error: 'Failed to create staff' };
+    return { success: false, error: 'Failed to create staff. Email might already exist.' };
   }
+
+  revalidatePath('/staff');
+  redirect('/staff');
 }
