@@ -3,15 +3,31 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import StaffSidebar from '../../components/StaffSidebar';
-import { useFulfillment } from '../../lib/useFulfillment';
+import { getFulfillmentRequests, deleteFulfillmentRequestAction } from '../../actions/fulfillment';
 import { useState, useEffect } from 'react';
 
 export default function FulfillmentPage() {
     const router = useRouter();
-    const { requests, isLoaded, deleteRequest } = useFulfillment();
+    const [requests, setRequests] = useState<any[]>([]);
+    const [isLoaded, setIsLoaded] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchRequests = async () => {
+            const data = await getFulfillmentRequests();
+            setRequests(data);
+            setIsLoaded(true);
+        };
+        fetchRequests();
+    }, []);
+
+    const deleteRequest = async (id: string) => {
+        await deleteFulfillmentRequestAction(id);
+        const data = await getFulfillmentRequests();
+        setRequests(data);
+    };
 
     useEffect(() => {
         const handleClick = () => setActiveDropdown(null);

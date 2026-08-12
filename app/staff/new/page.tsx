@@ -1,6 +1,25 @@
+'use client';
+
+import { useActionState, useEffect } from 'react';
+import { createStaff } from '../../actions/staff';
+import { useRouter } from 'next/navigation';
 import StaffSidebar from '../../components/StaffSidebar';
 
+const initialState = {
+  success: false,
+  error: '',
+};
+
 export default function CreateStaffPage() {
+    const [state, formAction, isPending] = useActionState(createStaff, initialState);
+    const router = useRouter();
+
+    useEffect(() => {
+        if (state.success) {
+            router.push('/staff');
+        }
+    }, [state.success, router]);
+
     return (
         <div className="h-full flex antialiased text-on-background font-body-md bg-surface-container-low">
             <StaffSidebar />
@@ -13,7 +32,12 @@ export default function CreateStaffPage() {
                 </header>
 
                 <div className="bg-surface rounded-xl border border-outline-variant shadow-sm max-w-2xl">
-                    <form className="p-6 space-y-6">
+                    {state.error && (
+                        <div className="m-6 mb-0 p-3 bg-error/10 border border-error text-error rounded-lg text-sm text-center">
+                            {state.error}
+                        </div>
+                    )}
+                    <form action={formAction} className="p-6 space-y-6">
                         <div className="grid grid-cols-2 gap-6">
                             <div className="col-span-2 sm:col-span-1">
                                 <label className="block font-label-bold text-on-surface mb-2" htmlFor="firstName">
@@ -21,6 +45,7 @@ export default function CreateStaffPage() {
                                 </label>
                                 <input 
                                     id="firstName"
+                                    name="firstName"
                                     type="text" 
                                     className="w-full px-4 py-3 bg-surface-container border border-outline-variant rounded-lg text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                                     placeholder="Jane"
@@ -33,6 +58,7 @@ export default function CreateStaffPage() {
                                 </label>
                                 <input 
                                     id="lastName"
+                                    name="lastName"
                                     type="text" 
                                     className="w-full px-4 py-3 bg-surface-container border border-outline-variant rounded-lg text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                                     placeholder="Doe"
@@ -47,10 +73,24 @@ export default function CreateStaffPage() {
                             </label>
                             <input 
                                 id="email"
+                                name="email"
                                 type="email" 
                                 className="w-full px-4 py-3 bg-surface-container border border-outline-variant rounded-lg text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                                 placeholder="jane.doe@tribemotors.com"
                                 required
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block font-label-bold text-on-surface mb-2" htmlFor="password">
+                                Temporary Password
+                            </label>
+                            <input 
+                                id="password"
+                                name="password"
+                                type="password" 
+                                className="w-full px-4 py-3 bg-surface-container border border-outline-variant rounded-lg text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                placeholder="default123"
                             />
                         </div>
 
@@ -60,6 +100,7 @@ export default function CreateStaffPage() {
                             </label>
                             <select 
                                 id="role"
+                                name="role"
                                 className="w-full px-4 py-3 bg-surface-container border border-outline-variant rounded-lg text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none"
                                 required
                                 defaultValue=""
@@ -102,11 +143,11 @@ export default function CreateStaffPage() {
                         </div>
 
                         <div className="pt-4 flex justify-end gap-3 border-t border-outline-variant">
-                            <button type="button" className="px-6 py-2 border border-outline-variant rounded-lg text-on-surface hover:bg-surface-variant transition-colors font-label-bold">
+                            <button type="button" onClick={() => router.back()} className="px-6 py-2 border border-outline-variant rounded-lg text-on-surface hover:bg-surface-variant transition-colors font-label-bold">
                                 Cancel
                             </button>
-                            <button type="submit" className="px-6 py-2 bg-primary text-on-primary rounded-lg hover:opacity-90 transition-opacity font-label-bold">
-                                Create Staff Account
+                            <button disabled={isPending} type="submit" className="px-6 py-2 bg-primary text-on-primary rounded-lg hover:opacity-90 transition-opacity font-label-bold disabled:opacity-50">
+                                {isPending ? 'Creating...' : 'Create Staff Account'}
                             </button>
                         </div>
                     </form>

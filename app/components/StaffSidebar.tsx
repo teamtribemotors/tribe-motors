@@ -1,10 +1,12 @@
 "use client";
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { logout } from '../actions/auth';
 
 export default function StaffSidebar() {
     const pathname = usePathname();
+    const router = useRouter();
 
     const getLinkClass = (path: string) => {
         // Exact match for /staff, otherwise prefix match for others like /staff/inventory
@@ -17,6 +19,11 @@ export default function StaffSidebar() {
     const getIconClass = (path: string) => {
         const isActive = path === '/staff' ? pathname === '/staff' : pathname.startsWith(path);
         return isActive ? "material-symbols-outlined filled-icon" : "material-symbols-outlined";
+    };
+    
+    const handleLogout = async () => {
+        await logout();
+        router.push('/staff/login');
     };
 
     return (
@@ -79,10 +86,10 @@ export default function StaffSidebar() {
                     <span className="material-symbols-outlined">settings</span>
                     <span className="font-label-bold text-label-bold">Settings</span>
                 </a>
-                <Link className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-colors duration-200" href="/staff/login">
+                <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-colors duration-200">
                     <span className="material-symbols-outlined">logout</span>
                     <span className="font-label-bold text-label-bold">Logout</span>
-                </Link>
+                </button>
             </div>
         </nav>
     );

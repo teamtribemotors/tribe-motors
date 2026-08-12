@@ -3,15 +3,31 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import StaffSidebar from '../../components/StaffSidebar';
-import { useServiceRecords } from '../../lib/useServiceRecords';
+import { getServiceRecords, deleteServiceRecordAction } from '../../actions/records';
 import { useState, useEffect } from 'react';
 
 export default function ServiceRecordsPage() {
     const router = useRouter();
-    const { records, isLoaded, deleteRecord } = useServiceRecords();
+    const [records, setRecords] = useState<any[]>([]);
+    const [isLoaded, setIsLoaded] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchRecords = async () => {
+            const data = await getServiceRecords();
+            setRecords(data);
+            setIsLoaded(true);
+        };
+        fetchRecords();
+    }, []);
+
+    const deleteRecord = async (id: string) => {
+        await deleteServiceRecordAction(id);
+        const data = await getServiceRecords();
+        setRecords(data);
+    };
 
     useEffect(() => {
         const handleClick = () => setActiveDropdown(null);

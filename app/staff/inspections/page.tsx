@@ -3,15 +3,31 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import StaffSidebar from '../../components/StaffSidebar';
-import { useInspections } from '../../lib/useInspections';
+import { getInspections, deleteInspectionAction } from '../../actions/inspections';
 import { useState, useEffect } from 'react';
 
 export default function InspectionsPage() {
     const router = useRouter();
-    const { inspections, isLoaded, deleteInspection } = useInspections();
+    const [inspections, setInspections] = useState<any[]>([]);
+    const [isLoaded, setIsLoaded] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchInspections = async () => {
+            const data = await getInspections();
+            setInspections(data);
+            setIsLoaded(true);
+        };
+        fetchInspections();
+    }, []);
+
+    const deleteInspection = async (id: string) => {
+        await deleteInspectionAction(id);
+        const data = await getInspections();
+        setInspections(data);
+    };
 
     useEffect(() => {
         const handleClick = () => setActiveDropdown(null);

@@ -1,6 +1,25 @@
-import Link from 'next/link';
+'use client';
+
+import { useActionState } from 'react';
+import { login } from '../../actions/auth';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+
+const initialState = {
+  success: false,
+  error: '',
+};
 
 export default function StaffLoginPage() {
+    const [state, formAction, isPending] = useActionState(login, initialState);
+    const router = useRouter();
+
+    useEffect(() => {
+        if (state.success) {
+            router.push('/staff');
+        }
+    }, [state.success, router]);
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-surface-container-low p-4">
             <div className="w-full max-w-md bg-surface p-8 rounded-2xl shadow-sm border border-outline-variant">
@@ -9,7 +28,13 @@ export default function StaffLoginPage() {
                     <p className="font-body-md text-on-surface-variant">Staff Portal Login</p>
                 </div>
 
-                <form className="space-y-6">
+                {state.error && (
+                    <div className="mb-4 p-3 bg-error/10 border border-error text-error rounded-lg text-sm text-center">
+                        {state.error}
+                    </div>
+                )}
+
+                <form action={formAction} className="space-y-6">
                     <div>
                         <label className="block font-label-bold text-on-surface mb-2" htmlFor="email">
                             Email Address
@@ -18,6 +43,7 @@ export default function StaffLoginPage() {
                             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">mail</span>
                             <input 
                                 id="email"
+                                name="email"
                                 type="email" 
                                 className="w-full pl-10 pr-4 py-3 bg-surface-container border border-outline-variant rounded-lg text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                                 placeholder="name@tribemotors.com"
@@ -34,6 +60,7 @@ export default function StaffLoginPage() {
                             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">lock</span>
                             <input 
                                 id="password"
+                                name="password"
                                 type="password" 
                                 className="w-full pl-10 pr-4 py-3 bg-surface-container border border-outline-variant rounded-lg text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                                 placeholder="••••••••"
@@ -50,9 +77,9 @@ export default function StaffLoginPage() {
                         <a href="#" className="font-label-sm text-primary hover:underline">Forgot password?</a>
                     </div>
 
-                    <Link href="/staff" className="w-full block text-center bg-primary text-on-primary font-label-bold py-3 rounded-lg hover:opacity-90 transition-opacity">
-                        Sign In
-                    </Link>
+                    <button disabled={isPending} type="submit" className="w-full block text-center bg-primary text-on-primary font-label-bold py-3 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50">
+                        {isPending ? 'Signing In...' : 'Sign In'}
+                    </button>
                 </form>
             </div>
         </div>
