@@ -56,9 +56,9 @@ export default function StaffSidebar() {
                     <span className={getIconClass('/staff/records')}>build</span>
                     <span className="font-label-bold text-label-bold">Service Records</span>
                 </Link>
-                <Link className={getLinkClass('/staff/fulfillment')} href="/staff/fulfillment">
-                    <span className={getIconClass('/staff/fulfillment')}>workspace_premium</span>
-                    <span className="font-label-bold text-label-bold">Fulfillment</span>
+                <Link className={getLinkClass('/staff/customers')} href="/staff/customers">
+                    <span className={getIconClass('/staff/customers')}>group</span>
+                    <span className="font-label-bold text-label-bold">Customers</span>
                 </Link>
                 <Link className={getLinkClass('/staff/enquiries')} href="/staff/enquiries">
                     <span className={getIconClass('/staff/enquiries')}>forum</span>

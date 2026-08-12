@@ -18,37 +18,40 @@ export default async function EnquiriesPage() {
         </header>
 
         <section className="bg-surface-container rounded-2xl shadow-sm border border-outline-variant overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-outline-variant bg-surface-container-low text-on-surface-variant">
-                <th className="font-label-bold text-label-bold p-4">Name</th>
-                <th className="font-label-bold text-label-bold p-4">Phone</th>
-                <th className="font-label-bold text-label-bold p-4">Vehicle Model</th>
-                <th className="font-label-bold text-label-bold p-4">Date</th>
-                <th className="font-label-bold text-label-bold p-4">Status</th>
-              </tr>
-            </thead>
-            <tbody className="font-body-md text-body-md text-on-surface">
-              {data.map((enq) => (
-                <tr key={enq.id} className="border-b border-outline-variant hover:bg-surface-container-high transition-colors">
-                  <td className="p-4">{enq.name}</td>
-                  <td className="p-4">{enq.number}</td>
-                  <td className="p-4">{enq.vehicleModel}</td>
-                  <td className="p-4">{new Date(enq.createdAt).toLocaleDateString()}</td>
-                  <td className="p-4">
-                    <span className={`px-2 py-1 rounded text-xs ${enq.status === 'New' ? 'bg-[#228B22]/10 text-green-800' : 'bg-surface-variant text-on-surface-variant'}`}>
-                      {enq.status}
-                    </span>
-                  </td>
+          {data.length === 0 ? (
+            <div className="py-20 flex flex-col items-center justify-center text-center">
+              <span className="material-symbols-outlined text-6xl text-on-surface-variant/50 mb-4">forum</span>
+              <h3 className="font-headline-md text-headline-md text-on-surface mb-2">No enquiries yet</h3>
+              <p className="font-body-md text-body-md text-on-surface-variant max-w-md">When customers contact you about a vehicle, their enquiries will appear here.</p>
+            </div>
+          ) : (
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-outline-variant bg-surface-container-low text-on-surface-variant">
+                  <th className="font-label-bold text-label-bold p-4">Name</th>
+                  <th className="font-label-bold text-label-bold p-4">Phone</th>
+                  <th className="font-label-bold text-label-bold p-4">Vehicle Model</th>
+                  <th className="font-label-bold text-label-bold p-4">Date</th>
+                  <th className="font-label-bold text-label-bold p-4">Status</th>
                 </tr>
-              ))}
-              {data.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="p-4 text-center text-on-surface-variant">No enquiries found.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="font-body-md text-body-md text-on-surface">
+                {data.map((enq) => (
+                  <tr key={enq.id} className="border-b border-outline-variant hover:bg-surface-container-high transition-colors">
+                    <td className="p-4">{enq.name}</td>
+                    <td className="p-4">{enq.number}</td>
+                    <td className="p-4">{enq.vehicleModel}</td>
+                    <td className="p-4">{new Date(enq.createdAt).toLocaleDateString()}</td>
+                    <td className="p-4">
+                      <span className={`px-2 py-1 rounded text-xs ${enq.status === 'New' ? 'bg-[#228B22]/10 text-green-800' : 'bg-surface-variant text-on-surface-variant'}`}>
+                        {enq.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </section>
       </main>
     </div>

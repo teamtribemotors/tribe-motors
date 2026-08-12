@@ -42,71 +42,83 @@ export default async function Page() {
           </header>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter pb-12">
-            {data.map((vehicle) => {
-              let badgeColor = "bg-secondary-container text-on-secondary-container";
-              if (vehicle.status === "Draft") badgeColor = "bg-surface-dim text-on-surface";
-              if (vehicle.status === "Sold") badgeColor = "bg-surface-tint text-on-primary";
+            {data.length === 0 ? (
+              <div className="col-span-full py-20 flex flex-col items-center justify-center text-center bg-surface-container-lowest rounded-xl border border-dashed border-outline-variant">
+                <span className="material-symbols-outlined text-6xl text-on-surface-variant/50 mb-4">directions_car</span>
+                <h3 className="font-headline-md text-headline-md text-on-surface mb-2">No vehicles in inventory</h3>
+                <p className="font-body-md text-body-md text-on-surface-variant mb-6 max-w-md">Your inventory is empty. Start adding vehicles to display them here and on the main website.</p>
+                <Link href="/staff/inventory/new" className="bg-primary text-on-primary font-label-bold text-label-bold py-2 px-6 rounded-lg shadow-sm hover:opacity-90 transition-opacity flex items-center gap-2">
+                  <span className="material-symbols-outlined">add</span>
+                  Add First Vehicle
+                </Link>
+              </div>
+            ) : (
+              data.map((vehicle) => {
+                let badgeColor = "bg-secondary-container text-on-secondary-container";
+                if (vehicle.status === "Draft") badgeColor = "bg-surface-dim text-on-surface";
+                if (vehicle.status === "Sold") badgeColor = "bg-surface-tint text-on-primary";
 
-              const formattedPrice = new Intl.NumberFormat('en-IN', {
-                style: 'currency', currency: 'INR',
-                maximumFractionDigits: 0
-              }).format(Number(vehicle.price));
+                const formattedPrice = new Intl.NumberFormat('en-IN', {
+                  style: 'currency', currency: 'INR',
+                  maximumFractionDigits: 0
+                }).format(Number(vehicle.price));
 
-              return (
-                <article key={vehicle.id} className={`bg-surface-container-lowest rounded-xl ambient-shadow overflow-hidden flex flex-col group hover:shadow-lg transition-shadow duration-300 ${vehicle.status === 'Sold' ? 'opacity-75' : ''}`}>
-                  <div className="relative aspect-[3/2] overflow-hidden bg-surface-variant">
-                    <img alt={vehicle.imageAlt} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${vehicle.status === 'Sold' ? 'grayscale' : ''}`} src={vehicle.imageUrl} />
-                    {vehicle.status === 'Sold' && (
-                      <div className="absolute inset-0 bg-background/20"></div>
-                    )}
-                    <div className="absolute top-4 left-4">
-                      <span className={`${badgeColor} px-3 py-1 rounded font-label-bold text-label-bold shadow-sm`}>{vehicle.status}</span>
-                    </div>
-                  </div>
-                  <div className="p-4 md:p-6 flex flex-col flex-1 gap-2">
-                    <div className="flex justify-between items-start gap-4">
-                      <h3 className="font-headline-md text-headline-md text-on-surface line-clamp-2">{vehicle.title}</h3>
-                    </div>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      <span className="bg-surface-container px-2 py-1 rounded font-label-sm text-label-sm text-on-surface">{vehicle.transmission}</span>
-                      <span className="bg-surface-container px-2 py-1 rounded font-label-sm text-label-sm text-on-surface">{vehicle.fuelType}</span>
-                      <span className="bg-surface-container px-2 py-1 rounded font-label-sm text-label-sm text-on-surface">{vehicle.mileage.toLocaleString()} km</span>
-                    </div>
-                    <div className="mt-auto pt-4 border-t border-outline-variant flex justify-between items-center">
-                      <div className={`font-headline-md text-headline-md font-bold ${vehicle.status === 'Sold' ? 'text-outline line-through' : 'text-primary'}`}>{formattedPrice}</div>
-                      <div className="flex gap-2">
-                        <form action={async () => {
-                          'use server';
-                          await deleteVehicle(vehicle.id);
-                        }}>
-                          <button
-                            aria-label="Delete Vehicle"
-                            type="submit"
-                            className="text-on-surface-variant hover:text-error hover:bg-error-container w-10 h-10 flex items-center justify-center rounded-full transition-colors"
-                          >
-                            <span className="material-symbols-outlined">delete</span>
-                          </button>
-                        </form>
-                        {vehicle.status !== 'Sold' && (
-                          <Link
-                            href={`/staff/inventory/edit/${vehicle.id}`}
-                            aria-label="Edit Vehicle"
-                            className="text-on-surface-variant hover:text-primary hover:bg-surface-variant w-10 h-10 flex items-center justify-center rounded-full transition-colors"
-                          >
-                            <span className="material-symbols-outlined">edit</span>
-                          </Link>
-                        )}
-                        {vehicle.status === 'Sold' && (
-                          <button aria-label="View Details" className="text-on-surface-variant hover:bg-surface-variant w-10 h-10 flex items-center justify-center rounded-full transition-colors">
-                            <span className="material-symbols-outlined">visibility</span>
-                          </button>
-                        )}
+                return (
+                  <article key={vehicle.id} className={`bg-surface-container-lowest rounded-xl ambient-shadow overflow-hidden flex flex-col group hover:shadow-lg transition-shadow duration-300 ${vehicle.status === 'Sold' ? 'opacity-75' : ''}`}>
+                    <div className="relative aspect-[3/2] overflow-hidden bg-surface-variant">
+                      <img alt={vehicle.imageAlt} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${vehicle.status === 'Sold' ? 'grayscale' : ''}`} src={vehicle.imageUrl} />
+                      {vehicle.status === 'Sold' && (
+                        <div className="absolute inset-0 bg-background/20"></div>
+                      )}
+                      <div className="absolute top-4 left-4">
+                        <span className={`${badgeColor} px-3 py-1 rounded font-label-bold text-label-bold shadow-sm`}>{vehicle.status}</span>
                       </div>
                     </div>
-                  </div>
-                </article>
-              );
-            })}
+                    <div className="p-4 md:p-6 flex flex-col flex-1 gap-2">
+                      <div className="flex justify-between items-start gap-4">
+                        <h3 className="font-headline-md text-headline-md text-on-surface line-clamp-2">{vehicle.title}</h3>
+                      </div>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <span className="bg-surface-container px-2 py-1 rounded font-label-sm text-label-sm text-on-surface">{vehicle.transmission}</span>
+                        <span className="bg-surface-container px-2 py-1 rounded font-label-sm text-label-sm text-on-surface">{vehicle.fuelType}</span>
+                        <span className="bg-surface-container px-2 py-1 rounded font-label-sm text-label-sm text-on-surface">{vehicle.mileage.toLocaleString()} km</span>
+                      </div>
+                      <div className="mt-auto pt-4 border-t border-outline-variant flex justify-between items-center">
+                        <div className={`font-headline-md text-headline-md font-bold ${vehicle.status === 'Sold' ? 'text-outline line-through' : 'text-primary'}`}>{formattedPrice}</div>
+                        <div className="flex gap-2">
+                          <form action={async () => {
+                            'use server';
+                            await deleteVehicle(vehicle.id);
+                          }}>
+                            <button
+                              aria-label="Delete Vehicle"
+                              type="submit"
+                              className="text-on-surface-variant hover:text-error hover:bg-error-container w-10 h-10 flex items-center justify-center rounded-full transition-colors"
+                            >
+                              <span className="material-symbols-outlined">delete</span>
+                            </button>
+                          </form>
+                          {vehicle.status !== 'Sold' && (
+                            <Link
+                              href={`/staff/inventory/edit/${vehicle.id}`}
+                              aria-label="Edit Vehicle"
+                              className="text-on-surface-variant hover:text-primary hover:bg-surface-variant w-10 h-10 flex items-center justify-center rounded-full transition-colors"
+                            >
+                              <span className="material-symbols-outlined">edit</span>
+                            </Link>
+                          )}
+                          {vehicle.status === 'Sold' && (
+                            <button aria-label="View Details" className="text-on-surface-variant hover:bg-surface-variant w-10 h-10 flex items-center justify-center rounded-full transition-colors">
+                              <span className="material-symbols-outlined">visibility</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })
+            )}
           </div>
 
         </div>

@@ -26,7 +26,7 @@ export async function getServiceRecords() {
     id: item.id,
     vehicleId: item.vehicleId,
     type: item.type,
-    cost: `$${(item.cost / 100).toFixed(2)}`, // Assuming cost is in cents
+    cost: `₹ ${(item.cost).toLocaleString('en-IN')}`,
     status: item.status,
     date: item.date.toISOString().split('T')[0],
     vehicle: item.vehicleTitle || 'Unknown Vehicle',

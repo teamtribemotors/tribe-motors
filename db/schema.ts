@@ -19,6 +19,7 @@ export const vehicles = pgTable('vehicles', {
   description: text('description'),
   imageUrl: text('image_url').notNull(),
   imageAlt: text('image_alt').notNull(),
+  customerId: uuid('customer_id'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 }, (table) => {
@@ -67,14 +68,23 @@ export const inspections = pgTable('inspections', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
-export const fulfillmentRequests = pgTable('fulfillment_requests', {
+export const customers = pgTable('customers', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: text('name').notNull(),
+  email: text('email'),
+  phone: text('phone').notNull(),
+  address: text('address'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const sales = pgTable('sales', {
   id: uuid('id').defaultRandom().primaryKey(),
   vehicleId: uuid('vehicle_id').references(() => vehicles.id).notNull(),
-  buyerName: text('buyer_name').notNull(),
-  buyerType: text('buyer_type').notNull(), // Individual, Dealer
-  contact: text('contact').notNull(), // email or phone
-  status: text('status').notNull().default('Pending'), // Pending, In Progress, Completed
-  requestTime: timestamp('request_time').defaultNow().notNull(),
+  customerId: uuid('customer_id').references(() => customers.id).notNull(),
+  salePrice: integer('sale_price').notNull(),
+  saleDate: timestamp('sale_date').defaultNow().notNull(),
+  notes: text('notes'),
 });
 
 export const serviceRecords = pgTable('service_records', {
