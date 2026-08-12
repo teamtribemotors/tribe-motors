@@ -1,11 +1,13 @@
 'use server';
 
-import { db } from '../../db';
-import { fulfillmentRequests, vehicles } from '../../db/schema';
+import { db } from '@/db';
+import { fulfillmentRequests, vehicles } from '@/db/schema';
 import { eq, desc } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+import { requireAuth } from './auth';
 
 export async function getFulfillmentRequests() {
+  await requireAuth();
   const data = await db
     .select({
       id: fulfillmentRequests.id,
@@ -34,11 +36,12 @@ export async function getFulfillmentRequests() {
 }
 
 export async function getFulfillmentRequestById(id: string) {
+  await requireAuth();
   const [data] = await db
     .select()
     .from(fulfillmentRequests)
     .where(eq(fulfillmentRequests.id, id));
-  
+
   if (!data) return null;
 
   return {
@@ -54,6 +57,7 @@ export async function createFulfillmentRequest(data: {
   contact: string;
   status: string;
 }) {
+  await requireAuth();
   await db.insert(fulfillmentRequests).values({
     vehicleId: data.vehicleId,
     buyerName: data.buyerName,
@@ -71,6 +75,7 @@ export async function updateFulfillmentRequest(id: string, data: {
   contact?: string;
   status?: string;
 }) {
+  await requireAuth();
   await db.update(fulfillmentRequests).set({
     ...data,
   }).where(eq(fulfillmentRequests.id, id));
@@ -78,6 +83,7 @@ export async function updateFulfillmentRequest(id: string, data: {
 }
 
 export async function deleteFulfillmentRequestAction(id: string) {
+  await requireAuth();
   await db.delete(fulfillmentRequests).where(eq(fulfillmentRequests.id, id));
   revalidatePath('/staff/fulfillment');
 }

@@ -4,8 +4,10 @@ import { db } from '../../db';
 import { inspections, vehicles } from '../../db/schema';
 import { eq, desc } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+import { requireAuth } from './auth';
 
 export async function getInspections() {
+  await requireAuth();
   const data = await db
     .select({
       id: inspections.id,
@@ -34,6 +36,7 @@ export async function getInspections() {
 }
 
 export async function getInspectionById(id: string) {
+  await requireAuth();
   const [data] = await db
     .select()
     .from(inspections)
@@ -53,6 +56,7 @@ export async function createInspection(data: {
   score: number;
   status: string;
 }) {
+  await requireAuth();
   await db.insert(inspections).values({
     vehicleId: data.vehicleId,
     inspectorName: data.inspectorName,
@@ -68,6 +72,7 @@ export async function updateInspection(id: string, data: {
   score?: number;
   status?: string;
 }) {
+  await requireAuth();
   await db.update(inspections).set({
     ...data,
     updatedAt: new Date(),
@@ -76,6 +81,7 @@ export async function updateInspection(id: string, data: {
 }
 
 export async function deleteInspectionAction(id: string) {
+  await requireAuth();
   await db.delete(inspections).where(eq(inspections.id, id));
   revalidatePath('/staff/inspections');
 }

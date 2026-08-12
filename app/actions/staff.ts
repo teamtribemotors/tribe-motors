@@ -3,8 +3,10 @@
 import { db } from '../../db';
 import { staff } from '../../db/schema';
 import { revalidatePath } from 'next/cache';
+import { requireAuth } from './auth';
 
 export async function createStaff(prevState: any, formData: FormData) {
+  await requireAuth();
   const firstName = formData.get('firstName') as string;
   const lastName = formData.get('lastName') as string;
   const email = formData.get('email') as string;

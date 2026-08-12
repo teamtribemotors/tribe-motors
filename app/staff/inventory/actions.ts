@@ -1,10 +1,11 @@
 'use server';
 
 import { z } from 'zod';
-import { db } from '../../../db';
-import { vehicles } from '../../../db/schema';
+import { db } from '@/db';
+import { vehicles } from '@/db/schema';
 import { revalidatePath } from 'next/cache';
 import { eq } from 'drizzle-orm';
+import { requireAuth } from '@/app/actions/auth';
 
 const vehicleSchema = z.object({
   id: z.string().optional(),
@@ -27,8 +28,9 @@ const vehicleSchema = z.object({
 
 export async function saveVehicle(prevState: any, formData: FormData) {
   try {
+    await requireAuth();
     const isCertified = formData.get('isCertified') === 'true' || formData.get('isCertified') === 'on';
-    
+
     const rawData = {
       id: formData.get('id') || undefined,
       make: formData.get('make'),
@@ -80,6 +82,7 @@ export async function saveVehicle(prevState: any, formData: FormData) {
 
 export async function deleteVehicle(id: string) {
   try {
+    await requireAuth();
     await db.delete(vehicles).where(eq(vehicles.id, id));
     revalidatePath('/staff/inventory');
     revalidatePath('/browse');

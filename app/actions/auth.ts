@@ -37,3 +37,16 @@ export async function logout() {
   cookieStore.delete('staff_session');
   return { success: true };
 }
+
+export async function requireAuth() {
+  const cookieStore = await cookies();
+  const session = cookieStore.get('staff_session')?.value;
+  if (!session) {
+    throw new Error('Unauthorized');
+  }
+  try {
+    return JSON.parse(session);
+  } catch (e) {
+    throw new Error('Invalid session');
+  }
+}

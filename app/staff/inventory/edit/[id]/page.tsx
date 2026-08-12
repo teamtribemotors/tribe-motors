@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { notFound, redirect } from 'next/navigation';
-import StaffSidebar from '../../../../components/StaffSidebar';
-import VehicleForm from '../../../../components/VehicleForm';
-import { db } from '../../../../db';
-import { vehicles } from '../../../../db/schema';
+import StaffSidebar from '@/app/components/StaffSidebar';
+import VehicleForm from '@/app/components/VehicleForm';
+import VehicleQR from '@/app/components/VehicleQR';
+import { db } from '@/db';
+import { vehicles } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
 export default async function EditVehiclePage({ params }: { params: Promise<{ id: string }> }) {
@@ -49,10 +49,17 @@ export default async function EditVehiclePage({ params }: { params: Promise<{ id
 
                 {/* We just need to handle the success redirect from client side. But actually VehicleForm is client so we can just let it handle. Wait, we can't pass a function to a Client Component from a Server Component. We will redirect via a Server Action or we can use next/navigation in the Client Component. */}
                 {/* Wait, VehicleForm takes onSuccess as a prop. Since VehicleForm is "use client", we can't pass a Server function unless it's a Server Action. */}
-                <VehicleForm initialData={vehicle[0]} />
+                <div className="flex flex-col lg:flex-row gap-8 items-start">
+                    <div className="flex-1 w-full">
+                        <VehicleForm initialData={vehicle[0]} />
+                    </div>
+                    <div className="w-full lg:w-80 flex-shrink-0">
+                        <VehicleQR vehicleId={id} />
+                    </div>
+                </div>
             </main>
         </div>
     );
 }
 
-{/* Wait, let me just replace this entirely by making a small client wrapper or moving `useRouter` to VehicleForm. */}
+{/* Wait, let me just replace this entirely by making a small client wrapper or moving `useRouter` to VehicleForm. */ }

@@ -4,8 +4,10 @@ import { db } from '../../db';
 import { serviceRecords, vehicles } from '../../db/schema';
 import { eq, desc } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+import { requireAuth } from './auth';
 
 export async function getServiceRecords() {
+  await requireAuth();
   const data = await db
     .select({
       id: serviceRecords.id,
@@ -32,6 +34,7 @@ export async function getServiceRecords() {
 }
 
 export async function getServiceRecordById(id: string) {
+  await requireAuth();
   const [data] = await db
     .select()
     .from(serviceRecords)
@@ -51,6 +54,7 @@ export async function createServiceRecord(data: {
   cost: number; // in cents
   status: string;
 }) {
+  await requireAuth();
   await db.insert(serviceRecords).values({
     vehicleId: data.vehicleId,
     type: data.type,
@@ -66,6 +70,7 @@ export async function updateServiceRecord(id: string, data: {
   cost?: number; // in cents
   status?: string;
 }) {
+  await requireAuth();
   await db.update(serviceRecords).set({
     ...data,
   }).where(eq(serviceRecords.id, id));
@@ -73,6 +78,7 @@ export async function updateServiceRecord(id: string, data: {
 }
 
 export async function deleteServiceRecordAction(id: string) {
+  await requireAuth();
   await db.delete(serviceRecords).where(eq(serviceRecords.id, id));
   revalidatePath('/staff/records');
 }
