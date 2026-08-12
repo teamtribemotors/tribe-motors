@@ -104,14 +104,14 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                       <span className="text-[10px] font-bold uppercase tracking-widest">100% Secure Payments</span>
                     </div>
                     <div className="flex flex-wrap justify-center items-center gap-8 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
-                      <div className="h-6 w-20 flex items-center justify-center">
-                        <img className="h-full object-contain" data-alt={vehicle.imageAlt} src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbtRg8jNu0TS-g6693W2D96G1xqTHVtW18SP60hsW_wQ-wMJ_xOTppKMbR98iyXtxHjhet5YJ0G76dJMmAZXVU04cnLh_FxGwB-BCL5CknzB5CDjHcgKCZKyEdvlCvnh-nWMNdq3wWfs3CFhUNVIi2vGYRdfNKXVmhBYMPRy-iNV9oD5L2mBkSGjvI1IoOo7sQJdq3t9Wm4wBu8OvIo8XCHvE7p6-5zyMMwGVQeTf--l-GyJ5piPM" />
+                      <div className="h-6 w-16 flex items-center justify-center font-bold text-outline">
+                        VISA
                       </div>
-                      <div className="h-6 w-16 flex items-center justify-center">
-                        <img className="h-full object-contain" data-alt={vehicle.imageAlt} src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLkNzYmgNAixyl35RqPsR-PpinORCdoUN7lCONuBNSEEbB5PgKlolbV9sSZmSfzpvBFG0tdtESziAGbOss0FWF9-9Btys-mthKBo6tebp9ZT7YxS9iDoXaetzkx0TY2GAUYJHJWcrRyjXfvWTCUhUtxrG_8TEdMb2A89YP3SR3mkBLCx79Pjw29E3umLJgRPpZaUlURexTW1OIJeuKEJvX06nSGQ0e3-FUhbAtgbPW7susklpTGMA" />
+                      <div className="h-6 w-16 flex items-center justify-center font-bold text-outline">
+                        MASTERCARD
                       </div>
-                      <div className="h-6 w-16 flex items-center justify-center">
-                        <img className="h-full object-contain" data-alt={vehicle.imageAlt} src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwD9Q9PYyy4mWOc6jmKnvvMdvgIiSkKC_28Ox_weuNQqcRLfEr6EefbGUvylsmfIN8sG3eqxCDaGQ8XCeVRjItt9-OieHMPSbCzyGvoutE_2GCg0S5qOjpIBQlf4wwl11jAvcYHst-j_A7qFrYz2vihxwgopVLu3DTCY5xJf2KTxVn6NOza3NS4gTLWobC9T_7H6PLhyJ6_YIhn5TLco_6zCn5Q9wendnNY17S8hT3nh_nS7hr2JM" />
+                      <div className="h-6 w-16 flex items-center justify-center font-bold text-outline">
+                        AMEX
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5 text-outline/50 text-[10px]">

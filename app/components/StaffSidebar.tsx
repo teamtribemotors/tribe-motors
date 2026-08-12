@@ -31,7 +31,7 @@ export default function StaffSidebar() {
             <div className="px-6 py-8">
                 <h1 className="font-headline-md text-headline-md font-bold text-primary">Tribe Motors</h1>
                 <div className="mt-4 flex items-center gap-3">
-                    <img alt="Staff Member Avatar" className="w-10 h-10 rounded-full object-cover border border-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRXz99O5MXab08DFZEm1cdWqY-Mv-D6tZ8ZSIK0xGfSOeNqLhNO1lUFBZZ4qD6aMDDCn9GVphwIDvHBZ0ywzBG4tXAyZ_g0oi4kEoBlN1Hfa4yAegjYF1hwYISbl8DKDEzAAbiL05phSTzwbZtz9DgIh6LxnLRnX1cAtA8-FUM8N8Jn7xCV-cRapc9h-AkeQ8yQH1cf_Eha776PHbwFVm-TkKO_ojI9y2IYoIrGGwH3oHtbM8jQCs" />
+                    <div className="w-10 h-10 rounded-full border border-outline-variant bg-surface-variant flex items-center justify-center font-label-bold text-on-surface">TM</div>
                     <div>
                         <div className="font-label-bold text-label-bold text-on-surface">Staff Portal</div>
                         <div className="font-label-sm text-label-sm text-on-surface-variant">Admin Level</div>

@@ -38,16 +38,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-base h-[50vh] md:h-[60vh] rounded-xl overflow-hidden shadow-ambient-sm">
-            <div className="md:col-span-3 md:row-span-2 relative group cursor-pointer overflow-hidden">
-              <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A high-end professional automotive photograph of a sleek silver 2021 Mercedes-Benz E-Class parked in a dimly lit, luxurious showroom. The lighting is dramatic, highlighting the elegant curves of the car's body. The background features subtle warm tones, brushed metal accents, and deep shadows, reflecting a premium, tactile modernist aesthetic. The mood is sophisticated and exclusive." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZekoP-wWJS_zqcJV65nWsWMEY69nx554f3CcZnVqCHiKaeEQLiLwwyZB7eNWFLhVMqUd6csB5tmmFpM8XaC5Ko2MeL35fyjqEw1BYmw2ZN_HzNJCrCS8qqGiWoI48_phbTs3QMYKv6g9o7URR-WC2-VQ4PogRq93hv9ELhiclMmNlilZdLqit8RHSo7r8nKgpIGN9YOey4F7wXJgUHplK9ItvSxYMLPuA38wp2RzKo-SZSbIcKGs" />
-            </div>
-            <div className="hidden md:block relative group cursor-pointer overflow-hidden">
-              <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A detailed close-up shot of the luxurious interior of a Mercedes-Benz E-Class. The focus is on the premium leather seats, polished wood trim, and modern digital dashboard. Warm ambient lighting glows softly inside the cabin, creating a welcoming, high-end clubhouse atmosphere. The tactile textures of the materials are emphasized, conveying comfort and superior craftsmanship." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApu7b5rfoY1RIJkERek0H7JhLhDNLT42GaijbkUYnFSjvzyaWuRjQp1nvNuy-L02CCsHTgO5yklDlHTyDSdBYbWoeU26iQ62mNb0lvRkHk7XacttxH6ZCN-IAF-CO1ijz6YzqXI5uZrGSkA4Vc3KJ6jG3VivWD-0ohJpbzuB69AlvzLUrNBT8GgIqgsH2pIJlVOT8hvhx7IWxgHnm1y9Wo1G10zlbeUkKHs5g0m0Rz1Y_KYIdwUDY" />
-            </div>
-            <div className="hidden md:block relative group cursor-pointer overflow-hidden">
-              <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A focused shot of the distinctive alloy wheel of a Mercedes-Benz E-Class, showcasing its intricate design and pristine condition. The tire rests on a polished showroom floor that subtly reflects the ambient warm lighting. The surrounding environment implies a high-end garage or luxury presentation space, consistent with a premium automotive brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCS89V0en6h0eLmd-W8x_rzAXqJLp-vdqcd9odaF8u20xeu3TA781bMC2koEiydZeiNBJ2L-oUDrfFSIAFvDM-MS31Einf_rG4rpigGaReZqbDAhHR2VcW-uA7Zcf9I_3emAz8lYNODafHo08x1qj8yJNz36NA3zdkYgDUAJCe79Zy6FvFHhA5WRRDNWDgd70_zVLlfkXeJoKx7TE3HgXR6FEVfdwz79x42kB6I-kMUUTTAutbDHRU" />
-            </div>
+          <div className="h-[50vh] md:h-[60vh] rounded-xl overflow-hidden shadow-ambient-sm relative group cursor-pointer">
+            <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt={vehicle.imageAlt} src={vehicle.imageUrl} />
           </div>
         </section>
 

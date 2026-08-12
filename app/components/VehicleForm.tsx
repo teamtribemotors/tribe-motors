@@ -34,6 +34,7 @@ type VehicleFormValues = z.infer<typeof vehicleSchema>;
 
 export default function VehicleForm({ initialData }: { initialData?: any }) {
   const [isPending, startTransition] = useTransition();
+  const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
 
   const {
@@ -53,10 +54,38 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
       transmission: 'Automatic',
       bodyType: 'SUV',
       color: '#000000',
-      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCin5fM3hME3Gke4YZYLcuVFT_G8lzTJmdUc683UYse4u13kiUqPe4UVlWx_0m1ewukmu5oFo2YCXMKNc6W8dsizEAagMWIRzNYB9u_jTxmK9Jh9UndGuZUVm9vs5AVxsIISX-pYIFsgvDaGf-AHkfwYkLiPN-4WgPJxeIPhWAAlIQkSTZEFnFU5vOevq8gv9qgPxJBDPI9kBxOJlnHjC_HyLGM6zye7XsjRB71Xf8gHrjYac_U5Qg',
-      imageAlt: 'New Vehicle',
+      imageUrl: '',
+      imageAlt: '',
     },
   });
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      
+      if (res.ok && data.url) {
+        setValue('imageUrl', data.url, { shouldValidate: true });
+        toast.success('Image uploaded successfully');
+      } else {
+        toast.error(data.error || 'Failed to upload image');
+      }
+    } catch (err) {
+      toast.error('An error occurred during upload');
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const onSubmit = (data: any) => {
     startTransition(async () => {
@@ -220,6 +249,41 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
           <div className="space-y-stack-md">
             <section className="bg-surface-container-lowest rounded-xl p-stack-md shadow-[0_4px_24px_rgba(139,62,47,0.04)] border border-surface-container">
               <h3 className="font-headline-md text-headline-md text-on-background mb-6 flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary">image</span>
+                Media
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Vehicle Image</label>
+                  {watch('imageUrl') && (
+                    <div className="mb-4 aspect-[3/2] rounded overflow-hidden bg-surface-variant relative">
+                      <img src={watch('imageUrl')} alt="Preview" className="w-full h-full object-cover" />
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    disabled={isUploading}
+                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-on-primary hover:file:opacity-90"
+                  />
+                  {isUploading && <p className="text-primary text-sm mt-2">Uploading...</p>}
+                  {errors.imageUrl && <p className="text-error text-sm mt-1">{errors.imageUrl.message}</p>}
+                </div>
+                <div>
+                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Image Alt Text</label>
+                  <input
+                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface"
+                    placeholder="Describe the vehicle image"
+                    {...register('imageAlt')}
+                  />
+                  {errors.imageAlt && <p className="text-error text-sm mt-1">{errors.imageAlt.message}</p>}
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-surface-container-lowest rounded-xl p-stack-md shadow-[0_4px_24px_rgba(139,62,47,0.04)] border border-surface-container">
+              <h3 className="font-headline-md text-headline-md text-on-background mb-6 flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary">payments</span>
                 Pricing & Status
               </h3>
@@ -268,9 +332,8 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
           </div>
         </div>
 
-        {/* Hidden inputs to preserve default image for now */}
+        {/* The imageUrl and imageAlt are now handled in the Media section */}
         <input type="hidden" {...register('imageUrl')} />
-        <input type="hidden" {...register('imageAlt')} />
         <button id="hidden-submit" type="submit" disabled={isPending} className="hidden" />
       </form>
     </>
