@@ -26,15 +26,15 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-stack-sm">
             <div>
               <div className="flex gap-2 mb-2">
-                <span className="bg-surface-container-low text-on-surface-variant px-3 py-1 rounded font-label-sm text-label-sm uppercase tracking-wide border border-surface-dim">Automatic</span>
-                <span className="bg-surface-container-low text-on-surface-variant px-3 py-1 rounded font-label-sm text-label-sm uppercase tracking-wide border border-surface-dim">Petrol</span>
-                <span className="bg-surface-container-low text-on-surface-variant px-3 py-1 rounded font-label-sm text-label-sm uppercase tracking-wide border border-surface-dim">1st Owner</span>
+                <span className="bg-surface-container-low text-on-surface-variant px-3 py-1 rounded font-label-sm text-label-sm uppercase tracking-wide border border-surface-dim">{vehicle.transmission}</span>
+                <span className="bg-surface-container-low text-on-surface-variant px-3 py-1 rounded font-label-sm text-label-sm uppercase tracking-wide border border-surface-dim">{vehicle.fuelType}</span>
+                <span className="bg-surface-container-low text-on-surface-variant px-3 py-1 rounded font-label-sm text-label-sm uppercase tracking-wide border border-surface-dim">{vehicle.owners}</span>
               </div>
-              <h1 className="font-display-lg text-display-lg md:text-[48px] text-on-background">2021 Mercedes-Benz E-Class E 350</h1>
-              <p className="font-body-lg text-body-lg text-on-surface-variant mt-2">14,500 km • Mumbai</p>
+              <h1 className="font-display-lg text-display-lg md:text-[48px] text-on-background">{vehicle.title}</h1>
+              <p className="font-body-lg text-body-lg text-on-surface-variant mt-2">{vehicle.mileage.toLocaleString('en-IN')} km • {vehicle.status}</p>
             </div>
             <div className="text-left md:text-right">
-              <p className="font-display-lg text-[32px] md:text-[40px] text-primary font-bold">₹ 58,50,000</p>
+              <p className="font-display-lg text-[32px] md:text-[40px] text-primary font-bold">₹ {vehicle.price.toLocaleString('en-IN')}</p>
             </div>
           </div>
 
@@ -53,28 +53,31 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4">
                 <div>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Engine</p>
-                  <p className="font-body-md text-body-md text-on-background font-medium">1991 cc, 4 Cylinders</p>
+                  <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Make</p>
+                  <p className="font-body-md text-body-md text-on-background font-medium">{vehicle.make}</p>
                 </div>
                 <div>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Power</p>
-                  <p className="font-body-md text-body-md text-on-background font-medium">194 bhp @ 5800 rpm</p>
+                  <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Model</p>
+                  <p className="font-body-md text-body-md text-on-background font-medium">{vehicle.model}</p>
                 </div>
                 <div>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Torque</p>
-                  <p className="font-body-md text-body-md text-on-background font-medium">320 Nm @ 1650 rpm</p>
+                  <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Year</p>
+                  <p className="font-body-md text-body-md text-on-background font-medium">{vehicle.year}</p>
                 </div>
                 <div>
                   <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Transmission</p>
-                  <p className="font-body-md text-body-md text-on-background font-medium">9-Speed Automatic</p>
+                  <p className="font-body-md text-body-md text-on-background font-medium">{vehicle.transmission}</p>
                 </div>
                 <div>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Drivetrain</p>
-                  <p className="font-body-md text-body-md text-on-background font-medium">RWD</p>
+                  <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Body Type</p>
+                  <p className="font-body-md text-body-md text-on-background font-medium">{vehicle.bodyType}</p>
                 </div>
                 <div>
                   <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Color</p>
-                  <p className="font-body-md text-body-md text-on-background font-medium">Obsidian Black</p>
+                  <p className="font-body-md text-body-md text-on-background font-medium flex items-center gap-2">
+                    <span className="w-4 h-4 inline-block rounded-full border border-outline-variant" style={{ backgroundColor: vehicle.color }}></span>
+                    <span className="uppercase">{vehicle.color}</span>
+                  </p>
                 </div>
               </div>
             </div>
@@ -84,7 +87,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 Description
               </h2>
               {vehicle.description ? (
-                <div 
+                <div
                   className="font-body-md text-body-md text-on-surface-variant leading-relaxed prose prose-sm max-w-none prose-p:my-2 prose-ul:my-2 prose-li:my-0"
                   dangerouslySetInnerHTML={{ __html: vehicle.description }}
                 />
@@ -108,10 +111,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 <p className="font-body-md text-body-md text-on-surface-variant mb-6 px-4">
                   Access a comprehensive 140-point inspection, complete service timeline, and structural integrity verification.
                 </p>
-                <div className="bg-inverse-surface text-on-primary font-label-sm text-label-sm px-4 py-2 rounded-full flex items-center gap-2 mb-8 shadow-sm">
-                  <span className="material-symbols-outlined text-secondary-fixed text-sm" data-icon="visibility">visibility</span>
-                  7 buyers have already unlocked this report
-                </div>
+
                 <Link href={`/vehicle/${id}/unlock-report`} className="w-full bg-primary text-on-primary font-label-bold text-label-bold py-4 rounded-lg flex items-center justify-center gap-3 hover:bg-primary-container transition-colors shadow-md relative overflow-hidden group">
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#D4AF37]"></div>
                   <span className="material-symbols-outlined text-[#D4AF37]" data-icon="key">key</span>
@@ -121,13 +121,15 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
               </div>
             </div>
 
-            <div className="bg-[#0A3622] rounded-xl p-6 border border-[#145C3A] flex items-start gap-4 shadow-ambient-sm">
-              <span className="material-symbols-outlined text-[#D4AF37] text-3xl filled-icon" data-icon="verified">verified</span>
-              <div>
-                <h4 className="font-label-bold text-label-bold text-white mb-1">Tribe Certified Excellence</h4>
-                <p className="font-body-md text-body-md text-green-100 text-sm">This vehicle has passed our rigorous physical and mechanical vetting process.</p>
+            {vehicle.isCertified && (
+              <div className="bg-[#0A3622] rounded-xl p-6 border border-[#145C3A] flex items-start gap-4 shadow-ambient-sm">
+                <span className="material-symbols-outlined text-[#D4AF37] text-3xl filled-icon" data-icon="verified">verified</span>
+                <div>
+                  <h4 className="font-label-bold text-label-bold text-white mb-1">Tribe Certified Excellence</h4>
+                  <p className="font-body-md text-body-md text-green-100 text-sm">This vehicle has passed our rigorous physical and mechanical vetting process.</p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </section>
       </main>
