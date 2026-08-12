@@ -1,9 +1,9 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import 'react-quill/dist/quill.snow.css';
+import 'react-quill-new/dist/quill.snow.css';
 
-const ReactQuill = dynamic(() => import('react-quill'), { 
+const ReactQuill = dynamic(() => import('react-quill-new'), { 
   ssr: false,
   loading: () => <div className="min-h-[150px] p-4 text-on-surface-variant bg-surface-container-low rounded-md border border-outline-variant">Loading editor...</div>
 });
@@ -26,7 +26,7 @@ const modules = {
 const formats = [
   'header',
   'bold', 'italic', 'underline', 'strike',
-  'list', 'bullet',
+  'list',
   'link'
 ];
 
