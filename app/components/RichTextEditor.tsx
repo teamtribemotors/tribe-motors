@@ -3,6 +3,7 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
+import Underline from '@tiptap/extension-underline';
 import { useEffect } from 'react';
 
 interface RichTextEditorProps {
@@ -14,6 +15,7 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
   const editor = useEditor({
     extensions: [
       StarterKit,
+      Underline,
       Link.configure({
         openOnClick: false,
       }),
@@ -63,6 +65,17 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
           }`}
         >
           Italic
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+          className={`px-3 py-1 text-sm rounded transition-colors ${
+            editor.isActive('underline')
+              ? 'bg-primary text-on-primary font-label-bold'
+              : 'text-on-surface-variant hover:bg-surface-container-highest'
+          }`}
+        >
+          Underline
         </button>
         <button
           type="button"

@@ -40,6 +40,8 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
     register,
     handleSubmit,
     control,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<VehicleFormValues>({
     resolver: zodResolver(vehicleSchema) as any,
@@ -50,7 +52,7 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
       fuelType: 'Petrol',
       transmission: 'Automatic',
       bodyType: 'SUV',
-      color: 'Black',
+      color: '#000000',
       imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCin5fM3hME3Gke4YZYLcuVFT_G8lzTJmdUc683UYse4u13kiUqPe4UVlWx_0m1ewukmu5oFo2YCXMKNc6W8dsizEAagMWIRzNYB9u_jTxmK9Jh9UndGuZUVm9vs5AVxsIISX-pYIFsgvDaGf-AHkfwYkLiPN-4WgPJxeIPhWAAlIQkSTZEFnFU5vOevq8gv9qgPxJBDPI9kBxOJlnHjC_HyLGM6zye7XsjRB71Xf8gHrjYac_U5Qg',
       imageAlt: 'New Vehicle',
     },
@@ -137,7 +139,7 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-x-gutter gap-y-6">
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Mileage (km)</label>
+                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Kilometers Driven</label>
                   <input
                     className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface"
                     placeholder="e.g. 12450"
@@ -172,12 +174,22 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-gutter gap-y-6 mt-6">
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Color</label>
-                  <input
-                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface"
-                    placeholder="e.g. Black"
-                    {...register('color')}
-                  />
+                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Color (Hex)</label>
+                  <div className="flex items-center gap-3 bg-surface-container-low border border-outline-variant rounded p-1 focus-within:ring-1 focus-within:ring-primary focus-within:border-primary transition-colors">
+                    <input
+                      type="color"
+                      className="h-10 w-10 rounded cursor-pointer border-0 p-0 bg-transparent flex-shrink-0 ml-1"
+                      value={watch('color') || '#000000'}
+                      onChange={(e) => setValue('color', e.target.value, { shouldValidate: true })}
+                    />
+                    <input
+                      type="text"
+                      className="flex-1 bg-transparent border-none focus:outline-none font-body-md text-on-surface uppercase py-2 px-2"
+                      placeholder="#000000"
+                      {...register('color')}
+                    />
+                  </div>
+                  {errors.color && <p className="text-error text-sm mt-1">{errors.color.message}</p>}
                 </div>
                 <div>
                   <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Owners</label>

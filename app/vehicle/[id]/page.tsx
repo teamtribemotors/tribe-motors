@@ -91,9 +91,16 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 <span className="material-symbols-outlined text-primary" data-icon="description">description</span>
                 Description
               </h2>
-              <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                Meticulously maintained and exceptionally clean, this E-Class represents the pinnacle of executive luxury. Single owner, fully serviced at authorized centers with complete records. The interior features premium leather upholstery with open-pore wood trim, presenting a tactile and inviting environment. Equipped with the latest MBUX infotainment and advanced driver assistance systems.
-              </p>
+              {vehicle.description ? (
+                <div 
+                  className="font-body-md text-body-md text-on-surface-variant leading-relaxed prose prose-sm max-w-none prose-p:my-2 prose-ul:my-2 prose-li:my-0"
+                  dangerouslySetInnerHTML={{ __html: vehicle.description }}
+                />
+              ) : (
+                <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed italic">
+                  No description provided.
+                </p>
+              )}
             </div>
           </div>
 
