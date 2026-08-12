@@ -1,6 +1,6 @@
 import { db } from './index';
 import { sql } from 'drizzle-orm';
-import { vehicles, staff, enquiries, inspections, customers, sales, serviceRecords } from './schema';
+import { vehicles, staff, enquiries, customers, sales, serviceRecords } from './schema';
 
 async function resetDb() {
   console.log('Resetting DB...');
@@ -8,7 +8,6 @@ async function resetDb() {
   // 1. Delete all records from all tables
   await db.execute(sql`TRUNCATE TABLE sales CASCADE;`);
   await db.execute(sql`TRUNCATE TABLE service_records CASCADE;`);
-  await db.execute(sql`TRUNCATE TABLE inspections CASCADE;`);
   await db.execute(sql`TRUNCATE TABLE enquiries CASCADE;`);
   await db.execute(sql`TRUNCATE TABLE vehicles CASCADE;`);
   await db.execute(sql`TRUNCATE TABLE customers CASCADE;`);

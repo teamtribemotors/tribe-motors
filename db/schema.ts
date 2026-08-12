@@ -57,16 +57,7 @@ export const staff = pgTable('staff', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-export const inspections = pgTable('inspections', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  vehicleId: uuid('vehicle_id').references(() => vehicles.id).notNull(),
-  inspectorName: text('inspector_name').notNull(),
-  date: timestamp('date').defaultNow().notNull(),
-  score: integer('score').notNull(), // out of 100
-  status: text('status').notNull().default('Pending'), // Pending, Passed, Failed
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
-});
+// Note: inspections table removed per user request
 
 export const customers = pgTable('customers', {
   id: uuid('id').defaultRandom().primaryKey(),
