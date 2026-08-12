@@ -14,7 +14,6 @@ export const vehicles = pgTable('vehicles', {
   color: text('color').notNull().default('Unknown'),
   isCertified: boolean('is_certified').notNull().default(false),
   status: text('status').notNull().default('Draft'), // Draft, Live, Pending, Sold
-  vin: text('vin').notNull().default('PENDING_VIN'),
   title: text('title').notNull(),
   description: text('description'),
   imageUrl: text('image_url').notNull(),

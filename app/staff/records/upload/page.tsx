@@ -26,10 +26,10 @@ export default function Page() {
                     </h2>
 <div className="grid grid-cols-1 gap-gutter">
 <div>
-<label className="block font-label-bold text-label-bold text-on-surface mb-base">Search Vehicle by VIN</label>
+<label className="block font-label-bold text-label-bold text-on-surface mb-base">Search Vehicle by ID</label>
 <div className="relative">
 <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-<input className="w-full bg-surface-bright border border-outline-variant rounded-lg pl-10 pr-4 py-3 font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-colors" placeholder="Enter 17-digit VIN" type="text"/>
+<input className="w-full bg-surface-bright border border-outline-variant rounded-lg pl-10 pr-4 py-3 font-body-md focus:border-primary focus:ring-1 focus:ring-primary transition-colors" placeholder="Enter Vehicle ID" type="text"/>
 </div>
 </div>
 </div>

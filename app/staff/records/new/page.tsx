@@ -85,7 +85,7 @@ export default function NewServiceRecordPage() {
                             >
                                 <option value="">-- Choose a Vehicle --</option>
                                 {vehicles.map(v => (
-                                    <option key={v.id} value={v.id}>{v.year} {v.make} {v.model} ({v.vin})</option>
+                                    <option key={v.id} value={v.id}>{v.year} {v.make} {v.model}</option>
                                 ))}
                             </select>
                         </div>

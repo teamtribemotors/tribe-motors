@@ -1,7 +1,7 @@
 import StaffSidebar from '../components/StaffSidebar';
 import { db } from '../../db';
 import { vehicles as vehiclesTable } from '../../db/schema';
-import { desc, eq, sql } from 'drizzle-orm';
+import { desc } from 'drizzle-orm';
 import Link from 'next/link';
 
 export default async function Page() {
@@ -27,7 +27,7 @@ export default async function Page() {
           <div className="flex items-center gap-4">
             <div className="relative">
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-              <input className="pl-10 pr-4 py-2 bg-surface border border-outline-variant rounded-lg text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none w-64 transition-all" placeholder="Search VIN or Model..." type="text" />
+              <input className="pl-10 pr-4 py-2 bg-surface border border-outline-variant rounded-lg text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none w-64 transition-all" placeholder="Search Make or Model..." type="text" />
             </div>
             <button className="p-2 bg-surface border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors">
               <span className="material-symbols-outlined">filter_list</span>
@@ -72,7 +72,6 @@ export default async function Page() {
               <thead className="bg-surface-container border-b border-outline-variant">
                 <tr>
                   <th className="py-4 px-6 font-label-bold text-label-bold text-on-surface-variant">Vehicle</th>
-                  <th className="py-4 px-6 font-label-bold text-label-bold text-on-surface-variant">VIN</th>
                   <th className="py-4 px-6 font-label-bold text-label-bold text-on-surface-variant">Price</th>
                   <th className="py-4 px-6 font-label-bold text-label-bold text-on-surface-variant">Status</th>
                   <th className="py-4 px-6 font-label-bold text-label-bold text-on-surface-variant">Added</th>
@@ -92,7 +91,6 @@ export default async function Page() {
                         </div>
                       </div>
                     </td>
-                    <td className="py-4 px-6 text-on-surface-variant">{vehicle.vin}</td>
                     <td className="py-4 px-6 font-label-bold text-primary">₹{vehicle.price.toLocaleString()}</td>
                     <td className="py-4 px-6">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-label-sm font-label-bold ${vehicle.status === 'Live' ? 'bg-secondary-container text-on-secondary-container' :
@@ -111,7 +109,7 @@ export default async function Page() {
 
                 {allVehicles.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="py-8 text-center text-on-surface-variant">No vehicles found.</td>
+                    <td colSpan={5} className="py-8 text-center text-on-surface-variant">No vehicles found.</td>
                   </tr>
                 )}
 
