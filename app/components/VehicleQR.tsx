@@ -1,10 +1,10 @@
 'use client';
 
-import { QRCodeSVG } from 'qrcode.react';
+import { QRCodeCanvas } from 'qrcode.react';
 import { useRef } from 'react';
 
 export default function VehicleQR({ vehicleId }: { vehicleId: string }) {
-  const qrRef = useRef<SVGSVGElement>(null);
+  const qrRef = useRef<HTMLCanvasElement>(null);
   
   // URL to the public page
   const url = typeof window !== 'undefined' 
@@ -13,13 +13,12 @@ export default function VehicleQR({ vehicleId }: { vehicleId: string }) {
 
   const downloadQR = () => {
     if (!qrRef.current) return;
-    const svgData = new XMLSerializer().serializeToString(qrRef.current);
-    const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-    const downloadUrl = URL.createObjectURL(blob);
+    const canvas = qrRef.current;
+    const pngUrl = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
     
     const link = document.createElement('a');
-    link.href = downloadUrl;
-    link.download = `vehicle-qr-${vehicleId}.svg`;
+    link.href = pngUrl;
+    link.download = `vehicle-qr-${vehicleId}.png`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -29,7 +28,7 @@ export default function VehicleQR({ vehicleId }: { vehicleId: string }) {
     <div className="flex flex-col items-center gap-4 p-4 bg-surface-container-lowest rounded-xl shadow-sm border border-surface-container">
       <h4 className="font-label-bold text-label-bold text-on-surface-variant">Public Listing QR</h4>
       <div className="bg-white p-4 rounded-lg shadow-inner">
-        <QRCodeSVG 
+        <QRCodeCanvas 
           value={url} 
           size={160} 
           fgColor="#6d281a" // var(--color-primary)
