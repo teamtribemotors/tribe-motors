@@ -65,7 +65,7 @@ export default async function Page() {
 
                 return (
                   <article key={vehicle.id} className={`bg-surface-container-lowest rounded-xl ambient-shadow overflow-hidden flex flex-col group hover:shadow-lg transition-shadow duration-300 relative ${vehicle.status === 'Sold' ? 'opacity-75' : ''}`}>
-                    <Link href={`/vehicle/${vehicle.id}`} className="absolute inset-0 z-0" aria-label={`View ${vehicle.title}`}></Link>
+                    <Link href={`/staff/inventory/${vehicle.id}`} className="absolute inset-0 z-0" aria-label={`View ${vehicle.title}`}></Link>
                     <div className="relative aspect-[3/2] overflow-hidden bg-surface-variant pointer-events-none">
                       <img alt={vehicle.imageAlt} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${vehicle.status === 'Sold' ? 'grayscale' : ''}`} src={vehicle.imageUrl} />
                       {vehicle.status === 'Sold' && (
@@ -111,7 +111,7 @@ export default async function Page() {
                             </Link>
                           )}
                           {vehicle.status === 'Sold' && (
-                            <Link href={`/vehicle/${vehicle.id}`} aria-label="View Details" className="text-on-surface-variant hover:bg-surface-variant w-10 h-10 flex items-center justify-center rounded-full transition-colors">
+                            <Link href={`/staff/inventory/${vehicle.id}`} aria-label="View Details" className="text-on-surface-variant hover:bg-surface-variant w-10 h-10 flex items-center justify-center rounded-full transition-colors">
                               <span className="material-symbols-outlined">visibility</span>
                             </Link>
                           )}
