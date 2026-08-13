@@ -96,11 +96,26 @@ export default async function Page() {
                             View all <span className="material-symbols-outlined text-sm">arrow_forward</span>
                         </Link>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-                        {featuredVehicles.map((vehicle) => (
-                            <VehicleCard key={vehicle.id} vehicle={vehicle} />
-                        ))}
-                    </div>
+                    {featuredVehicles.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+                            {featuredVehicles.map((vehicle) => (
+                                <VehicleCard key={vehicle.id} vehicle={vehicle} />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center py-16 px-4 text-center bg-surface-container-lowest rounded-2xl border border-surface-variant ambient-shadow-sm">
+                            <div className="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mb-4">
+                                <span className="material-symbols-outlined text-3xl text-outline">directions_car</span>
+                            </div>
+                            <h3 className="font-headline-sm text-headline-sm text-on-surface mb-2">No vehicles currently featured</h3>
+                            <p className="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mb-6">
+                                We are currently updating our premium inventory. Check back soon for meticulously inspected pre-owned vehicles.
+                            </p>
+                            <Link href="/browse" className="inline-flex h-10 px-6 bg-primary text-on-primary font-label-bold text-label-bold rounded-lg items-center justify-center hover:opacity-90 transition-opacity">
+                                Browse All Inventory
+                            </Link>
+                        </div>
+                    )}
                 </section>
             </main>
 

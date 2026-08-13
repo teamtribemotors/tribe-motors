@@ -15,7 +15,7 @@ export const vehicleSchema = z.object({
   id: z.string().optional(),
   make: z.string().min(1, "Make is required"),
   model: z.string().min(1, "Model is required"),
-  year: z.coerce.number().min(1900, "Invalid year").max(2100, "Invalid year"),
+  year: z.coerce.number().min(1900, "Invalid year").max(new Date().getFullYear(), "Year cannot be in the future"),
   price: z.coerce.number().min(0, "Price must be positive"),
   mileage: z.coerce.number().min(0, "Mileage must be positive"),
   fuelType: z.string().min(1, "Fuel type is required"),
@@ -139,12 +139,15 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
                 </div>
                 <div>
                   <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Year</label>
-                  <input
-                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface"
-                    placeholder="YYYY"
-                    type="number"
+                  <select
+                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface bg-none appearance-none"
                     {...register('year')}
-                  />
+                  >
+                    <option value="">Select Year</option>
+                    {Array.from({ length: new Date().getFullYear() - 1899 }, (_, i) => new Date().getFullYear() - i).map(y => (
+                      <option key={y} value={y}>{y}</option>
+                    ))}
+                  </select>
                   {errors.year && <p className="text-error text-sm mt-1">{errors.year.message}</p>}
                 </div>
                 <div>

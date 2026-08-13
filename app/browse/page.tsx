@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import VehicleCard from '../components/VehicleCard';
@@ -60,13 +61,26 @@ export default async function Page({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-            {data.length > 0 ? data.map((vehicle) => (
-              <VehicleCard key={vehicle.id} vehicle={vehicle} />
-            )) : (
-              <p className="col-span-full text-center py-12 text-on-surface-variant">No vehicles found matching your criteria.</p>
-            )}
-          </div>
+          {data.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+              {data.map((vehicle) => (
+                <VehicleCard key={vehicle.id} vehicle={vehicle} />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16 px-4 text-center bg-surface-container-lowest rounded-2xl border border-surface-variant ambient-shadow-sm w-full">
+              <div className="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mb-4">
+                <span className="material-symbols-outlined text-3xl text-outline">search_off</span>
+              </div>
+              <h3 className="font-headline-sm text-headline-sm text-on-surface mb-2">No vehicles found</h3>
+              <p className="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mb-6">
+                We couldn&apos;t find any vehicles matching your current filters. Try adjusting your search criteria to see more results.
+              </p>
+              <Link href="/browse" className="inline-flex h-10 px-6 bg-primary text-on-primary font-label-bold text-label-bold rounded-lg items-center justify-center hover:opacity-90 transition-opacity">
+                Clear Filters
+              </Link>
+            </div>
+          )}
           <div className="mt-stack-lg">
             <Suspense fallback={<div>Loading pages...</div>}>
               <Pagination totalPages={totalPages} />

@@ -87,7 +87,10 @@ export default async function Page() {
                         <img alt={vehicle.imageAlt} className="w-16 h-12 rounded object-cover border border-outline-variant" src={vehicle.imageUrl} />
                         <div>
                           <div className="font-label-bold text-on-surface">{vehicle.year} {vehicle.make} {vehicle.model}</div>
-                          <div className="text-label-sm text-on-surface-variant mt-0.5">{vehicle.color} • {vehicle.mileage.toLocaleString()} miles</div>
+                          <div className="text-label-sm text-on-surface-variant mt-1 flex items-center gap-1.5">
+                            <div className="w-3 h-3 rounded-full border border-outline-variant" style={{ backgroundColor: vehicle.color }} title={vehicle.color}></div>
+                            <span>• {vehicle.mileage.toLocaleString()} km</span>
+                          </div>
                         </div>
                       </div>
                     </td>

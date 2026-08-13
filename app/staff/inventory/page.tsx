@@ -64,8 +64,9 @@ export default async function Page() {
                 }).format(Number(vehicle.price));
 
                 return (
-                  <article key={vehicle.id} className={`bg-surface-container-lowest rounded-xl ambient-shadow overflow-hidden flex flex-col group hover:shadow-lg transition-shadow duration-300 ${vehicle.status === 'Sold' ? 'opacity-75' : ''}`}>
-                    <div className="relative aspect-[3/2] overflow-hidden bg-surface-variant">
+                  <article key={vehicle.id} className={`bg-surface-container-lowest rounded-xl ambient-shadow overflow-hidden flex flex-col group hover:shadow-lg transition-shadow duration-300 relative ${vehicle.status === 'Sold' ? 'opacity-75' : ''}`}>
+                    <Link href={`/vehicle/${vehicle.id}`} className="absolute inset-0 z-0" aria-label={`View ${vehicle.title}`}></Link>
+                    <div className="relative aspect-[3/2] overflow-hidden bg-surface-variant pointer-events-none">
                       <img alt={vehicle.imageAlt} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${vehicle.status === 'Sold' ? 'grayscale' : ''}`} src={vehicle.imageUrl} />
                       {vehicle.status === 'Sold' && (
                         <div className="absolute inset-0 bg-background/20"></div>
@@ -74,7 +75,7 @@ export default async function Page() {
                         <span className={`${badgeColor} px-3 py-1 rounded font-label-bold text-label-bold shadow-sm`}>{vehicle.status}</span>
                       </div>
                     </div>
-                    <div className="p-4 md:p-6 flex flex-col flex-1 gap-2">
+                    <div className="p-4 md:p-6 flex flex-col flex-1 gap-2 pointer-events-none">
                       <div className="flex justify-between items-start gap-4">
                         <h3 className="font-headline-md text-headline-md text-on-surface line-clamp-2">{vehicle.title}</h3>
                       </div>
@@ -83,8 +84,10 @@ export default async function Page() {
                         <span className="bg-surface-container px-2 py-1 rounded font-label-sm text-label-sm text-on-surface">{vehicle.fuelType}</span>
                         <span className="bg-surface-container px-2 py-1 rounded font-label-sm text-label-sm text-on-surface">{vehicle.mileage.toLocaleString()} km</span>
                       </div>
-                      <div className="mt-auto pt-4 border-t border-outline-variant flex justify-between items-center">
-                        <div className={`font-headline-md text-headline-md font-bold ${vehicle.status === 'Sold' ? 'text-outline line-through' : 'text-primary'}`}>{formattedPrice}</div>
+                    </div>
+                    <div className="px-4 md:px-6 pb-4 md:pb-6 mt-auto">
+                      <div className="pt-4 border-t border-outline-variant flex justify-between items-center relative z-10">
+                        <div className={`font-headline-md text-headline-md font-bold pointer-events-none ${vehicle.status === 'Sold' ? 'text-outline line-through' : 'text-primary'}`}>{formattedPrice}</div>
                         <div className="flex gap-2">
                           <form action={async () => {
                             'use server';
@@ -108,9 +111,9 @@ export default async function Page() {
                             </Link>
                           )}
                           {vehicle.status === 'Sold' && (
-                            <button aria-label="View Details" className="text-on-surface-variant hover:bg-surface-variant w-10 h-10 flex items-center justify-center rounded-full transition-colors">
+                            <Link href={`/vehicle/${vehicle.id}`} aria-label="View Details" className="text-on-surface-variant hover:bg-surface-variant w-10 h-10 flex items-center justify-center rounded-full transition-colors">
                               <span className="material-symbols-outlined">visibility</span>
-                            </button>
+                            </Link>
                           )}
                         </div>
                       </div>
