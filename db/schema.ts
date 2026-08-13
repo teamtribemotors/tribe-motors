@@ -12,6 +12,8 @@ export const vehicles = pgTable('vehicles', {
   bodyType: text('body_type').notNull(), // SUV, Sedan, Hatchback
   owners: text('owners').notNull().default('1st Owner'),
   color: text('color').notNull().default('Unknown'),
+  colorHex: text('color_hex').notNull(),
+  accidentalHistory: boolean('accidental_history').notNull().default(false),
   isCertified: boolean('is_certified').notNull().default(false),
   status: text('status').notNull().default('Draft'), // Draft, Live, Pending, Sold
   title: text('title').notNull(),

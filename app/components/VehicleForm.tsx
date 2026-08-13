@@ -23,6 +23,8 @@ export const vehicleSchema = z.object({
   bodyType: z.string().min(1, "Body type is required"),
   owners: z.string().min(1, "Owners is required"),
   color: z.string().min(1, "Color is required"),
+  colorHex: z.string().min(1, "Color Hex is required"),
+  accidentalHistory: z.preprocess((val) => val === 'true' || val === true, z.boolean()),
   isCertified: z.boolean().default(false),
   status: z.enum(['Draft', 'Live', 'Pending', 'Sold']),
   imageUrl: z.string().url("Invalid image URL"),
@@ -46,14 +48,19 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
     formState: { errors },
   } = useForm<VehicleFormValues>({
     resolver: zodResolver(vehicleSchema) as any,
-    defaultValues: initialData || {
+    defaultValues: initialData ? {
+      ...initialData,
+      accidentalHistory: String(initialData.accidentalHistory || false)
+    } : {
       status: 'Draft',
       isCertified: false,
+      accidentalHistory: 'false',
       owners: '1st Owner',
       fuelType: 'Petrol',
       transmission: 'Automatic',
       bodyType: 'SUV',
-      color: '#000000',
+      color: '',
+      colorHex: '#000000',
       imageUrl: '',
       imageAlt: '',
     },
@@ -204,20 +211,20 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
                   </select>
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-gutter gap-y-6 mt-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-gutter gap-y-6 mt-6">
                 <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Color (Hex)</label>
+                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Color</label>
                   <div className="flex items-center gap-3 bg-surface-container-low border border-outline-variant rounded p-1 focus-within:ring-1 focus-within:ring-primary focus-within:border-primary transition-colors">
                     <input
                       type="color"
                       className="h-10 w-10 rounded cursor-pointer border-0 p-0 bg-transparent flex-shrink-0 ml-1"
-                      value={watch('color') || '#000000'}
-                      onChange={(e) => setValue('color', e.target.value, { shouldValidate: true })}
+                      value={watch('colorHex') || '#000000'}
+                      onChange={(e) => setValue('colorHex', e.target.value, { shouldValidate: true })}
                     />
                     <input
                       type="text"
-                      className="flex-1 bg-transparent border-none focus:outline-none font-body-md text-on-surface uppercase py-2 px-2"
-                      placeholder="#000000"
+                      className="flex-1 bg-transparent border-none focus:outline-none font-body-md text-on-surface py-2 px-2"
+                      placeholder="e.g. Phantom Black"
                       {...register('color')}
                     />
                   </div>
@@ -233,6 +240,20 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
                     <option value="2nd Owner">2nd Owner</option>
                     <option value="3rd Owner">3rd Owner</option>
                   </select>
+                </div>
+                <div>
+                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Accidental History</label>
+                  <div className="flex gap-4 mt-3">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" value="true" className="text-primary focus:ring-primary border-outline" {...register('accidentalHistory')} />
+                      <span className="font-label-bold text-label-bold text-on-surface">Yes</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" value="false" className="text-primary focus:ring-primary border-outline" {...register('accidentalHistory')} />
+                      <span className="font-label-bold text-label-bold text-on-surface">No</span>
+                    </label>
+                  </div>
+                  {errors.accidentalHistory && <p className="text-error text-sm mt-1">{errors.accidentalHistory.message}</p>}
                 </div>
               </div>
               
@@ -337,6 +358,7 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
 
         {/* The imageUrl and imageAlt are now handled in the Media section */}
         <input type="hidden" {...register('imageUrl')} />
+        <input type="hidden" {...register('colorHex')} />
         <button id="hidden-submit" type="submit" disabled={isPending} className="hidden" />
       </form>
     </>
