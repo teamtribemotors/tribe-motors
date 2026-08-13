@@ -24,7 +24,7 @@ These pages are designed for prospective buyers to find, evaluate, and purchase 
 3. **Vehicle Details - Tribe Motors**
    - A dedicated page for a specific vehicle.
    - Displays high-quality images, comprehensive specifications (make, model, year, mileage, transmission, fuel type, price), and a detailed description.
-   - Provides options for customers to contact the seller or initiate a purchase/enquiry.
+   - Provides options for customers to contact the seller, initiate a purchase/enquiry, or click the **Schedule** button to book an available time slot for a visit/test drive.
 
 4. **Unlock Report - Payment**
    - A gateway page where customers can pay to access premium, detailed vehicle inspection and history reports.
@@ -33,6 +33,11 @@ These pages are designed for prospective buyers to find, evaluate, and purchase 
 5. **Payment Success**
    - The confirmation page displayed after a successful transaction (e.g., unlocking a report or placing a deposit).
    - Provides next steps and transaction receipts.
+
+6. **Schedule Visit / Test Drive**
+   - An interactive booking interface accessed via the Schedule button.
+   - Allows customers to select a date and choose from multiple available time slots to inspect or test drive a vehicle.
+   - Sends a confirmation to both the customer and the staff.
 
 ### Admin-Side (Staff Portal)
 
@@ -62,7 +67,11 @@ These pages are restricted to authorized personnel (Admins and Staff) to manage 
     - The data entry interface for adding new vehicles to the platform or updating existing listings.
     - Staff can input all necessary vehicle metadata (price, mileage, features, images) to publish to the client-side Browse page.
 
-7. **Tribe Motors Platform Flow**
+7. **Schedule Management**
+    - A calendar or list view for staff to manage upcoming customer visits and test drives.
+    - Allows staff to view booked slots, and approve, reschedule, or cancel them.
+
+8. **Tribe Motors Platform Flow**
     - Documentation outlining the end-to-end journey of a vehicle on the platform, from acquisition and inspection by staff to listing, customer enquiry, payment, and final fulfillment.
 
 ## Platform Architecture & Workflows
@@ -76,10 +85,14 @@ graph TD
     C -->|View Details| D[Vehicle Details]
     D --> E[Make Enquiry]
     D --> F[Unlock Premium Report]
+    D --> K[Click Schedule Button]
+    K --> L[Select Date & Time Slot]
+    L --> M[Booking Confirmed]
     F --> G[Payment Gateway]
     G --> H[Payment Success]
     H --> I[View Full Service & Accidental History]
     E --> J[Staff Follow-up]
+    M --> J
 ```
 
 ### 2. Admin & Staff Workflow
@@ -89,6 +102,7 @@ graph TD
     A[Staff Dashboard] --> B[Inventory Management]
     A --> C[Service Records]
     A --> D[Fulfillment Queue]
+    A --> E_Admin[Schedule Management]
 
     B --> B1[Create New Listing]
     B --> B2[Edit Draft/Live Vehicle]
@@ -100,6 +114,9 @@ graph TD
     D --> D1[Review Enquiries]
     D --> D2[Process Payments/Orders]
     D --> D3[Schedule Vehicle Handover]
+
+    E_Admin --> E1[View Booked Slots]
+    E_Admin --> E2[Approve/Reschedule Visits]
 ```
 
 ### 3. Data Entities (ER Diagram)
@@ -108,8 +125,10 @@ graph TD
 erDiagram
     VEHICLES ||--o{ ENQUIRIES : receives
     VEHICLES ||--o{ SERVICE_RECORDS : has
+    VEHICLES ||--o{ APPOINTMENTS : scheduled_for
     CUSTOMERS ||--o{ ENQUIRIES : makes
     CUSTOMERS ||--o{ SALES : purchases
+    CUSTOMERS ||--o{ APPOINTMENTS : books
     VEHICLES ||--o| SALES : undergoes
 
     VEHICLES {
@@ -128,5 +147,11 @@ erDiagram
         uuid id PK
         string type
         string status
+    }
+
+    APPOINTMENTS {
+        uuid id PK
+        datetime slot_time
+        string status "Scheduled, Completed, Cancelled"
     }
 ```
