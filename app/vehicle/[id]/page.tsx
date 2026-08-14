@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { formatIndianCurrency } from '../../utils';
 import { db } from '../../../db';
 import { vehicles } from '../../../db/schema';
 import { eq } from 'drizzle-orm';
@@ -34,7 +35,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
               <p className="font-body-lg text-body-lg text-on-surface-variant mt-2">{vehicle.mileage.toLocaleString('en-IN')} km • {vehicle.status}</p>
             </div>
             <div className="text-left md:text-right">
-              <p className="font-display-lg text-[32px] md:text-[40px] text-primary font-bold">₹ {vehicle.price.toLocaleString('en-IN')}</p>
+              <p className="font-display-lg text-[32px] md:text-[40px] text-primary font-bold">{formatIndianCurrency(vehicle.price)}</p>
             </div>
           </div>
 
@@ -112,7 +113,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                   Access a comprehensive 140-point inspection, complete service timeline, and structural integrity verification.
                 </p>
 
-                <Link href={`/vehicle/${id}/unlock-report`} className="w-full bg-primary text-on-primary font-label-bold text-label-bold py-4 rounded-lg flex items-center justify-center gap-3 hover:bg-primary-container transition-colors shadow-md relative overflow-hidden group">
+                <Link href={`/vehicle/${id}/unlock-report`} className="w-full bg-accent-orange text-on-primary font-label-bold text-label-bold py-4 rounded-lg flex items-center justify-center gap-3 hover:opacity-90 transition-opacity shadow-md relative overflow-hidden group">
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#D4AF37]"></div>
                   <span className="material-symbols-outlined text-[#D4AF37]" data-icon="key">key</span>
                   Unlock Report — ₹199
@@ -122,10 +123,10 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
             </div>
 
             {vehicle.isCertified && (
-              <div className="bg-[#0A3622] rounded-xl p-6 border border-[#145C3A] flex items-start gap-4 shadow-ambient-sm">
+              <div className="bg-verified-green rounded-xl p-6 flex items-start gap-4 shadow-ambient-sm">
                 <span className="material-symbols-outlined text-[#D4AF37] text-3xl filled-icon" data-icon="verified">verified</span>
                 <div>
-                  <h4 className="font-label-bold text-label-bold text-white mb-1">Tribe Certified Excellence</h4>
+                  <h4 className="font-label-bold text-label-bold text-surface-bright mb-1">Verified Excellence</h4>
                   <p className="font-body-md text-body-md text-green-100 text-sm">This vehicle has passed our rigorous physical and mechanical vetting process.</p>
                 </div>
               </div>

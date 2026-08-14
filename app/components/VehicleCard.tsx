@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { formatIndianCurrency } from '../utils';
 
 export interface VehicleCardProps {
   id: string;
@@ -13,10 +14,7 @@ export interface VehicleCardProps {
 }
 
 export default function VehicleCard({ vehicle }: { vehicle: VehicleCardProps }) {
-  // Format price if it's a number
-  const formattedPrice = typeof vehicle.price === 'number' 
-    ? new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(vehicle.price)
-    : vehicle.price;
+  const formattedPrice = formatIndianCurrency(vehicle.price);
 
   const formattedMileage = typeof vehicle.mileage === 'number'
     ? `${new Intl.NumberFormat('en-IN').format(vehicle.mileage)} km`
@@ -28,9 +26,9 @@ export default function VehicleCard({ vehicle }: { vehicle: VehicleCardProps }) 
         <div className="relative aspect-[3/2] overflow-hidden bg-surface-variant flex-shrink-0">
           <img className="w-full h-full object-cover" data-alt={vehicle.imageAlt} src={vehicle.imageUrl} alt={vehicle.title} />
           {vehicle.isCertified && (
-            <div className="absolute top-3 left-3 bg-[#228B22] text-on-primary font-label-sm text-label-sm px-2 py-1 rounded flex items-center gap-1 shadow-md">
-              <span className="material-symbols-outlined text-[14px] text-[#D4AF37]">workspace_premium</span>
-              Tribe Certified
+            <div className="absolute top-3 right-3 bg-verified-green text-surface-bright font-label-sm text-label-sm px-3 py-1 rounded-full flex items-center gap-1 shadow-md">
+              <span className="material-symbols-outlined text-[14px] text-surface-bright">workspace_premium</span>
+              Verified
             </div>
           )}
         </div>

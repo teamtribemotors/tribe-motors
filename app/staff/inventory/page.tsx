@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { formatIndianCurrency } from '../../utils';
 import StaffSidebar from '../../components/StaffSidebar';
 import { db } from '../../../db';
 import { vehicles } from '../../../db/schema';
@@ -58,10 +59,7 @@ export default async function Page() {
                 if (vehicle.status === "Draft") badgeColor = "bg-surface-dim text-on-surface";
                 if (vehicle.status === "Sold") badgeColor = "bg-surface-tint text-on-primary";
 
-                const formattedPrice = new Intl.NumberFormat('en-IN', {
-                  style: 'currency', currency: 'INR',
-                  maximumFractionDigits: 0
-                }).format(Number(vehicle.price));
+                const formattedPrice = formatIndianCurrency(vehicle.price);
 
                 return (
                   <article key={vehicle.id} className={`bg-surface-container-lowest rounded-xl ambient-shadow overflow-hidden flex flex-col group hover:shadow-lg transition-shadow duration-300 relative ${vehicle.status === 'Sold' ? 'opacity-75' : ''}`}>
