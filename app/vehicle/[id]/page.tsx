@@ -94,6 +94,10 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 <span className="font-body-md text-body-md text-on-surface">{vehicle.transmission}</span>
               </div>
               <div className="flex justify-between border-b border-outline-variant/20 pb-2">
+                <span className="font-label-md text-label-md text-on-surface-variant">Distance Driven</span>
+                <span className="font-body-md text-body-md text-on-surface">{vehicle.distanceDriven.toLocaleString('en-IN')} km</span>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
                 <span className="font-label-md text-label-md text-on-surface-variant">Body Type</span>
                 <span className="font-body-md text-body-md text-on-surface">{vehicle.bodyType}</span>
               </div>
@@ -122,8 +126,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
               <div className="grid grid-cols-2 gap-stack-sm mb-stack-lg">
                 <div className="flex flex-col bg-surface p-stack-sm rounded border border-outline-variant/20">
                   <span className="material-symbols-outlined text-on-surface-variant mb-1">speed</span>
-                  <span className="font-label-sm text-label-sm text-on-surface-variant">Mileage</span>
-                  <span className="font-body-md text-body-md font-semibold text-on-surface">{vehicle.mileage.toLocaleString('en-IN')} km</span>
+                  <span className="font-label-sm text-label-sm text-on-surface-variant">Distance</span>
+                  <span className="font-body-md text-body-md font-semibold text-on-surface">{vehicle.distanceDriven.toLocaleString('en-IN')} km</span>
                 </div>
                 <div className="flex flex-col bg-surface p-stack-sm rounded border border-outline-variant/20">
                   <span className="material-symbols-outlined text-on-surface-variant mb-1">settings</span>

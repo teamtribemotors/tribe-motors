@@ -7,6 +7,7 @@ export const vehicles = pgTable('vehicles', {
   year: integer('year').notNull(),
   price: integer('price').notNull(),
   mileage: integer('mileage').notNull(),
+  distanceDriven: integer('distance_driven').notNull().default(0),
   fuelType: text('fuel_type').notNull(), // Petrol, Diesel, EV, Hybrid
   transmission: text('transmission').notNull(), // Automatic, Manual, DCT
   bodyType: text('body_type').notNull(), // SUV, Sedan, Hatchback

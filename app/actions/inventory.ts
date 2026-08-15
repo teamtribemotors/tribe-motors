@@ -25,6 +25,7 @@ export async function bulkInsertVehicles(vehiclesData: any[]) {
     year: v.year ? parseInt(v.year) : new Date().getFullYear(),
     price: v.price ? parseInt(v.price) : 0,
     mileage: v.mileage ? parseInt(v.mileage) : 0,
+    distanceDriven: v.distanceDriven ? parseInt(v.distanceDriven) : 0,
     fuelType: v.fuelType || 'Petrol',
     transmission: v.transmission || 'Automatic',
     bodyType: v.bodyType || 'Sedan',

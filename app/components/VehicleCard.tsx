@@ -6,6 +6,7 @@ export interface VehicleCardProps {
   title: string;
   price: number | string;
   mileage: number | string;
+  distanceDriven?: number | string;
   fuelType: string;
   transmission: string;
   isCertified: boolean;
@@ -17,9 +18,10 @@ export interface VehicleCardProps {
 export default function VehicleCard({ vehicle }: { vehicle: VehicleCardProps }) {
   const formattedPrice = formatIndianCurrency(vehicle.price);
 
-  const formattedMileage = typeof vehicle.mileage === 'number'
-    ? `${new Intl.NumberFormat('en-IN').format(vehicle.mileage)} km`
-    : vehicle.mileage;
+  const displayDistance = vehicle.distanceDriven ?? vehicle.mileage;
+  const formattedDistance = typeof displayDistance === 'number'
+    ? `${new Intl.NumberFormat('en-IN').format(displayDistance)} km`
+    : displayDistance;
 
   return (
     <Link href={`/vehicle/${vehicle.id}`} className="block h-full">
@@ -48,7 +50,7 @@ export default function VehicleCard({ vehicle }: { vehicle: VehicleCardProps }) 
           <div className="mt-auto pt-4 border-t border-outline-variant/20 grid grid-cols-2 gap-y-2 gap-x-4">
             <div className="flex items-center gap-2 text-on-surface-variant">
               <span className="material-symbols-outlined text-[18px]" data-icon="speed">speed</span>
-              <span className="font-label-sm text-label-sm">{formattedMileage}</span>
+              <span className="font-label-sm text-label-sm">{formattedDistance}</span>
             </div>
             <div className="flex items-center gap-2 text-on-surface-variant">
               <span className="material-symbols-outlined text-[18px]" data-icon="settings">settings</span>

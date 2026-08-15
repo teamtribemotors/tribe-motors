@@ -18,6 +18,7 @@ export const vehicleSchema = z.object({
   year: z.coerce.number().min(1900, "Invalid year").max(new Date().getFullYear(), "Year cannot be in the future"),
   price: z.coerce.number().min(0, "Price must be positive"),
   mileage: z.coerce.number().min(0, "Mileage must be positive"),
+  distanceDriven: z.coerce.number().min(0, "Distance driven must be positive"),
   fuelType: z.string().min(1, "Fuel type is required"),
   transmission: z.string().min(1, "Transmission is required"),
   bodyType: z.string().min(1, "Body type is required"),
@@ -130,7 +131,7 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
   const nextStep = async () => {
     let fieldsToValidate: any[] = [];
     if (currentStep === 1) {
-      fieldsToValidate = ['make', 'model', 'year', 'bodyType', 'mileage', 'transmission', 'fuelType', 'color', 'colorHex', 'owners', 'accidentalHistory'];
+      fieldsToValidate = ['make', 'model', 'year', 'bodyType', 'mileage', 'distanceDriven', 'transmission', 'fuelType', 'color', 'colorHex', 'owners', 'accidentalHistory'];
     } else if (currentStep === 2) {
       fieldsToValidate = ['description', 'price', 'isCertified', 'status'];
     }
@@ -224,7 +225,7 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
                     <h3 className="font-headline-md text-headline-md mb-6 pb-2 border-b border-outline-variant/30 text-on-surface">Specifications</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div className="space-y-2">
-                        <label className="font-label-md text-label-md text-on-surface-variant block">Mileage (km)</label>
+                        <label className="font-label-md text-label-md text-on-surface-variant block">Mileage (km/l or equivalent)</label>
                         <input
                             className="w-full p-4 bg-surface-container-lowest border border-outline-variant rounded focus:outline-none focus:border-primary font-body-md text-body-md shadow-sm"
                             placeholder="0"
@@ -232,6 +233,16 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
                             {...register('mileage')}
                         />
                         {errors.mileage && <p className="text-error text-sm mt-1">{errors.mileage.message as string}</p>}
+                        </div>
+                        <div className="space-y-2">
+                        <label className="font-label-md text-label-md text-on-surface-variant block">Distance Driven (km)</label>
+                        <input
+                            className="w-full p-4 bg-surface-container-lowest border border-outline-variant rounded focus:outline-none focus:border-primary font-body-md text-body-md shadow-sm"
+                            placeholder="0"
+                            type="number"
+                            {...register('distanceDriven')}
+                        />
+                        {errors.distanceDriven && <p className="text-error text-sm mt-1">{errors.distanceDriven.message as string}</p>}
                         </div>
                         <div className="space-y-2">
                         <label className="font-label-md text-label-md text-on-surface-variant block">Transmission</label>
