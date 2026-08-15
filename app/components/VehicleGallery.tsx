@@ -315,7 +315,7 @@ function FullscreenImageSlide({ img, idx, activeIndex, imageAlt }: { img: ImageO
         centerOnInit
         disabled={idx !== activeIndex}
         wheel={{ wheelDisabled: true }}
-        onTransformed={(ref) => setIsZoomed(ref.state.scale > 1)}
+        onTransform={(ref: any) => setIsZoomed(ref.state.scale > 1)}
         panning={{ disabled: !isZoomed }}
       >
         <TransformComponent wrapperStyle={{ width: '100%', height: '100%' }} contentStyle={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
