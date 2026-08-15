@@ -61,6 +61,22 @@ export default function VehicleGallery({ images, fallbackImageUrl, imageAlt }: V
   const goNext = () => setActiveIndex((prev) => (prev + 1) % displayedImages.length);
   const goPrev = () => setActiveIndex((prev) => (prev - 1 + displayedImages.length) % displayedImages.length);
 
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+  const onTouchMove = (e: React.TouchEvent) => setTouchEnd(e.targetTouches[0].clientX);
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    if (distance > minSwipeDistance) goNext();
+    if (distance < -minSwipeDistance) goPrev();
+  };
+
   return (
     <div className="flex flex-col gap-stack-sm">
       {/* Sections Tab */}
@@ -93,7 +109,12 @@ export default function VehicleGallery({ images, fallbackImageUrl, imageAlt }: V
       )}
 
       {/* Main Image Area */}
-      <div className="w-full aspect-[16/9] bg-[#1a1a1a] rounded-xl overflow-hidden relative group shadow-sm border border-outline-variant/20 cursor-pointer">
+      <div 
+        className="w-full aspect-[16/9] bg-[#1a1a1a] rounded-xl overflow-hidden relative group shadow-sm border border-outline-variant/20 cursor-pointer"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
         <img 
           className="w-full h-full object-contain transition-opacity duration-300" 
           src={currentImage.url} 
@@ -105,19 +126,21 @@ export default function VehicleGallery({ images, fallbackImageUrl, imageAlt }: V
           <>
             <button 
               onClick={(e) => { e.stopPropagation(); goPrev(); }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-primary text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all backdrop-blur-sm"
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-primary text-white rounded-full flex items-center justify-center opacity-70 md:opacity-0 md:group-hover:opacity-100 hover:!opacity-100 transition-all backdrop-blur-sm z-10"
+              aria-label="Previous image"
             >
               <span className="material-symbols-outlined">chevron_left</span>
             </button>
             <button 
               onClick={(e) => { e.stopPropagation(); goNext(); }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-primary text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all backdrop-blur-sm"
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-primary text-white rounded-full flex items-center justify-center opacity-70 md:opacity-0 md:group-hover:opacity-100 hover:!opacity-100 transition-all backdrop-blur-sm z-10"
+              aria-label="Next image"
             >
               <span className="material-symbols-outlined">chevron_right</span>
             </button>
             
             {/* Image Counter */}
-            <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm text-white px-3 py-1 rounded-full font-label-sm text-label-sm tracking-wide">
+            <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm text-white px-3 py-1 rounded-full font-label-sm text-label-sm tracking-wide z-10">
               {activeIndex + 1} / {displayedImages.length}
             </div>
           </>

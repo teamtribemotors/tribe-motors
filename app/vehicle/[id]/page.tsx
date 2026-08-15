@@ -22,7 +22,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
       <Navbar />
 
-      <main className="flex-grow w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop pt-stack-lg pb-28 md:pb-stack-lg flex flex-col md:grid md:grid-cols-12 gap-y-stack-lg md:gap-gutter">
+      <main className="relative z-20 flex-grow w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop pt-stack-lg pb-28 md:pb-stack-lg flex flex-col md:grid md:grid-cols-12 gap-y-stack-lg md:gap-gutter">
         {/* Breadcrumbs (Spans full width) */}
         <div className="order-1 md:col-span-12 mb-stack-sm pt-2">
           <nav aria-label="Breadcrumb" className="flex text-on-surface-variant font-body-md text-sm">
