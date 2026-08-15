@@ -28,7 +28,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           <nav aria-label="Breadcrumb" className="flex text-on-surface-variant font-body-md text-sm">
             <ol className="inline-flex flex-wrap items-center gap-2">
               <li className="inline-flex items-center">
-                <Link className="hover:text-primary transition-colors" href="/browse">Inventory</Link>
+                <Link className="hover:text-primary transition-colors" href="/browse">Garage</Link>
               </li>
               <li>
                 <span className="text-on-surface-variant/40">/</span>
