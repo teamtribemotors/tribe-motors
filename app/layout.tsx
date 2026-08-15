@@ -19,6 +19,14 @@ export const metadata: Metadata = {
   description: "Premium Pre-Owned Excellence",
 };
 
+import type { Viewport } from "next";
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
