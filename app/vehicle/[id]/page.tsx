@@ -24,23 +24,23 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
       <main className="flex-grow w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop pt-stack-lg pb-28 md:pb-stack-lg flex flex-col md:grid md:grid-cols-12 gap-y-stack-lg md:gap-gutter">
         {/* Breadcrumbs (Spans full width) */}
-        <div className="order-1 md:col-span-12 mb-stack-sm">
-          <nav aria-label="Breadcrumb" className="flex text-on-surface-variant font-label-sm text-label-sm">
-            <ol className="inline-flex flex-wrap items-center space-x-1 md:space-x-2">
+        <div className="order-1 md:col-span-12 mb-stack-sm pt-2">
+          <nav aria-label="Breadcrumb" className="flex text-on-surface-variant font-body-md text-sm">
+            <ol className="inline-flex flex-wrap items-center gap-2">
               <li className="inline-flex items-center">
                 <Link className="hover:text-primary transition-colors" href="/browse">Inventory</Link>
               </li>
-              <li className="">
-                <div className="flex items-center">
-                  <span className="material-symbols-outlined text-[16px] mx-1">chevron_right</span>
-                  <Link className="hover:text-primary transition-colors" href="/browse">{vehicle.make}</Link>
-                </div>
+              <li>
+                <span className="text-on-surface-variant/40">/</span>
               </li>
-              <li aria-current="page" className="">
-                <div className="flex items-center">
-                  <span className="material-symbols-outlined text-[16px] mx-1">chevron_right</span>
-                  <span className="text-on-surface">{vehicle.model}</span>
-                </div>
+              <li className="inline-flex items-center">
+                <Link className="hover:text-primary transition-colors" href={`/browse?make=${vehicle.make}`}>{vehicle.make}</Link>
+              </li>
+              <li>
+                <span className="text-on-surface-variant/40">/</span>
+              </li>
+              <li aria-current="page" className="inline-flex items-center">
+                <span className="text-on-surface font-medium">{vehicle.model}</span>
               </li>
             </ol>
           </nav>
