@@ -4,6 +4,7 @@ import Footer from '../components/Footer';
 import VehicleCard from '../components/VehicleCard';
 import Pagination from '../components/Pagination';
 import Filters from '../components/Filters';
+import SortDropdown from '../components/SortDropdown';
 import { db } from '../../db';
 import { vehicles } from '../../db/schema';
 import { and, gte, lte, eq, count, sql, asc, desc } from 'drizzle-orm';
@@ -43,48 +44,76 @@ export default async function Page({
   return (
     <>
       <Navbar />
-      <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg flex flex-col md:flex-row gap-gutter">
-
-        <aside className="w-full md:w-64 flex-shrink-0">
-          <Suspense fallback={<div className="p-4">Loading filters...</div>}>
-            <Filters />
+      <main className="flex-grow w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-stack-xl">
+        {/* Page Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-stack-lg gap-4">
+          <div>
+            <h1 className="text-display-lg font-display-lg text-on-background mb-2">Browse Cars</h1>
+            <p className="text-body-lg font-body-lg text-on-surface-variant">{totalCount} Verified Vehicles Found</p>
+          </div>
+          <Suspense fallback={null}>
+            <SortDropdown />
           </Suspense>
-        </aside>
+        </div>
 
-        <section className="flex-grow">
-          <div className="flex justify-between items-end mb-stack-md">
-            <div>
-              <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">Available Vehicles</h1>
-              <p className="font-body-md text-body-md text-on-surface-variant mt-1">Showing {totalCount} premium pre-owned cars</p>
-            </div>
-          </div>
+        {/* Active Filters */}
+        <div className="flex flex-wrap gap-2 mb-stack-md">
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full trust-badge font-label-sm text-label-sm">
+            Make: Porsche
+            <button className="hover:opacity-75 focus:outline-none flex items-center">
+              <span className="material-symbols-outlined text-[16px]" data-icon="close">close</span>
+            </button>
+          </span>
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full trust-badge font-label-sm text-label-sm">
+            Year: 2020+
+            <button className="hover:opacity-75 focus:outline-none flex items-center">
+              <span className="material-symbols-outlined text-[16px]" data-icon="close">close</span>
+            </button>
+          </span>
+          <button className="text-primary font-label-md hover:underline ml-2">Clear All</button>
+        </div>
 
-          {data.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-              {data.map((vehicle) => (
-                <VehicleCard key={vehicle.id} vehicle={vehicle} />
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-16 px-4 text-center bg-surface-container-lowest rounded-2xl border border-surface-variant ambient-shadow-sm w-full">
-              <div className="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mb-4">
-                <span className="material-symbols-outlined text-3xl text-outline">search_off</span>
-              </div>
-              <h3 className="font-headline-sm text-headline-sm text-on-surface mb-2">No vehicles found</h3>
-              <p className="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mb-6">
-                We couldn&apos;t find any vehicles matching your current filters. Try adjusting your search criteria to see more results.
-              </p>
-              <Link href="/browse" className="inline-flex h-10 px-6 bg-primary text-on-primary font-label-bold text-label-bold rounded-lg items-center justify-center hover:opacity-90 transition-opacity">
-                Clear Filters
-              </Link>
-            </div>
-          )}
-          <div className="mt-stack-lg">
-            <Suspense fallback={<div>Loading pages...</div>}>
-              <Pagination totalPages={totalPages} />
+        {/* Two Column Layout */}
+        <div className="flex flex-col md:flex-row gap-gutter">
+          {/* Sidebar (Filters) */}
+          <aside className="w-full md:w-1/4 shrink-0">
+            <Suspense fallback={<div className="p-4">Loading filters...</div>}>
+              <Filters />
             </Suspense>
+          </aside>
+
+          {/* Main Content (Grid) */}
+          <div className="w-full md:w-3/4">
+            {data.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {data.map((vehicle) => (
+                  <VehicleCard key={vehicle.id} vehicle={vehicle} />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-16 px-4 text-center bg-surface-container-lowest rounded-2xl border border-surface-variant ambient-shadow-sm w-full">
+                <div className="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mb-4">
+                  <span className="material-symbols-outlined text-3xl text-outline">search_off</span>
+                </div>
+                <h3 className="font-headline-sm text-headline-sm text-on-surface mb-2">No vehicles found</h3>
+                <p className="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mb-6">
+                  We couldn&apos;t find any vehicles matching your current filters. Try adjusting your search criteria to see more results.
+                </p>
+                <Link href="/browse" className="inline-flex h-10 px-6 bg-primary text-on-primary font-label-bold text-label-bold rounded-lg items-center justify-center hover:opacity-90 transition-opacity">
+                  Clear Filters
+                </Link>
+              </div>
+            )}
+            
+            {/* Pagination */}
+            <div className="mt-stack-xl flex justify-center">
+              <button className="h-12 px-8 rounded-lg bg-surface-bright border-2 border-on-background text-on-background font-label-md hover:bg-surface-container transition-colors shadow-sm flex items-center gap-2">
+                Load More Vehicles
+                <span className="material-symbols-outlined text-[20px]" data-icon="expand_more">expand_more</span>
+              </button>
+            </div>
           </div>
-        </section>
+        </div>
       </main>
 
       <Footer />

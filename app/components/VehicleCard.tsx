@@ -23,39 +23,42 @@ export default function VehicleCard({ vehicle }: { vehicle: VehicleCardProps }) 
 
   return (
     <Link href={`/vehicle/${vehicle.id}`} className="block h-full">
-      <article className="bg-surface-container-lowest rounded-lg border border-secondary-container/50 overflow-hidden hover:shadow-lg transition-shadow duration-300 group cursor-pointer flex flex-col h-full">
-        <div className="relative h-64 overflow-hidden">
-          <img 
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+      <article className="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/30 group hover:shadow-lg transition-all duration-300 relative flex flex-col h-full cursor-pointer">
+        {vehicle.isCertified && (
+          <div className="absolute top-4 right-4 z-10 trust-badge px-3 py-1 rounded-full text-label-sm font-label-sm flex items-center gap-1 shadow-sm">
+            <span className="material-symbols-outlined text-[16px]" data-icon="verified">verified</span>
+            Verified
+          </div>
+        )}
+        <div className="relative w-full aspect-[4/3] bg-surface-variant overflow-hidden">
+          <div 
+            className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500" 
             data-alt={vehicle.imageAlt} 
-            src={vehicle.imageUrl} 
-            alt={vehicle.title} 
+            style={{ backgroundImage: `url('${vehicle.imageUrl}')` }}
           />
-          {vehicle.isCertified && (
-            <div className="absolute top-4 right-4">
-              <span className="trust-badge">
-                <span className="material-symbols-outlined text-[14px]">verified</span> Verified
-              </span>
-            </div>
-          )}
         </div>
-        <div className="p-6 flex flex-col flex-grow">
-          <h3 className="font-headline-md text-headline-md text-on-surface mb-2">{vehicle.title}</h3>
-          <p className="font-display-lg text-headline-md text-primary mb-6">{formattedPrice}</p>
-          <ul className="flex flex-col gap-3 mt-auto border-t border-secondary-container pt-4">
-            <li className="flex justify-between items-center text-sm">
-              <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Year</span>
-              <span className="font-body-md text-body-md text-on-surface">{vehicle.year || 'N/A'}</span>
-            </li>
-            <li className="flex justify-between items-center text-sm">
-              <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Transmission</span>
-              <span className="font-body-md text-body-md text-on-surface">{vehicle.transmission}</span>
-            </li>
-            <li className="flex justify-between items-center text-sm">
-              <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Mileage</span>
-              <span className="font-body-md text-body-md text-on-surface">{formattedMileage}</span>
-            </li>
-          </ul>
+        <div className="p-5 flex flex-col flex-grow">
+          <div className="mb-3">
+            <h3 className="text-headline-md font-headline-md text-on-background leading-tight">{vehicle.title}</h3>
+            <p className="text-body-md text-on-surface-variant mt-1">{vehicle.year || 'N/A'}</p>
+          </div>
+          <div className="mb-4">
+            <p className="text-display-sm font-headline-lg text-primary">{formattedPrice}</p>
+          </div>
+          <div className="mt-auto pt-4 border-t border-outline-variant/20 grid grid-cols-2 gap-y-2 gap-x-4">
+            <div className="flex items-center gap-2 text-on-surface-variant">
+              <span className="material-symbols-outlined text-[18px]" data-icon="speed">speed</span>
+              <span className="font-label-sm text-label-sm">{formattedMileage}</span>
+            </div>
+            <div className="flex items-center gap-2 text-on-surface-variant">
+              <span className="material-symbols-outlined text-[18px]" data-icon="settings">settings</span>
+              <span className="font-label-sm text-label-sm">{vehicle.transmission}</span>
+            </div>
+            <div className="flex items-center gap-2 text-on-surface-variant col-span-2">
+              <span className="material-symbols-outlined text-[18px]" data-icon="local_gas_station">local_gas_station</span>
+              <span className="font-label-sm text-label-sm">{vehicle.fuelType}</span>
+            </div>
+          </div>
         </div>
       </article>
     </Link>
