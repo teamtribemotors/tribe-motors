@@ -7,8 +7,7 @@ import Filters from '../components/Filters';
 import SortDropdown from '../components/SortDropdown';
 import { db } from '../../db';
 import { vehicles } from '../../db/schema';
-import { and, gte, lte, eq, count, sql, asc, desc } from 'drizzle-orm';
-
+import { and, gte, lte, eq, count, asc, desc, inArray } from 'drizzle-orm';
 import { Suspense } from 'react';
 
 export default async function Page({
@@ -21,6 +20,8 @@ export default async function Page({
   const maxPrice = resolvedSearchParams.maxPrice ? Number(resolvedSearchParams.maxPrice) : undefined;
   const year = resolvedSearchParams.year ? Number(resolvedSearchParams.year) : undefined;
   const sort = typeof resolvedSearchParams.sort === 'string' ? resolvedSearchParams.sort : undefined;
+  const makeParam = resolvedSearchParams.make as string;
+  const selectedMakes = makeParam ? makeParam.split(',').filter(Boolean) : [];
 
   const page = resolvedSearchParams.page ? Number(resolvedSearchParams.page) : 1;
   const pageSize = 6;
@@ -30,6 +31,7 @@ export default async function Page({
   if (minPrice) filters.push(gte(vehicles.price, minPrice));
   if (maxPrice) filters.push(lte(vehicles.price, maxPrice));
   if (year) filters.push(eq(vehicles.year, year));
+  if (selectedMakes.length > 0) filters.push(inArray(vehicles.make, selectedMakes));
 
   // Determine Order By
   let orderBy = [desc(vehicles.createdAt)];
@@ -41,6 +43,36 @@ export default async function Page({
   const totalCountResult = await db.select({ count: count() }).from(vehicles).where(and(...filters));
   const totalCount = totalCountResult[0].count;
   const totalPages = Math.ceil(totalCount / pageSize);
+
+  // Fetch available makes
+  const makesCountResult = await db.select({ make: vehicles.make, count: count() }).from(vehicles).groupBy(vehicles.make);
+  const availableMakes = makesCountResult.map(row => ({ name: row.make, count: row.count }));
+
+  // Helper for active filters
+  const currentParams = new URLSearchParams();
+  Object.entries(resolvedSearchParams).forEach(([k, v]) => {
+    if (v) currentParams.set(k, String(v));
+  });
+
+  const getClearUrl = (keyToClear: string, valueToClear?: string) => {
+    const params = new URLSearchParams(currentParams.toString());
+    if (valueToClear && keyToClear === 'make') {
+      const current = params.get('make')?.split(',') || [];
+      const updated = current.filter(m => m !== valueToClear);
+      if (updated.length > 0) {
+        params.set('make', updated.join(','));
+      } else {
+        params.delete('make');
+      }
+    } else {
+      params.delete(keyToClear);
+    }
+    params.delete('page');
+    return `/browse?${params.toString()}`;
+  };
+
+  const hasActiveFilters = minPrice || maxPrice || year || selectedMakes.length > 0;
+
   return (
     <>
       <Navbar />
@@ -57,28 +89,43 @@ export default async function Page({
         </div>
 
         {/* Active Filters */}
-        <div className="flex flex-wrap gap-2 mb-stack-md">
-          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full trust-badge font-label-sm text-label-sm">
-            Make: Porsche
-            <button className="hover:opacity-75 focus:outline-none flex items-center">
-              <span className="material-symbols-outlined text-[16px]" data-icon="close">close</span>
-            </button>
-          </span>
-          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full trust-badge font-label-sm text-label-sm">
-            Year: 2020+
-            <button className="hover:opacity-75 focus:outline-none flex items-center">
-              <span className="material-symbols-outlined text-[16px]" data-icon="close">close</span>
-            </button>
-          </span>
-          <button className="text-primary font-label-md hover:underline ml-2">Clear All</button>
-        </div>
+        {hasActiveFilters && (
+          <div className="flex flex-wrap gap-2 mb-stack-md items-center">
+            {selectedMakes.map(make => (
+              <Link key={`make-${make}`} href={getClearUrl('make', make)} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full trust-badge font-label-sm text-label-sm hover:opacity-80 transition-opacity">
+                Make: {make}
+                <span className="material-symbols-outlined text-[16px]" data-icon="close">close</span>
+              </Link>
+            ))}
+            {minPrice && (
+              <Link href={getClearUrl('minPrice')} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full trust-badge font-label-sm text-label-sm hover:opacity-80 transition-opacity">
+                Min Price: ₹{minPrice.toLocaleString()}
+                <span className="material-symbols-outlined text-[16px]" data-icon="close">close</span>
+              </Link>
+            )}
+            {maxPrice && (
+              <Link href={getClearUrl('maxPrice')} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full trust-badge font-label-sm text-label-sm hover:opacity-80 transition-opacity">
+                Max Price: ₹{maxPrice.toLocaleString()}
+                <span className="material-symbols-outlined text-[16px]" data-icon="close">close</span>
+              </Link>
+            )}
+            {year && (
+              <Link href={getClearUrl('year')} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full trust-badge font-label-sm text-label-sm hover:opacity-80 transition-opacity">
+                Year: {year}
+                <span className="material-symbols-outlined text-[16px]" data-icon="close">close</span>
+              </Link>
+            )}
+            
+            <Link href="/browse" className="text-primary font-label-md hover:underline ml-2">Clear All</Link>
+          </div>
+        )}
 
         {/* Two Column Layout */}
         <div className="flex flex-col md:flex-row gap-gutter">
           {/* Sidebar (Filters) */}
           <aside className="w-full md:w-1/4 shrink-0">
             <Suspense fallback={<div className="p-4">Loading filters...</div>}>
-              <Filters />
+              <Filters availableMakes={availableMakes} />
             </Suspense>
           </aside>
 
@@ -106,11 +153,10 @@ export default async function Page({
             )}
             
             {/* Pagination */}
-            <div className="mt-stack-xl flex justify-center">
-              <button className="h-12 px-8 rounded-lg bg-surface-bright border-2 border-on-background text-on-background font-label-md hover:bg-surface-container transition-colors shadow-sm flex items-center gap-2">
-                Load More Vehicles
-                <span className="material-symbols-outlined text-[20px]" data-icon="expand_more">expand_more</span>
-              </button>
+            <div className="mt-stack-xl">
+              <Suspense fallback={null}>
+                <Pagination totalPages={totalPages} />
+              </Suspense>
             </div>
           </div>
         </div>

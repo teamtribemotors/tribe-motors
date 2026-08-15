@@ -4,6 +4,7 @@ import { useQueryState } from 'nuqs';
 
 export default function SortDropdown() {
   const [sort, setSort] = useQueryState('sort');
+  const [page, setPage] = useQueryState('page');
 
   return (
     <div className="flex items-center gap-4 self-end md:self-auto w-full md:w-auto">
@@ -13,7 +14,10 @@ export default function SortDropdown() {
           className="w-full appearance-none bg-surface-container-lowest border border-outline-variant rounded-lg py-3 pl-4 pr-10 text-body-md font-body-md text-on-background focus:ring-1 focus:ring-primary focus:border-primary" 
           id="sort"
           value={sort || ''}
-          onChange={(e) => setSort(e.target.value || null)}
+          onChange={(e) => {
+            setSort(e.target.value || null);
+            setPage(null);
+          }}
         >
           <option value="">Sort by: Newest</option>
           <option value="price_asc">Price: Low to High</option>
