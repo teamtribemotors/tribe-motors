@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, integer, boolean, uuid, index } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, integer, boolean, uuid, index, jsonb } from 'drizzle-orm/pg-core';
 
 export const vehicles = pgTable('vehicles', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -21,6 +21,7 @@ export const vehicles = pgTable('vehicles', {
   description: text('description'),
   imageUrl: text('image_url').notNull(),
   imageAlt: text('image_alt').notNull(),
+  images: jsonb('images').default('[]'),
   customerId: uuid('customer_id'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),

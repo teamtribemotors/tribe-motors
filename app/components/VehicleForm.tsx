@@ -29,17 +29,40 @@ export const vehicleSchema = z.object({
   accidentalHistory: z.preprocess((val) => val === 'true' || val === true, z.boolean()),
   isCertified: z.boolean().default(false),
   status: z.enum(['Draft', 'Live', 'Pending', 'Sold']),
-  imageUrl: z.string().url("Invalid image URL"),
-  imageAlt: z.string().min(1, "Image Alt is required"),
+  imageUrl: z.string().optional(),
+  imageAlt: z.string().optional(),
   description: z.string().optional(),
+  images: z.string().optional(), // Will store JSONified array
 });
 
 type VehicleFormValues = z.infer<typeof vehicleSchema>;
+
+type VehicleImage = {
+    id: string;
+    url: string;
+    alt: string;
+    section: string;
+    isMain: boolean;
+};
 
 export default function VehicleForm({ initialData }: { initialData?: any }) {
   const [isPending, startTransition] = useTransition();
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
+
+  // Media Manager State
+  const initialImages = initialData?.images || [];
+  const [images, setImages] = useState<VehicleImage[]>(typeof initialImages === 'string' ? JSON.parse(initialImages) : initialImages);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [newSectionName, setNewSectionName] = useState('');
+  
+  // Live Preview State
+  const [previewImageIndex, setPreviewImageIndex] = useState(0);
+
+  const sections = Array.from(new Set(images.map(img => img.section).filter(Boolean)));
+  if (!sections.includes('Uncategorized') && images.some(img => !img.section)) {
+      sections.push('Uncategorized');
+  }
 
   const {
     register,
@@ -53,7 +76,8 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
     mode: 'onChange',
     defaultValues: initialData ? {
       ...initialData,
-      accidentalHistory: String(initialData.accidentalHistory || false)
+      accidentalHistory: String(initialData.accidentalHistory || false),
+      images: typeof initialData.images === 'string' ? initialData.images : JSON.stringify(initialData.images || [])
     } : {
       status: 'Draft',
       isCertified: false,
@@ -72,37 +96,101 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
       price: 0,
       mileage: 0,
       distanceDriven: 0,
+      images: '[]'
     },
   });
 
   const formValues = watch();
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, section: string = 'Uncategorized') => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
 
     setIsUploading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-
+    
     try {
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await res.json();
-      
-      if (res.ok && data.url) {
-        setValue('imageUrl', data.url, { shouldValidate: true });
-        toast.success('Image uploaded successfully');
-      } else {
-        toast.error(data.error || 'Failed to upload image');
-      }
+        const newImages = [...images];
+        
+        for (const file of files) {
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            const data = await res.json();
+            
+            if (res.ok && data.url) {
+                newImages.push({
+                    id: Math.random().toString(36).substring(7),
+                    url: data.url,
+                    alt: formValues.make + ' ' + formValues.model,
+                    section: section,
+                    isMain: newImages.length === 0 // First image becomes main automatically
+                });
+            } else {
+                toast.error(data.error || 'Failed to upload image');
+            }
+        }
+        
+        setImages(newImages);
+        setValue('images', JSON.stringify(newImages), { shouldValidate: true });
+        
+        // Update legacy imageUrl for backwards compatibility
+        const mainImage = newImages.find(img => img.isMain) || newImages[0];
+        if (mainImage) {
+            setValue('imageUrl', mainImage.url);
+            setValue('imageAlt', mainImage.alt);
+        }
+        
+        toast.success('Images uploaded successfully');
     } catch (err) {
       toast.error('An error occurred during upload');
     } finally {
       setIsUploading(false);
     }
+  };
+
+  const handleSetMainImage = (id: string) => {
+      const updated = images.map(img => ({ ...img, isMain: img.id === id }));
+      setImages(updated);
+      setValue('images', JSON.stringify(updated), { shouldValidate: true });
+      
+      const mainImage = updated.find(img => img.isMain);
+      if (mainImage) {
+          setValue('imageUrl', mainImage.url);
+          setValue('imageAlt', mainImage.alt);
+      }
+  };
+
+  const handleDeleteImage = (id: string) => {
+      const updated = images.filter(img => img.id !== id);
+      if (updated.length > 0 && !updated.some(img => img.isMain)) {
+          updated[0].isMain = true; // ensure one main image exists
+      }
+      setImages(updated);
+      setValue('images', JSON.stringify(updated), { shouldValidate: true });
+      
+      const mainImage = updated.find(img => img.isMain);
+      if (mainImage) {
+          setValue('imageUrl', mainImage.url);
+          setValue('imageAlt', mainImage.alt);
+      } else {
+          setValue('imageUrl', '');
+          setValue('imageAlt', '');
+      }
+  };
+  
+  const handleAddSection = () => {
+      if (!newSectionName.trim()) return;
+      if (sections.includes(newSectionName.trim())) {
+          toast.error("Section already exists");
+          return;
+      }
+      // Just add a dummy image to create the section or we can just set active section and the first upload will create it
+      setActiveSection(newSectionName.trim());
+      setNewSectionName('');
   };
 
   const onSubmit = (data: any) => {
@@ -128,6 +216,9 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
       setValue('status', 'Draft');
       handleSubmit(onSubmit)();
   };
+
+  // Helper to get images for preview carousel
+  const allPreviewImages = images.length > 0 ? images : (formValues.imageUrl ? [{ url: formValues.imageUrl, alt: formValues.imageAlt, isMain: true, section: '', id: '1' }] : []);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-[1600px] mx-auto pb-32" id="vehicle-form">
@@ -337,58 +428,100 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
                 </div>
             </section>
 
-            {/* Media & Upload Section */}
+            {/* Advanced Media Manager Section */}
             <section className="bg-surface rounded-2xl border border-outline-variant/30 p-8 shadow-sm relative overflow-hidden group">
                 <div className="absolute top-0 left-0 w-1 h-full bg-primary origin-top transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300"></div>
-                <h3 className="font-headline-md text-headline-md mb-8 text-on-surface flex items-center gap-3">
-                    <span className="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">photo_camera</span>
-                    Media
-                </h3>
-                
-                <div className="space-y-6">
-                    <div className="space-y-2 group/input">
-                        <label className="font-label-md text-label-md text-on-surface-variant block transition-colors group-focus-within/input:text-primary">Vehicle Image</label>
-                        
-                        <div className="relative w-full aspect-[3/1] bg-surface-container-lowest border-2 border-dashed border-outline-variant/60 hover:border-primary/50 rounded-2xl flex flex-col items-center justify-center transition-all overflow-hidden group/upload">
-                            {watch('imageUrl') ? (
-                                <>
-                                    <img src={watch('imageUrl')} alt="Preview" className="w-full h-full object-cover" />
-                                    <div className="absolute inset-0 bg-inverse-surface/60 opacity-0 group-hover/upload:opacity-100 transition-opacity flex flex-col items-center justify-center text-white cursor-pointer">
-                                        <span className="material-symbols-outlined text-4xl mb-2">swap_horiz</span>
-                                        <span className="font-label-md">Change Image</span>
-                                    </div>
-                                </>
-                            ) : (
-                                <div className="text-center p-6 pointer-events-none">
-                                    <span className="material-symbols-outlined text-5xl text-primary/50 mb-3 group-hover/upload:scale-110 transition-transform">cloud_upload</span>
-                                    <p className="font-label-md text-on-surface mb-1">Drag and drop or click to upload</p>
-                                    <p className="font-body-sm text-on-surface-variant">Supports JPG, PNG, WEBP (Max 5MB)</p>
-                                </div>
-                            )}
-                            
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImageUpload}
-                                disabled={isUploading}
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                            />
-                        </div>
-
-                        {isUploading && <p className="text-primary text-sm mt-2 font-label-sm animate-pulse">Uploading securely to cloud...</p>}
-                        {errors.imageUrl && <p className="text-error text-sm mt-1">{errors.imageUrl.message as string}</p>}
-                    </div>
-
-                    <div className="space-y-2 group/input">
-                        <label className="font-label-md text-label-md text-on-surface-variant block transition-colors group-focus-within/input:text-primary">Image Alt Text</label>
-                        <input
-                            className="w-full p-4 bg-surface-container-lowest border border-outline-variant rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-body-md text-body-md shadow-sm transition-all"
-                            placeholder="Describe the vehicle image for accessibility"
-                            {...register('imageAlt')}
+                <div className="flex items-center justify-between mb-8">
+                    <h3 className="font-headline-md text-headline-md text-on-surface flex items-center gap-3">
+                        <span className="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">photo_library</span>
+                        Media Manager
+                    </h3>
+                    <div className="flex items-center gap-2 bg-surface-container-low p-1.5 rounded-lg border border-outline-variant/30">
+                        <input 
+                            type="text" 
+                            placeholder="New Section..." 
+                            className="bg-transparent border-none focus:outline-none text-sm px-2 w-32"
+                            value={newSectionName}
+                            onChange={(e) => setNewSectionName(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddSection())}
                         />
-                        {errors.imageAlt && <p className="text-error text-sm mt-1">{errors.imageAlt.message as string}</p>}
+                        <button type="button" onClick={handleAddSection} className="material-symbols-outlined text-on-surface-variant hover:text-primary text-sm p-1">add</button>
                     </div>
                 </div>
+                
+                {!activeSection ? (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {sections.map(section => {
+                            const sectionImages = images.filter(img => img.section === section || (!img.section && section === 'Uncategorized'));
+                            const cover = sectionImages[0];
+                            return (
+                                <div key={section} onClick={() => setActiveSection(section)} className="group/section cursor-pointer bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden hover:border-primary transition-all">
+                                    <div className="aspect-video bg-surface-container relative">
+                                        {cover ? (
+                                            <img src={cover.url} alt={cover.alt} className="w-full h-full object-cover group-hover/section:scale-105 transition-transform" />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center text-on-surface-variant/50">
+                                                <span className="material-symbols-outlined text-4xl">broken_image</span>
+                                            </div>
+                                        )}
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/section:opacity-100 transition-opacity flex items-center justify-center text-white">
+                                            <span className="font-label-md">View {sectionImages.length} Images</span>
+                                        </div>
+                                    </div>
+                                    <div className="p-3">
+                                        <h4 className="font-label-md text-on-surface truncate">{section}</h4>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                        
+                        {sections.length === 0 && (
+                            <div className="col-span-full text-center p-12 border-2 border-dashed border-outline-variant rounded-xl bg-surface-container-lowest">
+                                <span className="material-symbols-outlined text-5xl text-on-surface-variant mb-2">collections</span>
+                                <p className="font-body-md text-on-surface">No media sections yet.</p>
+                                <p className="font-body-sm text-on-surface-variant mt-1 mb-4">Create a section like "Exterior" or "Interior" to organize images.</p>
+                                <button type="button" onClick={() => setActiveSection('Exterior')} className="text-primary font-label-md hover:underline">Start with 'Exterior'</button>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-3">
+                            <button type="button" onClick={() => setActiveSection(null)} className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">arrow_back</button>
+                            <h4 className="font-headline-sm text-on-surface">{activeSection}</h4>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {images.filter(img => img.section === activeSection || (!img.section && activeSection === 'Uncategorized')).map((img, idx) => (
+                                <div key={img.id} className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all group/img ${img.isMain ? 'border-primary shadow-[0_0_15px_rgba(176,38,0,0.3)]' : 'border-outline-variant hover:border-primary/50'}`}>
+                                    <img src={img.url} alt={img.alt} className="w-full h-full object-cover" />
+                                    {img.isMain && <div className="absolute top-2 left-2 bg-primary text-white text-[10px] px-2 py-1 rounded-md font-bold uppercase tracking-wide shadow-md">Main</div>}
+                                    
+                                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/img:opacity-100 transition-opacity flex flex-col justify-between p-2">
+                                        <div className="flex justify-end">
+                                            <button type="button" onClick={() => handleDeleteImage(img.id)} className="material-symbols-outlined text-white hover:text-error text-sm p-1 bg-black/40 rounded-full backdrop-blur-sm">delete</button>
+                                        </div>
+                                        {!img.isMain && (
+                                            <button type="button" onClick={() => handleSetMainImage(img.id)} className="bg-white text-black font-label-sm text-xs py-1.5 px-2 rounded-lg shadow-sm hover:bg-gray-100 w-full text-center">Set Main</button>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                            
+                            <label className="relative aspect-square rounded-xl border-2 border-dashed border-outline-variant hover:border-primary flex flex-col items-center justify-center cursor-pointer bg-surface-container-lowest transition-all group/upload">
+                                {isUploading ? (
+                                    <span className="material-symbols-outlined animate-spin text-primary text-3xl">progress_activity</span>
+                                ) : (
+                                    <>
+                                        <span className="material-symbols-outlined text-on-surface-variant group-hover/upload:text-primary group-hover/upload:scale-110 transition-all text-3xl mb-2">add_photo_alternate</span>
+                                        <span className="font-label-sm text-on-surface-variant group-hover/upload:text-primary">Add Image</span>
+                                    </>
+                                )}
+                                <input type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, activeSection)} disabled={isUploading} />
+                            </label>
+                        </div>
+                    </div>
+                )}
             </section>
         </div>
 
@@ -399,7 +532,7 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
                 Live Preview
             </h3>
             
-            <div className="bg-surface rounded-2xl border border-outline-variant/30 overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] group transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] relative">
+            <div className="bg-surface rounded-2xl border border-outline-variant/30 overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] group relative">
                 {formValues.isCertified && (
                     <div className="absolute top-4 right-4 z-10 bg-primary text-on-primary text-[10px] uppercase font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1 backdrop-blur-md">
                         <span className="material-symbols-outlined text-[14px]">verified</span>
@@ -407,24 +540,60 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
                     </div>
                 )}
                 
-                <div className="aspect-[4/3] bg-surface-container flex items-center justify-center overflow-hidden relative">
-                    {formValues.imageUrl ? (
-                        <img src={formValues.imageUrl} alt={formValues.imageAlt || "Vehicle preview"} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                    ) : (
-                        <div className="text-center text-on-surface-variant opacity-50 flex flex-col items-center">
-                            <span className="material-symbols-outlined text-6xl mb-2">directions_car</span>
-                            <span className="font-label-sm uppercase tracking-wider">No Image</span>
+                {/* Image Carousel Preview */}
+                <div className="bg-surface-container flex flex-col items-center justify-center relative">
+                    <div className="aspect-[4/3] w-full relative group/carousel bg-black/5">
+                        {allPreviewImages.length > 0 ? (
+                            <>
+                                <img src={allPreviewImages[previewImageIndex]?.url} alt={allPreviewImages[previewImageIndex]?.alt || "Vehicle preview"} className="w-full h-full object-cover" />
+                                
+                                {allPreviewImages.length > 1 && (
+                                    <>
+                                        <button type="button" onClick={() => setPreviewImageIndex(prev => prev > 0 ? prev - 1 : allPreviewImages.length - 1)} className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-black/30 hover:bg-black/50 text-white rounded-full backdrop-blur-sm transition-all opacity-0 group-hover/carousel:opacity-100">
+                                            <span className="material-symbols-outlined text-sm">chevron_left</span>
+                                        </button>
+                                        <button type="button" onClick={() => setPreviewImageIndex(prev => prev < allPreviewImages.length - 1 ? prev + 1 : 0)} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center bg-black/30 hover:bg-black/50 text-white rounded-full backdrop-blur-sm transition-all opacity-0 group-hover/carousel:opacity-100">
+                                            <span className="material-symbols-outlined text-sm">chevron_right</span>
+                                        </button>
+                                        
+                                        <div className="absolute top-2 left-2 bg-black/40 text-white text-[10px] px-2 py-0.5 rounded backdrop-blur-sm shadow-sm font-medium">
+                                            {previewImageIndex + 1} / {allPreviewImages.length}
+                                        </div>
+                                    </>
+                                )}
+                            </>
+                        ) : (
+                            <div className="absolute inset-0 flex flex-col items-center justify-center text-on-surface-variant opacity-50">
+                                <span className="material-symbols-outlined text-6xl mb-2">directions_car</span>
+                                <span className="font-label-sm uppercase tracking-wider">No Image</span>
+                            </div>
+                        )}
+                        
+                        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent opacity-80 pointer-events-none" />
+                        <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end pointer-events-none">
+                            <div>
+                                <p className="text-white/80 font-label-md text-sm drop-shadow-md">{formValues.make || 'Make'} {formValues.year || 'Year'}</p>
+                                <h4 className="text-white font-headline-md text-xl drop-shadow-md line-clamp-1">{formValues.model || 'Model'}</h4>
+                            </div>
+                            <p className="text-white font-headline-sm drop-shadow-md">{formValues.price ? formatIndianCurrency(formValues.price) : '₹0'}</p>
+                        </div>
+                    </div>
+                    
+                    {/* Thumbnail Row */}
+                    {allPreviewImages.length > 1 && (
+                        <div className="w-full flex gap-2 p-3 overflow-x-auto bg-surface border-b border-outline-variant/20 scrollbar-hide">
+                            {allPreviewImages.map((img, idx) => (
+                                <button 
+                                    key={idx}
+                                    type="button" 
+                                    onClick={() => setPreviewImageIndex(idx)}
+                                    className={`relative w-12 h-12 flex-shrink-0 rounded-md overflow-hidden border-2 transition-all ${previewImageIndex === idx ? 'border-primary' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                                >
+                                    <img src={img.url} alt="thumbnail" className="w-full h-full object-cover" />
+                                </button>
+                            ))}
                         </div>
                     )}
-                    
-                    <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent opacity-80" />
-                    <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
-                        <div>
-                            <p className="text-white/80 font-label-md text-sm drop-shadow-md">{formValues.make || 'Make'} {formValues.year || 'Year'}</p>
-                            <h4 className="text-white font-headline-md text-xl drop-shadow-md line-clamp-1">{formValues.model || 'Model'}</h4>
-                        </div>
-                        <p className="text-white font-headline-sm drop-shadow-md">{formValues.price ? formatIndianCurrency(formValues.price) : '₹0'}</p>
-                    </div>
                 </div>
                 
                 <div className="p-5 grid grid-cols-2 gap-4 bg-surface relative z-10">
@@ -466,9 +635,10 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
         </div>
       </div>
 
-      {/* Hidden Fields */}
+      {/* Hidden Fields for Validation Tracking */}
       <input type="hidden" {...register('imageUrl')} />
       <input type="hidden" {...register('colorHex')} />
+      <input type="hidden" {...register('images')} />
 
       {/* Status & Action Bar - Glassmorphic Fixed Footer */}
       <div className="fixed bottom-0 right-0 left-0 md:left-64 bg-inverse-surface/95 backdrop-blur-md border-t border-inverse-surface p-4 md:p-6 flex flex-col md:flex-row items-center justify-between shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.3)] z-40 transition-all">

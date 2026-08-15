@@ -27,6 +27,7 @@ const vehicleSchema = z.object({
   imageUrl: z.string().url("Invalid image URL"),
   imageAlt: z.string().min(1, "Image Alt is required"),
   description: z.string().optional(),
+  images: z.string().optional(), // Will be parsed JSON string
 });
 
 export async function saveVehicle(prevState: any, formData: FormData) {
@@ -51,9 +52,10 @@ export async function saveVehicle(prevState: any, formData: FormData) {
       accidentalHistory: formData.get('accidentalHistory') === 'true',
       isCertified,
       status: formData.get('status'),
-      imageUrl: formData.get('imageUrl'),
-      imageAlt: formData.get('imageAlt'),
+      imageUrl: formData.get('imageUrl') || '',
+      imageAlt: formData.get('imageAlt') || 'Vehicle Image',
       description: formData.get('description') || '',
+      images: formData.get('images') || '[]',
     };
 
     const validatedData = vehicleSchema.safeParse(rawData);
@@ -66,15 +68,22 @@ export async function saveVehicle(prevState: any, formData: FormData) {
       };
     }
 
-    const { id, ...dataToSave } = validatedData.data;
+    const { id, images, ...dataToSave } = validatedData.data;
     const title = `${dataToSave.year} ${dataToSave.make.charAt(0).toUpperCase() + dataToSave.make.slice(1)} ${dataToSave.model}`;
+    
+    let parsedImages = [];
+    try {
+      parsedImages = JSON.parse(images || '[]');
+    } catch(e) {
+      console.error('Failed to parse images', e);
+    }
 
     if (id) {
       // Update
-      await db.update(vehicles).set({ ...dataToSave, title }).where(eq(vehicles.id, id));
+      await db.update(vehicles).set({ ...dataToSave, title, images: parsedImages }).where(eq(vehicles.id, id));
     } else {
       // Insert
-      await db.insert(vehicles).values({ ...dataToSave, title });
+      await db.insert(vehicles).values({ ...dataToSave, title, images: parsedImages });
     }
 
     revalidatePath('/staff/inventory');
