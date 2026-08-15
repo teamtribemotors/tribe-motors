@@ -72,7 +72,19 @@ export async function scheduleVisit(prevState: any, formData: FormData) {
       customerId = newCustomer[0].id;
     }
 
-    const startTime = new Date(`2026-10-${date.padStart(2, '0')} ${time}`);
+    // date is now in YYYY-MM-DD format
+    const startTime = new Date(`${date}T${time.match(/\d{2}:\d{2}/) ? time : (() => {
+        // convert '11:00 AM' to '11:00:00'
+        const match = time.match(/(\d+):(\d+) (AM|PM)/);
+        if (match) {
+            let [_, hours, minutes, period] = match;
+            let h = parseInt(hours);
+            if (period === 'PM' && h < 12) h += 12;
+            if (period === 'AM' && h === 12) h = 0;
+            return `${h.toString().padStart(2, '0')}:${minutes}:00`;
+        }
+        return time;
+    })()}`);
     const endTime = new Date(startTime.getTime() + 60 * 60 * 1000);
 
     // Insert appointment

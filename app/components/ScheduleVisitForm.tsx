@@ -4,7 +4,7 @@ import { useState, useActionState } from 'react';
 import { scheduleVisit } from '../actions/appointments';
 
 export default function ScheduleVisitForm({ vehicleId }: { vehicleId: string }) {
-  const [selectedDate, setSelectedDate] = useState<number | null>(10);
+  const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedTime, setSelectedTime] = useState<string | null>('11:00 AM');
 
   const [state, formAction, isPending] = useActionState(scheduleVisit, null);
@@ -23,7 +23,6 @@ export default function ScheduleVisitForm({ vehicleId }: { vehicleId: string }) 
     <form className="space-y-stack-lg flex-grow flex flex-col" action={formAction}>
       {/* Hidden Inputs for Action */}
       <input type="hidden" name="vehicleId" value={vehicleId} />
-      <input type="hidden" name="date" value={selectedDate?.toString() || ''} />
       <input type="hidden" name="time" value={selectedTime || ''} />
 
       {state?.success === false && (
@@ -37,45 +36,17 @@ export default function ScheduleVisitForm({ vehicleId }: { vehicleId: string }) 
         
         {/* Date Picker */}
         <div>
-          <div className="flex justify-between items-center mb-stack-md">
-            <h3 className="font-headline-md text-headline-md">Select Date</h3>
-            <div className="flex space-x-2">
-              <button className="p-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors disabled:opacity-50" type="button">
-                <span className="material-symbols-outlined">chevron_left</span>
-              </button>
-              <span className="font-label-md text-label-md flex items-center px-2">October 2024</span>
-              <button className="p-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors" type="button">
-                <span className="material-symbols-outlined">chevron_right</span>
-              </button>
-            </div>
-          </div>
-          <div className="grid grid-cols-7 gap-2 text-center mb-2">
-            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
-              <div key={i} className="font-label-sm text-label-sm text-on-surface-variant py-2">{d}</div>
-            ))}
-          </div>
-          <div className="grid grid-cols-7 gap-2 text-center">
-            {/* Empty days */}
-            <div></div><div></div>
-            
-            {/* Days */}
-            {[1, 2].map(day => (
-              <button key={day} className="py-3 rounded-lg font-body-md text-body-md text-on-surface-variant opacity-30 cursor-not-allowed" disabled type="button">
-                {day}
-              </button>
-            ))}
-            
-            {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31].map(day => (
-              <button 
-                key={day} 
-                onClick={() => setSelectedDate(day)}
-                className={`py-3 rounded-lg font-body-md text-body-md transition-colors ${selectedDate === day ? 'text-on-primary bg-primary shadow-sm' : 'text-on-surface hover:bg-surface-variant'}`} 
-                type="button"
-              >
-                {day}
-              </button>
-            ))}
-          </div>
+          <label className="font-headline-md text-headline-md mb-stack-md block">Select Date</label>
+          <input 
+            type="date" 
+            name="date"
+            min={new Date().toISOString().split('T')[0]}
+            max={new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().split('T')[0]}
+            required
+            className="w-full bg-surface-container border border-outline-variant rounded-lg p-3 font-body-md text-body-md text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+            value={selectedDate || ''}
+            onChange={e => setSelectedDate(e.target.value)}
+          />
         </div>
 
         <div className="border-t border-outline-variant/30 pt-stack-lg">

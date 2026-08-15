@@ -22,9 +22,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
       <Navbar />
 
-      <main className="flex-grow w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop pt-stack-lg pb-28 md:pb-stack-lg grid grid-cols-1 md:grid-cols-12 gap-gutter">
+      <main className="flex-grow w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop pt-stack-lg pb-28 md:pb-stack-lg flex flex-col md:grid md:grid-cols-12 gap-y-stack-lg md:gap-gutter">
         {/* Breadcrumbs (Spans full width) */}
-        <div className="col-span-1 md:col-span-12 mb-stack-sm">
+        <div className="order-1 md:col-span-12 mb-stack-sm">
           <nav aria-label="Breadcrumb" className="flex text-on-surface-variant font-label-sm text-label-sm">
             <ol className="inline-flex flex-wrap items-center space-x-1 md:space-x-2">
               <li className="inline-flex items-center">
@@ -46,64 +46,17 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           </nav>
         </div>
 
-        {/* Left Column: Gallery & Details */}
-        <div className="col-span-1 md:col-span-8 flex flex-col gap-stack-lg">
-          {/* Gallery */}
+        {/* Gallery */}
+        <div className="order-2 md:col-span-8">
           <VehicleGallery
             images={vehicle.images as { url: string; section?: string; isMain?: boolean }[]}
             fallbackImageUrl={vehicle.imageUrl}
             imageAlt={vehicle.imageAlt}
           />
-
-          {/* Description */}
-          {vehicle.description && (
-            <div className="bg-surface-container-lowest border border-outline-variant/30 p-stack-md rounded-lg">
-              <h3 className="font-headline-md text-headline-md text-on-surface mb-stack-md">Description</h3>
-              <div
-                className="font-body-md text-body-md text-on-surface-variant mb-4 prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: vehicle.description }}
-              />
-            </div>
-          )}
-
-          {/* Detailed Specs */}
-          <div className="bg-surface-container-lowest border border-outline-variant/30 p-stack-md rounded-lg">
-            <h3 className="font-headline-md text-headline-md text-on-surface mb-stack-md">Technical Specifications</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-gutter gap-y-stack-sm">
-              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
-                <span className="font-label-md text-label-md text-on-surface-variant">Make</span>
-                <span className="font-body-md text-body-md text-on-surface">{vehicle.make}</span>
-              </div>
-              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
-                <span className="font-label-md text-label-md text-on-surface-variant">Model</span>
-                <span className="font-body-md text-body-md text-on-surface">{vehicle.model}</span>
-              </div>
-              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
-                <span className="font-label-md text-label-md text-on-surface-variant">Year</span>
-                <span className="font-body-md text-body-md text-on-surface">{vehicle.year}</span>
-              </div>
-              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
-                <span className="font-label-md text-label-md text-on-surface-variant">Transmission</span>
-                <span className="font-body-md text-body-md text-on-surface">{vehicle.transmission}</span>
-              </div>
-              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
-                <span className="font-label-md text-label-md text-on-surface-variant">Distance Driven</span>
-                <span className="font-body-md text-body-md text-on-surface">{vehicle.distanceDriven.toLocaleString('en-IN')} km</span>
-              </div>
-              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
-                <span className="font-label-md text-label-md text-on-surface-variant">Body Type</span>
-                <span className="font-body-md text-body-md text-on-surface">{vehicle.bodyType}</span>
-              </div>
-              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
-                <span className="font-label-md text-label-md text-on-surface-variant">Exterior Color</span>
-                <span className="font-body-md text-body-md text-on-surface uppercase">{vehicle.color}</span>
-              </div>
-            </div>
-          </div>
         </div>
 
-        {/* Right Column: Sticky Info Panel */}
-        <div className="col-span-1 md:col-span-4 relative">
+        {/* Right Column: Sticky Info Panel (Title, Price, Actions, Trust CTA) */}
+        <div className="order-3 md:col-span-4 md:row-span-2 relative">
           <div className="sticky top-[104px] flex flex-col gap-stack-md">
             {/* Core Info Card */}
             <div className="bg-surface-container-lowest border border-outline-variant/30 p-stack-md rounded-lg shadow-sm">
@@ -151,7 +104,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
             </div>
 
             {/* Trust CTA */}
-            <div className="bg-surface-container-lowest border-2 border-tertiary p-stack-md rounded-lg">
+            <div className="bg-surface-container-lowest border-2 border-tertiary p-stack-md rounded-lg hidden md:block">
               <div className="flex items-center gap-2 mb-2">
                 <span className="material-symbols-outlined text-tertiary">lock</span>
                 <h4 className="font-label-md text-label-md text-on-surface font-bold">Unlock Full History Report</h4>
@@ -166,7 +119,54 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           </div>
         </div>
 
+        {/* Description & Detailed Specs */}
+        <div className="order-4 md:col-span-8 flex flex-col gap-stack-lg">
+          {/* Description */}
+          {vehicle.description && vehicle.description.replace(/(<([^>]+)>)/gi, "").trim().length > 0 && (
+            <div className="bg-surface-container-lowest border border-outline-variant/30 p-stack-md rounded-lg">
+              <h3 className="font-headline-md text-headline-md text-on-surface mb-stack-md">Description</h3>
+              <div
+                className="font-body-md text-body-md text-on-surface-variant mb-4 prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: vehicle.description }}
+              />
+            </div>
+          )}
 
+          {/* Detailed Specs */}
+          <div className="bg-surface-container-lowest border border-outline-variant/30 p-stack-md rounded-lg">
+            <h3 className="font-headline-md text-headline-md text-on-surface mb-stack-md">Technical Specifications</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-gutter gap-y-stack-sm">
+              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
+                <span className="font-label-md text-label-md text-on-surface-variant">Make</span>
+                <span className="font-body-md text-body-md text-on-surface">{vehicle.make}</span>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
+                <span className="font-label-md text-label-md text-on-surface-variant">Model</span>
+                <span className="font-body-md text-body-md text-on-surface">{vehicle.model}</span>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
+                <span className="font-label-md text-label-md text-on-surface-variant">Year</span>
+                <span className="font-body-md text-body-md text-on-surface">{vehicle.year}</span>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
+                <span className="font-label-md text-label-md text-on-surface-variant">Transmission</span>
+                <span className="font-body-md text-body-md text-on-surface">{vehicle.transmission}</span>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
+                <span className="font-label-md text-label-md text-on-surface-variant">Distance Driven</span>
+                <span className="font-body-md text-body-md text-on-surface">{vehicle.distanceDriven.toLocaleString('en-IN')} km</span>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
+                <span className="font-label-md text-label-md text-on-surface-variant">Body Type</span>
+                <span className="font-body-md text-body-md text-on-surface">{vehicle.bodyType}</span>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
+                <span className="font-label-md text-label-md text-on-surface-variant">Exterior Color</span>
+                <span className="font-body-md text-body-md text-on-surface uppercase">{vehicle.color}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
 
       <Footer />
