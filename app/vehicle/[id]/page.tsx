@@ -22,11 +22,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
       <Navbar />
 
-      <main className="flex-grow w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg grid grid-cols-1 md:grid-cols-12 gap-gutter">
+      <main className="flex-grow w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop pt-stack-lg pb-28 md:pb-stack-lg grid grid-cols-1 md:grid-cols-12 gap-gutter">
         {/* Breadcrumbs (Spans full width) */}
         <div className="col-span-1 md:col-span-12 mb-stack-sm">
           <nav aria-label="Breadcrumb" className="flex text-on-surface-variant font-label-sm text-label-sm">
-            <ol className="inline-flex items-center space-x-1 md:space-x-2">
+            <ol className="inline-flex flex-wrap items-center space-x-1 md:space-x-2">
               <li className="inline-flex items-center">
                 <Link className="hover:text-primary transition-colors" href="/browse">Inventory</Link>
               </li>
@@ -140,11 +140,13 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
               </div>
 
               {/* Actions */}
-              <div className="flex flex-col gap-stack-sm">
-                <Link href={`/vehicle/${vehicle.id}/schedule-visit`} className="w-full flex justify-center items-center bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md h-[48px] rounded transition-colors duration-200">
-                  Schedule Test Drive
+              <div className="fixed bottom-0 left-0 right-0 z-50 bg-surface-container-lowest p-4 border-t border-outline-variant/30 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] flex gap-3 md:relative md:bottom-auto md:left-auto md:right-auto md:z-auto md:bg-transparent md:p-0 md:border-none md:shadow-none md:flex-col md:gap-stack-sm">
+                <Link href={`/vehicle/${vehicle.id}/schedule-visit`} className="flex-1 flex justify-center items-center bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md h-[48px] rounded transition-colors duration-200 shadow-sm whitespace-nowrap">
+                  Schedule
                 </Link>
-                <ContactDealerModal vehicleId={vehicle.id} vehicleModel={`${vehicle.year} ${vehicle.make} ${vehicle.model}`} />
+                <div className="flex-1">
+                  <ContactDealerModal vehicleId={vehicle.id} vehicleModel={`${vehicle.year} ${vehicle.make} ${vehicle.model}`} />
+                </div>
               </div>
             </div>
 
