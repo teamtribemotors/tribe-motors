@@ -6,6 +6,8 @@ import { z } from 'zod';
 import { saveVehicle } from '../staff/inventory/actions';
 import { useState, useTransition } from 'react';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
+import VerifiedBadge from './VerifiedBadge';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { formatIndianCurrency } from '../utils';
@@ -406,8 +408,7 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
                             <label className="flex items-center gap-3 cursor-pointer p-4 rounded-xl border border-outline-variant bg-surface-container-lowest hover:border-primary transition-colors shadow-sm w-full">
                                 <input type="checkbox" className="rounded border-outline-variant text-primary focus:ring-primary w-5 h-5" {...register('isCertified')} />
                                 <span className="font-label-md text-label-md text-on-surface flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-primary">verified</span>
-                                    Tribe Certified
+                                    <VerifiedBadge />
                                 </span>
                             </label>
                         </div>
@@ -534,9 +535,8 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
             
             <div className="bg-surface rounded-2xl border border-outline-variant/30 overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] group relative">
                 {formValues.isCertified && (
-                    <div className="absolute top-4 right-4 z-10 bg-primary text-on-primary text-[10px] uppercase font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1 backdrop-blur-md">
-                        <span className="material-symbols-outlined text-[14px]">verified</span>
-                        Certified
+                    <div className="absolute top-4 right-4 z-10 scale-[0.85] origin-top-right">
+                        <VerifiedBadge />
                     </div>
                 )}
                 

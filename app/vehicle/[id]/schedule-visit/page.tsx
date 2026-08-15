@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
 import ScheduleVisitForm from '../../../components/ScheduleVisitForm';
+import VerifiedBadge from '../../../components/VerifiedBadge';
 
 export default async function ScheduleVisitPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -32,9 +33,9 @@ export default async function ScheduleVisitPage({ params }: { params: Promise<{ 
           <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-stack-md shadow-sm">
             <div className="h-48 rounded-lg overflow-hidden mb-stack-sm relative">
               <img alt={vehicle.imageAlt || `${vehicle.year} ${vehicle.make} ${vehicle.model}`} className="w-full h-full object-cover" src={vehicle.imageUrl} />
-              <div className="absolute top-stack-sm right-stack-sm bg-tertiary text-on-tertiary font-label-sm text-label-sm px-3 py-1 rounded-full uppercase tracking-wider">
-                Verified
-              </div>
+              {vehicle.isCertified && (
+                <VerifiedBadge className="absolute top-stack-sm right-stack-sm z-10" />
+              )}
             </div>
             
             <div className="space-y-1">
