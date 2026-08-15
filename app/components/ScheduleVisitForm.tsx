@@ -28,8 +28,8 @@ export default function ScheduleVisitForm() {
             </div>
           </div>
           <div className="grid grid-cols-7 gap-2 text-center mb-2">
-            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => (
-              <div key={d} className="font-label-sm text-label-sm text-on-surface-variant py-2">{d}</div>
+            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
+              <div key={i} className="font-label-sm text-label-sm text-on-surface-variant py-2">{d}</div>
             ))}
           </div>
           <div className="grid grid-cols-7 gap-2 text-center">
