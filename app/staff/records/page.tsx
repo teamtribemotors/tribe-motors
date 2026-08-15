@@ -123,7 +123,23 @@ export default async function ServiceRecordsPage() {
                                             <div>
                                                 <p className="text-on-surface text-base font-bold group-hover:text-primary transition-colors">{vehicle.title}</p>
                                                 <div className="flex items-center gap-2 mt-1">
-                                                    <span className="font-body-md text-sm text-on-surface-variant font-medium text-primary">Cost: {formatIndianCurrency(record.cost)}</span>
+                                                    {record.originalCost ? (
+                                                        <>
+                                                            <span className="font-body-md text-sm text-on-surface-variant font-medium line-through opacity-70">
+                                                                {formatIndianCurrency(record.originalCost)}
+                                                            </span>
+                                                            <span className="font-body-md text-sm font-bold text-primary">
+                                                                {formatIndianCurrency(record.cost)}
+                                                            </span>
+                                                            <span className="font-label-sm text-xs bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded-full font-bold ml-1">
+                                                                -{Math.round(((record.originalCost - record.cost) / record.originalCost) * 100)}%
+                                                            </span>
+                                                        </>
+                                                    ) : (
+                                                        <span className="font-body-md text-sm text-on-surface-variant font-medium text-primary">
+                                                            Cost: {formatIndianCurrency(record.cost)}
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
@@ -131,9 +147,11 @@ export default async function ServiceRecordsPage() {
                                         <div className="col-span-1 md:col-span-3 flex items-center">
                                             <div className="flex items-center gap-2">
                                                 <span className="material-symbols-outlined text-outline-variant text-[20px]">
-                                                    {record.type.includes('Inspection') ? 'fact_check' : record.type.includes('Maintenance') ? 'build' : 'receipt_long'}
+                                                    picture_as_pdf
                                                 </span>
-                                                <p className="font-label-md text-sm text-on-surface">{record.type}</p>
+                                                <a href={record.fileUrl} target="_blank" rel="noopener noreferrer" className="font-label-md text-sm text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
+                                                    View Document
+                                                </a>
                                             </div>
                                         </div>
                                         

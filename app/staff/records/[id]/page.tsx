@@ -66,8 +66,10 @@ export default function ServiceRecordDetailPage({ params }: { params: Promise<{ 
                     <div className="bg-surface-container-lowest p-stack-md rounded-xl border border-outline-variant shadow-ambient-sm">
                         <div className="flex items-center justify-between border-b border-surface-variant pb-4 mb-6">
                             <h3 className="font-headline-md text-headline-md text-on-background flex items-center gap-2">
-                                <span className="material-symbols-outlined text-primary">build</span>
-                                {record.type}
+                                <span className="material-symbols-outlined text-primary">picture_as_pdf</span>
+                                <a href={record.fileUrl} target="_blank" rel="noopener noreferrer" className="hover:underline text-primary">
+                                    View Document (PDF)
+                                </a>
                             </h3>
                             <span className={`px-4 py-1.5 rounded-full font-label-bold text-sm shadow-sm ${getStatusBadgeColor(record.status)}`}>
                                 {record.status}
@@ -81,7 +83,23 @@ export default function ServiceRecordDetailPage({ params }: { params: Promise<{ 
                             </div>
                             <div>
                                 <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Cost</p>
-                                <p className="font-body-md text-body-md text-primary font-bold text-lg">₹ {record.cost.toLocaleString('en-IN')}</p>
+                                <div className="flex items-center gap-2">
+                                    {record.originalCost ? (
+                                        <>
+                                            <span className="font-body-md text-sm text-on-surface-variant font-medium line-through opacity-70">
+                                                ₹ {record.originalCost.toLocaleString('en-IN')}
+                                            </span>
+                                            <span className="font-body-md text-lg font-bold text-primary">
+                                                ₹ {record.cost.toLocaleString('en-IN')}
+                                            </span>
+                                            <span className="font-label-sm text-xs bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded-full font-bold ml-1">
+                                                -{Math.round(((record.originalCost - record.cost) / record.originalCost) * 100)}%
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <p className="font-body-md text-body-md text-primary font-bold text-lg">₹ {record.cost.toLocaleString('en-IN')}</p>
+                                    )}
+                                </div>
                             </div>
                         </div>
                         

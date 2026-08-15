@@ -13,8 +13,10 @@ export default function EditServiceRecordPage({ params }: { params: Promise<{ id
     const [recordId, setRecordId] = useState('');
 
     // Form state
-    const [type, setType] = useState('Maintenance');
+    const [fileUrl, setFileUrl] = useState('');
+    const [file, setFile] = useState<File | null>(null);
     const [cost, setCost] = useState('');
+    const [originalCost, setOriginalCost] = useState('');
     const [status, setStatus] = useState('Completed');
 
     useEffect(() => {
@@ -27,8 +29,9 @@ export default function EditServiceRecordPage({ params }: { params: Promise<{ id
                 return;
             }
             
-            setType(data.type);
+            if (data.fileUrl) setFileUrl(data.fileUrl);
             setCost(data.cost.toString());
+            if (data.originalCost) setOriginalCost(data.originalCost.toString());
             setStatus(data.status);
             
             setIsLoaded(true);
@@ -41,9 +44,24 @@ export default function EditServiceRecordPage({ params }: { params: Promise<{ id
         setIsSubmitting(true);
         
         try {
+            let updatedFileUrl = fileUrl;
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+                const uploadRes = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+                const uploadData = await uploadRes.json();
+                if (!uploadData.error) {
+                    updatedFileUrl = uploadData.url;
+                }
+            }
+
             await updateServiceRecord(recordId, { 
-                type, 
+                fileUrl: updatedFileUrl,
                 cost: parseInt(cost, 10), 
+                originalCost: originalCost ? parseInt(originalCost, 10) : undefined,
                 status 
             });
             toast.success('Service record updated successfully!');
@@ -83,29 +101,56 @@ export default function EditServiceRecordPage({ params }: { params: Promise<{ id
                     <form onSubmit={handleSubmit} className="bg-surface-container-lowest p-stack-md rounded-xl border border-outline-variant shadow-ambient-sm flex flex-col gap-6">
                         
                         <div>
-                            <label className="block font-label-bold text-label-bold text-on-surface mb-2">Service Type *</label>
-                            <select 
-                                required
-                                value={type}
-                                onChange={e => setType(e.target.value)}
-                                className="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors appearance-none"
-                            >
-                                <option value="Maintenance">Routine Maintenance (Oil, Filters, etc.)</option>
-                                <option value="Repair">Mechanical Repair</option>
-                                <option value="Bodywork">Bodywork / Paint</option>
-                                <option value="Inspection">140-Point Inspection</option>
-                            </select>
+                            <label className="block font-label-bold text-label-bold text-on-surface mb-2">Service Record (PDF)</label>
+                            {fileUrl && !file && (
+                                <div className="mb-4">
+                                    <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-label-md">
+                                        View Current Document
+                                    </a>
+                                </div>
+                            )}
+                            <div className="mt-1 flex justify-center px-6 pt-6 pb-6 border-2 border-outline-variant border-dashed rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer group">
+                                <div className="space-y-2 text-center">
+                                    <svg className="mx-auto h-8 w-8 text-on-surface-variant group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    <div className="flex text-body-md text-on-surface justify-center gap-1">
+                                        <label htmlFor="file-upload" className="relative cursor-pointer rounded-md font-label-bold text-primary hover:underline focus-within:outline-none">
+                                            <span>Upload new PDF file to replace</span>
+                                            <input 
+                                                id="file-upload" 
+                                                name="file-upload" 
+                                                type="file" 
+                                                className="sr-only" 
+                                                accept=".pdf" 
+                                                onChange={e => e.target.files && setFile(e.target.files[0])}
+                                            />
+                                        </label>
+                                    </div>
+                                    {file && <p className="text-body-sm text-primary font-bold">{file.name}</p>}
+                                </div>
+                            </div>
                         </div>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div>
-                                <label className="block font-label-bold text-label-bold text-on-surface mb-2">Cost (₹) *</label>
+                                <label className="block font-label-bold text-label-bold text-on-surface mb-2">Final Cost (₹) *</label>
                                 <input 
                                     type="number" 
                                     required
                                     min="0"
                                     value={cost}
                                     onChange={e => setCost(e.target.value)}
+                                    className="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+                                />
+                            </div>
+                            <div>
+                                <label className="block font-label-bold text-label-bold text-on-surface mb-2">Original Cost (₹) (Optional)</label>
+                                <input 
+                                    type="number" 
+                                    min="0"
+                                    value={originalCost}
+                                    onChange={e => setOriginalCost(e.target.value)}
                                     className="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
                                 />
                             </div>

@@ -14,7 +14,11 @@ export default function NewServiceRecordPage() {
 
     // Form state
     const [vehicleId, setVehicleId] = useState('');
+    const [cost, setCost] = useState('');
+    const [originalCost, setOriginalCost] = useState('');
+    const [file, setFile] = useState<File | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
     useEffect(() => {
         const fetchInventory = async () => {
             const data = await getVehicles();
@@ -26,13 +30,39 @@ export default function NewServiceRecordPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        if (!file) {
+            toast.error('Please upload a PDF record.');
+            return;
+        }
+
         setIsSubmitting(true);
 
         try {
+            // 1. Upload PDF
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            const uploadRes = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            const uploadData = await uploadRes.json();
+            
+            if (uploadData.error) {
+                toast.error(uploadData.error);
+                setIsSubmitting(false);
+                return;
+            }
+
+            const fileUrl = uploadData.url;
+
+            // 2. Save record
             await createServiceRecord({
                 vehicleId,
-                type: 'PDF Document',
-                cost: 0,
+                fileUrl,
+                cost: parseInt(cost, 10),
+                originalCost: originalCost ? parseInt(originalCost, 10) : undefined,
                 status: 'Completed'
             });
             toast.success('Service record uploaded successfully!');
@@ -84,6 +114,30 @@ export default function NewServiceRecordPage() {
                                 ))}
                             </select>
                         </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label className="block font-label-bold text-label-bold text-on-surface mb-2">Final Cost (₹) *</label>
+                                <input 
+                                    type="number" 
+                                    required
+                                    min="0"
+                                    value={cost}
+                                    onChange={e => setCost(e.target.value)}
+                                    className="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+                                />
+                            </div>
+                            <div>
+                                <label className="block font-label-bold text-label-bold text-on-surface mb-2">Original Cost (₹) (Optional)</label>
+                                <input 
+                                    type="number" 
+                                    min="0"
+                                    value={originalCost}
+                                    onChange={e => setOriginalCost(e.target.value)}
+                                    className="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors"
+                                />
+                            </div>
+                        </div>
 
                         <div>
                             <label className="block font-label-bold text-label-bold text-on-surface mb-2">Upload Service Record (PDF) *</label>
@@ -95,11 +149,21 @@ export default function NewServiceRecordPage() {
                                     <div className="flex text-body-md text-on-surface justify-center gap-1">
                                         <label htmlFor="file-upload" className="relative cursor-pointer rounded-md font-label-bold text-primary hover:underline focus-within:outline-none">
                                             <span>Upload a PDF file</span>
-                                            <input id="file-upload" name="file-upload" type="file" className="sr-only" accept=".pdf" required />
+                                            <input 
+                                                id="file-upload" 
+                                                name="file-upload" 
+                                                type="file" 
+                                                className="sr-only" 
+                                                accept=".pdf" 
+                                                required 
+                                                onChange={e => e.target.files && setFile(e.target.files[0])}
+                                            />
                                         </label>
                                         <p>or drag and drop</p>
                                     </div>
-                                    <p className="text-body-sm text-on-surface-variant">PDF up to 10MB</p>
+                                    <p className="text-body-sm text-on-surface-variant">
+                                        {file ? <span className="text-primary font-bold">{file.name}</span> : 'PDF up to 10MB'}
+                                    </p>
                                 </div>
                             </div>
                         </div>

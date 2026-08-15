@@ -8,6 +8,7 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import ContactDealerModal from '../../components/ContactDealerModal';
 import Link from 'next/link';
+import VehicleGallery from '../../components/VehicleGallery';
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -48,30 +49,22 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         {/* Left Column: Gallery & Details */}
         <div className="col-span-1 md:col-span-8 flex flex-col gap-stack-lg">
           {/* Gallery */}
-          <div className="flex flex-col gap-stack-sm">
-            <div className="w-full aspect-[16/9] bg-surface-container rounded-lg overflow-hidden relative group">
-              <img className="w-full h-full object-cover" data-alt={vehicle.imageAlt} src={vehicle.imageUrl} />
-            </div>
-            <div className="grid grid-cols-4 gap-stack-sm">
-              <div className="aspect-[4/3] bg-surface-container rounded cursor-pointer overflow-hidden"><img className="w-full h-full object-cover" src={vehicle.imageUrl} /></div>
-              <div className="aspect-[4/3] bg-surface-container rounded cursor-pointer overflow-hidden"><img className="w-full h-full object-cover" src={vehicle.imageUrl} /></div>
-              <div className="aspect-[4/3] bg-surface-container rounded cursor-pointer overflow-hidden"><img className="w-full h-full object-cover" src={vehicle.imageUrl} /></div>
-              <div className="aspect-[4/3] bg-surface-container rounded cursor-pointer overflow-hidden"><img className="w-full h-full object-cover" src={vehicle.imageUrl} /></div>
-            </div>
-          </div>
+          <VehicleGallery
+            images={vehicle.images as { url: string; section?: string; isMain?: boolean }[]}
+            fallbackImageUrl={vehicle.imageUrl}
+            imageAlt={vehicle.imageAlt}
+          />
 
           {/* Description */}
-          <div className="bg-surface-container-lowest border border-outline-variant/30 p-stack-md rounded-lg">
-            <h3 className="font-headline-md text-headline-md text-on-surface mb-stack-md">Description</h3>
-            {vehicle.description ? (
+          {vehicle.description && (
+            <div className="bg-surface-container-lowest border border-outline-variant/30 p-stack-md rounded-lg">
+              <h3 className="font-headline-md text-headline-md text-on-surface mb-stack-md">Description</h3>
               <div
                 className="font-body-md text-body-md text-on-surface-variant mb-4 prose prose-sm max-w-none"
                 dangerouslySetInnerHTML={{ __html: vehicle.description }}
               />
-            ) : (
-              <p className="font-body-md text-body-md text-on-surface-variant mb-4">No description provided.</p>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Detailed Specs */}
           <div className="bg-surface-container-lowest border border-outline-variant/30 p-stack-md rounded-lg">
@@ -171,54 +164,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           </div>
         </div>
 
-        {/* Curated For You Section (Spans full width) */}
-        <div className="col-span-1 md:col-span-12 mt-stack-xl">
-          <h2 className="font-headline-md text-headline-md text-on-surface mb-stack-md">Curated for You</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-            <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-lg overflow-hidden group cursor-pointer hover:shadow-md transition-shadow duration-300">
-              <div className="aspect-[16/9] bg-surface-container relative overflow-hidden">
-                <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A bright red 2022 Audi R8 V10 Performance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKqea3a3DrmLYQTIrGSIejLimBY2quU7h4cWfyLtMn0JHTUX_ZcSkpM19zGE_KdYgP2I58LJmKkxxeJ5BOuJ6QGxC8PzLaydidQZdtCzSDhT_D8YUDmokwYcjk0pm9UdFrr_tgICrtei7-uJmy68UZyrImGMNUG9xelD8muJY_omm8n5gtE2TrQUG0z0wmNH1PvyB5g-trv4VikIQHDI6x1nzThW5kW_V7qHHgCmssKJm4RB7laj1xMA" />
-              </div>
-              <div className="p-4">
-                <h4 className="font-label-md text-label-md text-on-surface font-bold mb-1">2022 Audi R8 V10 Performance</h4>
-                <div className="font-body-md text-body-md text-primary font-semibold mb-2">₹2,30,00,000</div>
-                <div className="flex gap-4 text-on-surface-variant font-label-sm text-label-sm">
-                  <span className="">8,500 km</span>
-                  <span className="">Petrol</span>
-                  <span className="">Auto</span>
-                </div>
-              </div>
-            </div>
-            <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-lg overflow-hidden group cursor-pointer hover:shadow-md transition-shadow duration-300">
-              <div className="aspect-[16/9] bg-surface-container relative overflow-hidden">
-                <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A pristine white 2020 Mercedes-AMG GT R" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFMSewNhvknzHL3XDDpD5ljxMi9wbG_xPB312X7GK6uI46B4lMdOOG0Om8R2dniePm-rr041cJZJXz1PXZP91y9Qc9qSRAFYbh4DhghRkJBglSNtmEvCOwJ6EqfKdjjC2XxYnLcwvCH1nIqB4AUnQO5bJYAyOWY4QffHxEtt-JjHcL4TWMjoSMF_QgL_p2t8Sps4_Vll9A78VqxMSnHTdvkEY-8Pnb1Z9El_oT7c5m1_0EW4kEySwtSA" />
-              </div>
-              <div className="p-4">
-                <h4 className="font-label-md text-label-md text-on-surface font-bold mb-1">2020 Mercedes-AMG GT R</h4>
-                <div className="font-body-md text-body-md text-primary font-semibold mb-2">₹1,95,00,000</div>
-                <div className="flex gap-4 text-on-surface-variant font-label-sm text-label-sm">
-                  <span className="">15,200 km</span>
-                  <span className="">Petrol</span>
-                  <span className="">Auto</span>
-                </div>
-              </div>
-            </div>
-            <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-lg overflow-hidden group cursor-pointer hover:shadow-md transition-shadow duration-300">
-              <div className="aspect-[16/9] bg-surface-container relative overflow-hidden">
-                <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A sleek silver 2021 Aston Martin Vantage" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfL6Lh8_-n31ErSDGS8iXRmtDNuAPrHQ094YkhIqLBpWnAHXgsv4W8NlT3eITPbd13jFVW2DTq189tjUt2QQdqGuTzEIcmIourYWGeC9-upTFoXz_ZRI3Rf75f8d_Kq4eeFNRivRmQtZhussngiJSqvO_tbD4WVE7ZsIdfZG7QtTPvsn_zBYzIbl5mY0SzQ5FtCy7tTnuxyowvsL2Tt6nkLLdfWvXgm7HucF1kB8Mx5hzEXP2dLxkY0A" />
-              </div>
-              <div className="p-4">
-                <h4 className="font-label-md text-label-md text-on-surface font-bold mb-1">2021 Aston Martin Vantage</h4>
-                <div className="font-body-md text-body-md text-primary font-semibold mb-2">₹1,78,00,000</div>
-                <div className="flex gap-4 text-on-surface-variant font-label-sm text-label-sm">
-                  <span className="">10,100 km</span>
-                  <span className="">Petrol</span>
-                  <span className="">Auto</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+
       </main>
 
       <Footer />

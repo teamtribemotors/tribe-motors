@@ -12,8 +12,9 @@ export async function getServiceRecords() {
     .select({
       id: serviceRecords.id,
       vehicleId: serviceRecords.vehicleId,
-      type: serviceRecords.type,
+      fileUrl: serviceRecords.fileUrl,
       cost: serviceRecords.cost,
+      originalCost: serviceRecords.originalCost,
       status: serviceRecords.status,
       date: serviceRecords.date,
       vehicleTitle: vehicles.title,
@@ -25,8 +26,9 @@ export async function getServiceRecords() {
   return data.map(item => ({
     id: item.id,
     vehicleId: item.vehicleId,
-    type: item.type,
-    cost: `₹ ${(item.cost).toLocaleString('en-IN')}`,
+    fileUrl: item.fileUrl,
+    cost: item.cost, // keep raw for UI
+    originalCost: item.originalCost,
     status: item.status,
     date: item.date.toISOString().split('T')[0],
     vehicle: item.vehicleTitle || 'Unknown Vehicle',
@@ -50,15 +52,17 @@ export async function getServiceRecordById(id: string) {
 
 export async function createServiceRecord(data: {
   vehicleId: string;
-  type: string;
-  cost: number; // in cents
+  fileUrl: string;
+  cost: number;
+  originalCost?: number;
   status: string;
 }) {
   await requireAuth();
   await db.insert(serviceRecords).values({
     vehicleId: data.vehicleId,
-    type: data.type,
+    fileUrl: data.fileUrl,
     cost: data.cost,
+    originalCost: data.originalCost,
     status: data.status,
     date: new Date(),
   });
@@ -66,8 +70,9 @@ export async function createServiceRecord(data: {
 }
 
 export async function updateServiceRecord(id: string, data: {
-  type?: string;
-  cost?: number; // in cents
+  fileUrl?: string;
+  cost?: number;
+  originalCost?: number;
   status?: string;
 }) {
   await requireAuth();

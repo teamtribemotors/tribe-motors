@@ -14,9 +14,6 @@ export default function Navbar() {
           <Link className="text-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200" href="/how-it-works">About</Link>
           <a className="text-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200" href="mailto:support@tribemotors.com">Contact</a>
         </nav>
-        <Link href="/staff/login" className="bg-primary hover:bg-surface-tint text-on-primary font-label-md text-label-md px-6 py-3 rounded active:scale-95 transition-transform hidden md:block">
-          Sign In
-        </Link>
         <button className="md:hidden text-surface-variant p-2">
           <span className="material-symbols-outlined">menu</span>
         </button>

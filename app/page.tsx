@@ -7,7 +7,6 @@ import { vehicles } from '../db/schema';
 import { desc } from 'drizzle-orm';
 
 export default async function Page() {
-    const featuredVehicles = await db.select().from(vehicles).orderBy(desc(vehicles.createdAt)).limit(3);
 
     return (
         <>
@@ -97,39 +96,9 @@ export default async function Page() {
                     </div>
                 </section>
 
-                {/* Featured Vehicles Section */}
-                <section className="py-stack-xl bg-surface">
-                    <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop">
-                        <div className="flex justify-between items-end mb-10 border-b border-secondary-container pb-4">
-                            <h2 className="font-headline-lg-mobile md:text-headline-lg text-on-surface">Curated for You</h2>
-                            <Link href="/browse" className="text-primary font-label-md text-label-md hover:underline flex items-center gap-1">
-                                View All <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-                            </Link>
-                        </div>
-                        {featuredVehicles.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-                                {featuredVehicles.map((vehicle) => (
-                                    <VehicleCard key={vehicle.id} vehicle={vehicle} />
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="flex flex-col items-center justify-center py-16 px-4 text-center bg-surface-container-lowest rounded-2xl border border-surface-variant shadow-sm">
-                                <div className="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mb-4">
-                                    <span className="material-symbols-outlined text-3xl text-outline">directions_car</span>
-                                </div>
-                                <h3 className="font-headline-sm text-headline-sm text-on-surface mb-2">No vehicles currently featured</h3>
-                                <p className="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mb-6">
-                                    We are currently updating our premium inventory. Check back soon for meticulously inspected pre-owned vehicles.
-                                </p>
-                                <Link href="/browse" className="inline-flex h-10 px-6 bg-primary text-on-primary font-label-bold text-label-bold rounded-lg items-center justify-center hover:opacity-90 transition-opacity">
-                                    Browse All Inventory
-                                </Link>
-                            </div>
-                        )}
-                    </div>
-                </section>
 
-                {/* Community Section */}
+
+                {/* Community Section
                 <section className="py-stack-xl bg-surface-container-high relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 10% 20%, #446253 0%, transparent 20%), radial-gradient(circle at 90% 80%, #b02600 0%, transparent 20%)' }}></div>
                     <div className="max-w-[800px] mx-auto px-margin-mobile md:px-margin-desktop relative z-10 text-center">
@@ -147,7 +116,7 @@ export default async function Page() {
                             </div>
                         </div>
                     </div>
-                </section>
+                </section> */}
             </main>
             <Footer />
         </>

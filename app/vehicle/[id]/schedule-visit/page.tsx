@@ -43,13 +43,7 @@ export default async function ScheduleVisitPage({ params }: { params: Promise<{ 
               <p className="font-body-md text-body-md text-on-surface mt-xs">{formatIndianCurrency(vehicle.price)}</p>
             </div>
             
-            <div className="mt-stack-md pt-stack-md border-t border-outline-variant/30">
-              <h3 className="font-label-md text-label-md text-on-surface-variant mb-3">Location</h3>
-              <div className="flex items-start space-x-3">
-                <span className="material-symbols-outlined text-primary" data-icon="location_on">location_on</span>
-                <p className="font-body-md text-body-md">Heritage Vault<br/>124 Vintage Way<br/>Los Angeles, CA</p>
-              </div>
-            </div>
+
           </div>
         </aside>
 

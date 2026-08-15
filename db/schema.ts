@@ -86,8 +86,10 @@ export const sales = pgTable('sales', {
 export const serviceRecords = pgTable('service_records', {
   id: uuid('id').defaultRandom().primaryKey(),
   vehicleId: uuid('vehicle_id').references(() => vehicles.id).notNull(),
-  type: text('type').notNull(), // Oil Change, Repair, etc.
+  type: text('type'), // Keep to avoid push conflicts
+  fileUrl: text('file_url'), // URL to the uploaded PDF
   cost: integer('cost').notNull(),
+  originalCost: integer('original_cost'),
   status: text('status').notNull().default('Pending'), // Pending, In Progress, Completed
   date: timestamp('date').defaultNow().notNull(),
 });
