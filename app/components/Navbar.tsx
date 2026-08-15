@@ -26,7 +26,7 @@ export default function Navbar() {
       
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-[#27282C] border-t border-outline-variant/20 px-margin-mobile py-4 flex flex-col gap-4 absolute w-full shadow-lg">
+        <div className="md:hidden bg-[#27282C] border-t border-outline-variant/20 px-margin-mobile py-4 flex flex-col gap-4 absolute left-0 w-full shadow-lg">
           <Link onClick={() => setIsOpen(false)} className="text-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200" href="/browse">Garage</Link>
           <Link onClick={() => setIsOpen(false)} className="text-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200" href="/how-it-works">About</Link>
           <a onClick={() => setIsOpen(false)} className="text-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200" href="mailto:support@tribemotors.com">Contact</a>

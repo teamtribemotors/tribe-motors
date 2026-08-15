@@ -18,10 +18,10 @@ export default async function Page() {
                     <div className="absolute inset-0 z-0 bg-image-overlay" data-alt="A cinematic, moody shot of a high-end sports car parked in a sleek, minimalist modern garage setting." style={{ backgroundImage: 'linear-gradient(rgb(26, 27, 31) 0%, rgba(26, 27, 31, 0.4) 15%, rgba(26, 27, 31, 0.8) 100%), url("/hero-bg.jpg")', backgroundSize: 'cover', backgroundPosition: 'center center' }}></div>
                     <div className="relative z-10 w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row gap-stack-lg items-center">
                         <div className="w-full text-center md:text-left text-on-primary flex flex-col items-center md:items-start justify-center">
-                            <h1 className="font-display-lg text-headline-lg-mobile md:text-display-lg mb-6 leading-tight max-w-2xl">
+                            <h1 className="font-display-lg text-4xl md:text-6xl mb-6 leading-tight max-w-2xl">
                                 The Art of the Verified Automobile.
                             </h1>
-                            <p className="font-body-lg text-body-lg text-secondary-container mb-8 max-w-lg">
+                            <p className="font-body-lg text-lg md:text-xl text-secondary-container mb-8 max-w-lg">
                                 Experience a curated concierge service for premium pre-owned cars in Visakhapatnam.
                             </p>
                             <Link href="/browse" className="inline-block bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md py-4 px-8 rounded transition-colors shadow-sm">
@@ -35,7 +35,7 @@ export default async function Page() {
                 <section className="py-stack-xl bg-background">
                     <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop">
                         <div className="flex justify-between items-end mb-8">
-                            <h2 className="font-headline-lg text-headline-lg text-on-background">Latest Arrivals</h2>
+                            <h2 className="font-headline-lg text-3xl md:text-4xl text-on-background">Latest Arrivals</h2>
                             <Link href="/browse" className="font-label-md text-label-md text-primary hover:underline hidden md:block">
                                 View all inventory &rarr;
                             </Link>
@@ -60,7 +60,7 @@ export default async function Page() {
                             <div className="w-12 h-12 rounded-full bg-tertiary-fixed text-tertiary flex items-center justify-center mb-6">
                                 <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                             </div>
-                            <h3 className="font-headline-md text-headline-md mb-3 text-on-surface">Every Car Inspected</h3>
+                            <h3 className="font-headline-md text-2xl mb-3 text-on-surface">Every Car Inspected</h3>
                             <p className="font-body-md text-body-md text-on-surface-variant">
                                 150-point technical certification guaranteeing mechanical excellence and safety for absolute peace of mind.
                             </p>
@@ -69,7 +69,7 @@ export default async function Page() {
                             <div className="w-12 h-12 rounded-full bg-tertiary-fixed text-tertiary flex items-center justify-center mb-6">
                                 <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>history_edu</span>
                             </div>
-                            <h3 className="font-headline-md text-headline-md mb-3 text-on-surface">Full Service History</h3>
+                            <h3 className="font-headline-md text-2xl mb-3 text-on-surface">Full Service History</h3>
                             <p className="font-body-md text-body-md text-on-surface-variant">
                                 Transparent documentation for every vehicle, detailing past maintenance, ownership, and accident-free verification.
                             </p>
@@ -78,7 +78,7 @@ export default async function Page() {
                             <div className="w-12 h-12 rounded-full bg-tertiary-fixed text-tertiary flex items-center justify-center mb-6">
                                 <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
                             </div>
-                            <h3 className="font-headline-md text-headline-md mb-3 text-on-surface">Community-Backed</h3>
+                            <h3 className="font-headline-md text-2xl mb-3 text-on-surface">Community-Backed</h3>
                             <p className="font-body-md text-body-md text-on-surface-variant">
                                 Trusted by Vizag's most discerning automotive enthusiasts and supported by a network of premium local service partners.
                             </p>

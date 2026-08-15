@@ -80,8 +80,8 @@ export default async function Page({
         {/* Page Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-stack-lg gap-4">
           <div>
-            <h1 className="text-display-lg font-display-lg text-on-background mb-2">Browse Cars</h1>
-            <p className="text-body-lg font-body-lg text-on-surface-variant">{totalCount} Verified Vehicles Found</p>
+            <h1 className="text-4xl md:text-5xl font-display-lg text-on-background mb-2">Browse Cars</h1>
+            <p className="text-lg md:text-xl font-body-lg text-on-surface-variant">{totalCount} Verified Vehicles Found</p>
           </div>
           <Suspense fallback={null}>
             <SortDropdown />

@@ -48,7 +48,7 @@ export default function Filters({ availableMakes }: { availableMakes: { name: st
       </button>
 
       {/* Filter Content */}
-      <div className={`${isOpen ? 'block' : 'hidden'} md:block bg-surface-container-lowest rounded-xl border border-outline-variant/50 p-6 sticky top-24`}>
+      <div className={`${isOpen ? 'block' : 'hidden'} md:block bg-surface-container-lowest rounded-xl border border-outline-variant/50 p-6 md:sticky md:top-24 md:max-h-[calc(100vh-6rem)] md:overflow-y-auto`}>
         <h2 className="hidden md:block text-headline-md font-headline-md text-on-background mb-6">Filters</h2>
       
       {/* Filter: Make */}
