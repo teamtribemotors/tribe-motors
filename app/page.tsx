@@ -15,7 +15,7 @@ export default async function Page() {
             <main className="flex-grow">
                 {/* Hero Section */}
                 <section className="relative h-[80vh] min-h-[600px] flex items-center w-full">
-                    <div className="absolute inset-0 z-0 bg-image-overlay" data-alt="A striking digital installation art piece featuring a cinematic, moody shot of a high-end sports car in a sleek, minimalist garage setting." style={{ backgroundImage: 'linear-gradient(rgb(26, 27, 31) 0%, rgba(26, 27, 31, 0.4) 15%, rgba(26, 27, 31, 0.8) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuC8sQ3I2UZjMlM5-en1GN75KbovjyCuFwPfGJs6x9BKgWOtwE5Q7TZuNlkG-WWOBBbRfinls4qwbqBfYxTguW6OIdR2oaECKaXckiPsRmC0_HG6BGX0tfezsvZIBsPL5E7x2YuETM7HRon5wKl3FfMMtWimY4fo-_ld4PxdxG9XMqxNLbmi_hLjUX-K8QAY2Bcq8YATo5qcJM5X5uw08lJhBOoAJbaDTROjX5tZJbgoWRqhUsvfWczuBg")', backgroundSize: 'cover', backgroundPosition: 'center center' }}></div>
+                    <div className="absolute inset-0 z-0 bg-image-overlay" data-alt="A cinematic, moody shot of a high-end sports car parked in a sleek, minimalist modern garage setting." style={{ backgroundImage: 'linear-gradient(rgb(26, 27, 31) 0%, rgba(26, 27, 31, 0.4) 15%, rgba(26, 27, 31, 0.8) 100%), url("/hero-bg.jpg")', backgroundSize: 'cover', backgroundPosition: 'center center' }}></div>
                     <div className="relative z-10 w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row gap-stack-lg items-center">
                         <div className="w-full md:w-1/2 text-center md:text-left text-on-primary">
                             <h1 className="font-display-lg text-headline-lg-mobile md:text-display-lg mb-6 leading-tight">
