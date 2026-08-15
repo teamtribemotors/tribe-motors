@@ -16,7 +16,7 @@ export default function StaffSidebar() {
         if (isActive(path)) {
             return "flex items-center gap-3 px-3 py-2 rounded-lg bg-primary text-white transition-colors cursor-pointer";
         }
-        return "flex items-center gap-3 px-3 py-2 hover:bg-[#4d0a00] rounded-lg transition-colors cursor-pointer text-surface/70 hover:text-surface group";
+        return "flex items-center gap-3 px-3 py-2 hover:bg-[#3a3b40] rounded-lg transition-colors cursor-pointer text-surface/70 hover:text-surface group";
     };
 
     const getIconClass = (path: string) => {
@@ -32,7 +32,7 @@ export default function StaffSidebar() {
     };
 
     return (
-        <aside className="w-64 border-r border-outline-variant/30 flex flex-col shrink-0 min-h-screen" style={{ backgroundColor: 'rgb(61, 7, 0)' }}>
+        <aside className="w-64 border-r border-outline-variant/30 flex flex-col shrink-0 min-h-screen" style={{ backgroundColor: '#27282c' }}>
             <div className="flex h-full flex-col justify-between p-4">
                 <div className="flex flex-col gap-4">
                     <div className="flex items-center mb-6 px-2">
@@ -73,7 +73,7 @@ export default function StaffSidebar() {
                         <p className="text-sm font-medium leading-normal font-label-md">Settings</p>
                     </Link>
                     
-                    <button onClick={handleLogout} className="flex items-center gap-3 px-3 py-2 hover:bg-[#4d0a00] rounded-lg transition-colors cursor-pointer text-surface/70 hover:text-surface group w-full text-left">
+                    <button onClick={handleLogout} className="flex items-center gap-3 px-3 py-2 hover:bg-[#3a3b40] rounded-lg transition-colors cursor-pointer text-surface/70 hover:text-surface group w-full text-left">
                         <span className="material-symbols-outlined text-primary">logout</span>
                         <p className="text-sm font-medium leading-normal font-label-md">Logout</p>
                     </button>
