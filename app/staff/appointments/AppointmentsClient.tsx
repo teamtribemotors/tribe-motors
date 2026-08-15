@@ -1,9 +1,98 @@
 "use client";
 
 import { useState } from 'react';
+import { Calendar, dateFnsLocalizer, Views } from 'react-big-calendar';
+import { format, parse, startOfWeek, getDay } from 'date-fns';
+import { enUS } from 'date-fns/locale/en-US';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { updateAppointmentStatus } from '../../actions/appointments';
+import toast from 'react-hot-toast';
+
+const locales = {
+  'en-US': enUS,
+};
+
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales,
+});
 
 export default function AppointmentsClient({ initialData }: { initialData: any[] }) {
-    const [selectedBooking, setSelectedBooking] = useState<any>(initialData[0] || null);
+    const [selectedBooking, setSelectedBooking] = useState<any>(null);
+    const [view, setView] = useState(Views.WEEK);
+    const [date, setDate] = useState(new Date());
+
+    // Map initialData to calendar events
+    const events = initialData.map((data) => ({
+        id: data.appointment.id,
+        title: `${data.customer.name.split(' ')[0]} - ${data.vehicle.model}`,
+        start: new Date(data.appointment.startTime),
+        end: new Date(data.appointment.endTime),
+        resource: data,
+    }));
+
+    const handleSelectEvent = (event: any) => {
+        setSelectedBooking(event.resource);
+    };
+
+    const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newStatus = e.target.value;
+        try {
+            await updateAppointmentStatus(selectedBooking.appointment.id, newStatus);
+            // Optimistically update the selected booking view
+            setSelectedBooking({
+                ...selectedBooking,
+                appointment: { ...selectedBooking.appointment, status: newStatus }
+            });
+            toast.success('Status updated successfully');
+        } catch (err) {
+            toast.error('Failed to update status');
+        }
+    };
+
+    // Custom event styling based on status
+    const eventPropGetter = (event: any) => {
+        const status = event.resource.appointment.status;
+        let backgroundColor = '#e2e8f0';
+        let borderColor = '#94a3b8';
+        let color = '#334155';
+
+        if (status === 'Pending') {
+            backgroundColor = '#fff0ed'; // bg-[#fe3b01]/10
+            borderColor = '#fe3b01';
+            color = '#b02600';
+        } else if (status === 'Confirmed') {
+            backgroundColor = '#e0f2fe';
+            borderColor = '#0284c7';
+            color = '#0369a1';
+        } else if (status === 'Completed') {
+            backgroundColor = '#dcfce7';
+            borderColor = '#16a34a';
+            color = '#15803d';
+        } else if (status === 'Cancelled') {
+            backgroundColor = '#f1f5f9';
+            borderColor = '#94a3b8';
+            color = '#64748b';
+        }
+
+        return {
+            style: {
+                backgroundColor,
+                borderLeft: `4px solid ${borderColor}`,
+                color,
+                borderRadius: '4px',
+                borderTop: 'none',
+                borderRight: 'none',
+                borderBottom: 'none',
+                opacity: 0.9,
+                fontWeight: 600,
+                fontSize: '12px',
+            }
+        };
+    };
 
     return (
         <>
@@ -12,28 +101,9 @@ export default function AppointmentsClient({ initialData }: { initialData: any[]
                 <div className="flex items-center space-x-4">
                     <h2 className="font-headline-lg text-headline-lg text-on-background">Schedule</h2>
                     <div className="flex items-center bg-surface-container-lowest border border-outline-variant rounded-lg p-1">
-                        <button className="px-4 py-1.5 font-label-md text-on-surface-variant hover:text-primary transition-colors rounded">Day</button>
-                        <button className="px-4 py-1.5 font-label-md bg-surface-container-highest text-primary font-bold rounded shadow-sm">Week</button>
-                        <button className="px-4 py-1.5 font-label-md text-on-surface-variant hover:text-primary transition-colors rounded">Month</button>
-                    </div>
-                </div>
-                <div className="flex items-center space-x-md">
-                    <div className="relative">
-                        <select className="appearance-none bg-surface-container-lowest border border-outline-variant text-on-background font-label-md py-2 pl-4 pr-10 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary">
-                            <option>All Staff</option>
-                            <option>Sarah Jenkins</option>
-                            <option>Michael Chang</option>
-                        </select>
-                        <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
-                    </div>
-                    <div className="flex items-center space-x-2 bg-surface-container-lowest border border-outline-variant rounded-lg p-1">
-                        <button className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded hover:bg-surface-container-highest">
-                            <span className="material-symbols-outlined">chevron_left</span>
-                        </button>
-                        <span className="font-label-md text-on-background px-2">Oct 23 - 29, 2023</span>
-                        <button className="p-1 text-on-surface-variant hover:text-primary transition-colors rounded hover:bg-surface-container-highest">
-                            <span className="material-symbols-outlined">chevron_right</span>
-                        </button>
+                        <button onClick={() => setView(Views.DAY)} className={`px-4 py-1.5 font-label-md rounded shadow-sm transition-colors ${view === Views.DAY ? 'bg-surface-container-highest text-primary font-bold' : 'text-on-surface-variant hover:text-primary'}`}>Day</button>
+                        <button onClick={() => setView(Views.WEEK)} className={`px-4 py-1.5 font-label-md rounded shadow-sm transition-colors ${view === Views.WEEK ? 'bg-surface-container-highest text-primary font-bold' : 'text-on-surface-variant hover:text-primary'}`}>Week</button>
+                        <button onClick={() => setView(Views.MONTH)} className={`px-4 py-1.5 font-label-md rounded shadow-sm transition-colors ${view === Views.MONTH ? 'bg-surface-container-highest text-primary font-bold' : 'text-on-surface-variant hover:text-primary'}`}>Month</button>
                     </div>
                 </div>
             </div>
@@ -41,91 +111,22 @@ export default function AppointmentsClient({ initialData }: { initialData: any[]
             {/* Content Area */}
             <div className="flex-1 flex overflow-hidden">
                 {/* Calendar View (Main Left) */}
-                <div className="flex-1 overflow-auto bg-surface relative">
-                    {/* Grid Placeholder / Structure */}
-                    <div className="min-w-[800px] h-full flex flex-col">
-                        {/* Days Header */}
-                        <div className="flex border-b border-outline-variant/20 sticky top-0 bg-surface/95 backdrop-blur z-10">
-                            <div className="w-16 shrink-0 border-r border-outline-variant/20"></div>
-                            <div className="flex-1 grid grid-cols-5 text-center font-label-md text-on-surface-variant divide-x divide-outline-variant/20">
-                                <div className="py-sm"><div className="text-label-sm uppercase tracking-wider mb-1">Mon</div><div className="text-body-lg font-semibold text-on-background">23</div></div>
-                                <div className="py-sm bg-surface-container-lowest"><div className="text-label-sm uppercase tracking-wider mb-1 text-primary">Tue</div><div className="text-body-lg font-bold text-primary">24</div></div>
-                                <div className="py-sm"><div className="text-label-sm uppercase tracking-wider mb-1">Wed</div><div className="text-body-lg font-semibold text-on-background">25</div></div>
-                                <div className="py-sm"><div className="text-label-sm uppercase tracking-wider mb-1">Thu</div><div className="text-body-lg font-semibold text-on-background">26</div></div>
-                                <div className="py-sm"><div className="text-label-sm uppercase tracking-wider mb-1">Fri</div><div className="text-body-lg font-semibold text-on-background">27</div></div>
-                            </div>
-                        </div>
-
-                        {/* Time Slots */}
-                        <div className="flex-1 flex relative">
-                            {/* Time Axis */}
-                            <div className="w-16 shrink-0 flex flex-col border-r border-outline-variant/20 text-right pr-2 text-label-sm text-on-surface-variant/70 pt-2">
-                                <div className="h-20">09:00</div>
-                                <div className="h-20">10:00</div>
-                                <div className="h-20">11:00</div>
-                                <div className="h-20">12:00</div>
-                                <div className="h-20">13:00</div>
-                                <div className="h-20">14:00</div>
-                                <div className="h-20">15:00</div>
-                                <div className="h-20">16:00</div>
-                            </div>
-
-                            {/* Grid Lines */}
-                            <div className="flex-1 grid grid-cols-5 divide-x divide-outline-variant/20 relative">
-                                {/* Horizontal Grid Lines */}
-                                <div className="absolute inset-0 pointer-events-none">
-                                    <div className="h-20 border-b border-outline-variant/10 w-full"></div>
-                                    <div className="h-20 border-b border-outline-variant/10 w-full"></div>
-                                    <div className="h-20 border-b border-outline-variant/10 w-full"></div>
-                                    <div className="h-20 border-b border-outline-variant/10 w-full"></div>
-                                    <div className="h-20 border-b border-outline-variant/10 w-full"></div>
-                                    <div className="h-20 border-b border-outline-variant/10 w-full"></div>
-                                    <div className="h-20 border-b border-outline-variant/10 w-full"></div>
-                                    <div className="h-20 border-b border-outline-variant/10 w-full"></div>
-                                </div>
-
-                                {/* Dynamic Column Mapping */}
-                                <div className="relative"></div>
-                                <div className="relative bg-surface-container-lowest/50">
-                                    {initialData.map((data, idx) => {
-                                        // A naive implementation to map time to Y coordinate just for show
-                                        // 09:00 is top 0, each hour is 80px
-                                        const startHour = data.appointment.startTime.getHours() + (data.appointment.startTime.getMinutes() / 60);
-                                        const endHour = data.appointment.endTime.getHours() + (data.appointment.endTime.getMinutes() / 60);
-                                        const top = Math.max(0, (startHour - 9) * 80 + 8);
-                                        const height = (endHour - startHour) * 80;
-                                        
-                                        const isPending = data.appointment.status === 'Pending';
-                                        
-                                        return (
-                                            <div 
-                                                key={data.appointment.id}
-                                                className={`absolute left-1 right-1 rounded-r p-2 shadow-sm cursor-pointer transition-colors z-10 ${
-                                                    isPending 
-                                                        ? 'bg-[#fe3b01]/10 border-l-4 border-[#fe3b01] hover:bg-[#fe3b01]/20'
-                                                        : 'bg-green-800/10 border-l-4 border-green-800 hover:bg-green-800/20'
-                                                }`}
-                                                style={{ top: `${top}px`, height: `${Math.max(40, height)}px` }}
-                                                onClick={() => setSelectedBooking(data)}
-                                            >
-                                                <div className="flex justify-between items-start mb-1">
-                                                    <div className={`text-label-sm font-bold ${isPending ? 'text-[#fe3b01]' : 'text-green-800'}`}>
-                                                        {data.appointment.startTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                                                    </div>
-                                                    <span className={`material-symbols-outlined text-[16px] ${isPending ? 'text-[#fe3b01]' : 'text-green-800'}`}>schedule</span>
-                                                </div>
-                                                <div className="text-label-md text-on-background truncate font-bold">{data.customer.name.split(' ')[0]} - {data.vehicle.model}</div>
-                                                <div className="text-label-sm text-on-surface-variant truncate">{data.appointment.status}</div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                                <div className="relative"></div>
-                                <div className="relative"></div>
-                                <div className="relative"></div>
-                            </div>
-                        </div>
-                    </div>
+                <div className="flex-1 overflow-auto bg-surface p-4">
+                    <Calendar
+                        localizer={localizer}
+                        events={events}
+                        startAccessor="start"
+                        endAccessor="end"
+                        style={{ height: '100%', minHeight: '600px' }}
+                        view={view}
+                        onView={(v) => setView(v as any)}
+                        date={date}
+                        onNavigate={(d) => setDate(d)}
+                        onSelectEvent={handleSelectEvent}
+                        eventPropGetter={eventPropGetter}
+                        step={30}
+                        timeslots={2}
+                    />
                 </div>
 
                 {/* Booking Details Panel (Right Sidebar) */}
@@ -142,17 +143,29 @@ export default function AppointmentsClient({ initialData }: { initialData: any[]
                         </div>
 
                         <div className="p-md flex-1 overflow-y-auto space-y-6">
-                            {/* Status Badge */}
-                            <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full font-label-sm border ${selectedBooking.appointment.status === 'Pending' ? 'bg-[#fe3b01]/10 text-[#fe3b01] border-[#fe3b01]/20' : 'bg-green-800/10 text-green-800 border-green-800/20'}`}>
-                                <span className="material-symbols-outlined text-[14px]">pending_actions</span>
-                                <span>{selectedBooking.appointment.status}</span>
+                            {/* Status Badge & Editor */}
+                            <div>
+                                <div className="text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Status</div>
+                                <select 
+                                    className="w-full bg-surface-container-lowest border border-outline-variant text-on-background font-label-md py-2 px-3 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                                    value={selectedBooking.appointment.status}
+                                    onChange={handleStatusChange}
+                                >
+                                    <option value="Pending">Pending</option>
+                                    <option value="Confirmed">Confirmed</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                </select>
                             </div>
 
                             {/* Time Info */}
                             <div>
                                 <div className="text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Schedule</div>
-                                <div className="font-headline-md text-on-background">{selectedBooking.appointment.startTime.toLocaleDateString()}</div>
-                                <div className="font-body-md text-secondary">{selectedBooking.appointment.startTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                                <div className="font-headline-md text-on-background">{new Date(selectedBooking.appointment.startTime).toLocaleDateString()}</div>
+                                <div className="font-body-md text-secondary">
+                                    {new Date(selectedBooking.appointment.startTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - 
+                                    {new Date(selectedBooking.appointment.endTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                </div>
                             </div>
 
                             {/* Customer Info */}
@@ -183,14 +196,6 @@ export default function AppointmentsClient({ initialData }: { initialData: any[]
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        {/* Action Area */}
-                        <div className="p-md border-t border-outline-variant/20 bg-surface-container-lowest mt-auto space-y-3">
-                            <button className="w-full h-12 bg-primary text-white font-label-md rounded-lg hover:bg-primary-container transition-colors flex items-center justify-center space-x-2 shadow-sm">
-                                <span className="material-symbols-outlined">check_circle</span>
-                                <span>Update Booking</span>
-                            </button>
                         </div>
                     </aside>
                 )}
