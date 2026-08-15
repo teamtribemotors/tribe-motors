@@ -1,9 +1,20 @@
-"use client";
 
 import StaffSidebar from '../../components/StaffSidebar';
 import StaffHeader from '../../components/StaffHeader';
+import { db } from '../../../db';
+import { serviceRecords, vehicles } from '../../../db/schema';
+import { eq, desc } from 'drizzle-orm';
+import { formatIndianCurrency } from '../../utils';
 
-export default function ServiceRecordsPage() {
+export default async function ServiceRecordsPage() {
+    const records = await db
+        .select({
+            record: serviceRecords,
+            vehicle: vehicles
+        })
+        .from(serviceRecords)
+        .innerJoin(vehicles, eq(serviceRecords.vehicleId, vehicles.id))
+        .orderBy(desc(serviceRecords.date));
     return (
         <div className="flex h-screen w-full overflow-hidden bg-surface-bright text-on-surface font-body-md antialiased">
             <StaffSidebar />
@@ -61,53 +72,37 @@ export default function ServiceRecordsPage() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-outline-variant">
-                                    <tr className="hover:bg-surface-bright-alt transition-colors group">
-                                        <td className="py-md px-6">
-                                            <div className="flex items-center gap-sm">
-                                                <div className="w-16 h-12 rounded bg-surface-container overflow-hidden shrink-0">
-                                                    <div className="w-full h-full bg-surface-variant"></div>
+                                    {records.map(({ record, vehicle }) => (
+                                        <tr key={record.id} className="hover:bg-surface-bright-alt transition-colors group relative">
+                                            <td className="py-md px-6 relative">
+                                                {record.status === 'Pending' && <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>}
+                                                <div className="flex items-center gap-sm pl-2">
+                                                    <div className="w-16 h-12 rounded bg-surface-container overflow-hidden shrink-0 bg-cover bg-center" style={{ backgroundImage: `url(${vehicle.imageUrl})` }}>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-on-surface text-sm font-semibold">{vehicle.title}</p>
+                                                        <p className="font-body-md text-sm text-on-surface-variant/80">Cost: {formatIndianCurrency(record.cost)}</p>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <p className="text-on-surface text-sm font-semibold">1973 Porsche 911T</p>
-                                                    <p className="font-body-md text-sm text-on-surface-variant/80">VIN: WP0ZZZ91ZTS123456</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="py-md px-6">
-                                            <p className="font-body-md text-body-md">150-Point Inspection</p>
-                                        </td>
-                                        <td className="py-md px-6 font-body-md text-body-md text-sm text-on-surface-variant">Oct 24, 2023</td>
-                                        <td className="py-md px-6">
-                                            <span className="inline-flex items-center rounded-full bg-tertiary-fixed px-2 py-1 text-[10px] font-bold text-on-tertiary-fixed uppercase tracking-tight">Complete</span>
-                                        </td>
-                                        <td className="py-md px-6 text-right">
-                                            <button className="font-label-md text-label-md text-primary border border-primary/30 px-sm py-xs rounded hover:bg-primary-fixed/20 transition-colors opacity-0 group-hover:opacity-100">View</button>
-                                        </td>
-                                    </tr>
-                                    <tr className="hover:bg-surface-bright-alt transition-colors group relative">
-                                        <td className="py-md px-6">
-                                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
-                                            <div className="flex items-center gap-sm pl-2">
-                                                <div className="w-16 h-12 rounded bg-surface-container overflow-hidden shrink-0">
-                                                    <div className="w-full h-full bg-surface-variant"></div>
-                                                </div>
-                                                <div>
-                                                    <p className="text-on-surface text-sm font-semibold">1988 Land Rover Defender</p>
-                                                    <p className="font-body-md text-sm text-on-surface-variant/80">VIN: SALLDHMM7FA123456</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="py-md px-6">
-                                            <p className="font-body-md text-body-md">Engine Overhaul</p>
-                                        </td>
-                                        <td className="py-md px-6 font-body-md text-body-md text-sm text-on-surface-variant">Oct 26, 2023</td>
-                                        <td className="py-md px-6">
-                                            <span className="inline-flex items-center rounded-full bg-primary-container text-on-primary px-2 py-1 text-[10px] font-bold uppercase tracking-tight">Pending</span>
-                                        </td>
-                                        <td className="py-md px-6 text-right">
-                                            <button className="font-label-md text-label-md text-primary border border-primary/30 px-sm py-xs rounded hover:bg-primary-fixed/20 transition-colors opacity-0 group-hover:opacity-100">View</button>
-                                        </td>
-                                    </tr>
+                                            </td>
+                                            <td className="py-md px-6">
+                                                <p className="font-body-md text-body-md">{record.type}</p>
+                                            </td>
+                                            <td className="py-md px-6 font-body-md text-body-md text-sm text-on-surface-variant">{record.date.toLocaleDateString()}</td>
+                                            <td className="py-md px-6">
+                                                {record.status === 'Completed' ? (
+                                                    <span className="inline-flex items-center rounded-full bg-tertiary-fixed px-2 py-1 text-[10px] font-bold text-on-tertiary-fixed uppercase tracking-tight">Complete</span>
+                                                ) : record.status === 'Pending' ? (
+                                                    <span className="inline-flex items-center rounded-full bg-primary-container text-on-primary px-2 py-1 text-[10px] font-bold uppercase tracking-tight">Pending</span>
+                                                ) : (
+                                                    <span className="inline-flex items-center rounded-full bg-surface-container-high px-2 py-1 text-[10px] font-bold uppercase tracking-tight text-on-surface-variant">{record.status}</span>
+                                                )}
+                                            </td>
+                                            <td className="py-md px-6 text-right">
+                                                <button className="font-label-md text-label-md text-primary border border-primary/30 px-sm py-xs rounded hover:bg-primary-fixed/20 transition-colors opacity-0 group-hover:opacity-100">View</button>
+                                            </td>
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </table>
                         </div>

@@ -39,7 +39,9 @@ export const enquiries = pgTable('enquiries', {
   number: text('number').notNull(),
   vehicleId: uuid('vehicle_id').references(() => vehicles.id).notNull(),
   vehicleModel: text('vehicle_model').notNull(),
-  status: text('status').notNull().default('New'), // New, Contacted
+  status: text('status').notNull().default('New'), // New, Contacted, Test Drive, Negotiation, Closed
+  assignedTo: uuid('assigned_to').references(() => staff.id),
+  notes: text('notes'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 }, (table) => {
   return {
@@ -86,4 +88,42 @@ export const serviceRecords = pgTable('service_records', {
   cost: integer('cost').notNull(),
   status: text('status').notNull().default('Pending'), // Pending, In Progress, Completed
   date: timestamp('date').defaultNow().notNull(),
+});
+
+export const reportUnlocks = pgTable('report_unlocks', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  vehicleId: uuid('vehicle_id').references(() => vehicles.id).notNull(),
+  customerId: uuid('customer_id').references(() => customers.id), // Could be null if guest
+  amount: integer('amount').notNull(),
+  unlockedAt: timestamp('unlocked_at').defaultNow().notNull(),
+});
+
+export const appointments = pgTable('appointments', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  customerId: uuid('customer_id').references(() => customers.id).notNull(),
+  vehicleId: uuid('vehicle_id').references(() => vehicles.id).notNull(),
+  staffId: uuid('staff_id').references(() => staff.id),
+  startTime: timestamp('start_time').notNull(),
+  endTime: timestamp('end_time').notNull(),
+  status: text('status').notNull().default('Pending'), // Pending, Confirmed, Completed, Cancelled
+  type: text('type').notNull().default('Visit'), // Visit, Test Drive
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export const tasks = pgTable('tasks', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  title: text('title').notNull(),
+  description: text('description'),
+  status: text('status').notNull().default('Pending'), // Pending, In Progress, Completed
+  assignedTo: uuid('assigned_to').references(() => staff.id),
+  priority: text('priority').default('Normal'), // Urgent, High, Normal, Low
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export const activityLogs = pgTable('activity_logs', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  type: text('type').notNull(), // Enquiry, Booking, Unlock, System
+  description: text('description').notNull(),
+  userId: uuid('user_id'), // User or staff who performed action
+  createdAt: timestamp('created_at').defaultNow().notNull(),
 });
