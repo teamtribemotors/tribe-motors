@@ -24,7 +24,7 @@ export default function EnquiriesKanban({ initialData, staffMembers = [] }: { in
         return state.map(item => item.enquiry.id === action.payload.id ? { ...item, enquiry: { ...item.enquiry, status: action.payload.status } } : item);
       }
       if (action.type === 'update_notes') {
-        return state.map(item => item.enquiry.id === action.payload.id ? { ...item, enquiry: { ...item.enquiry, internalNotes: action.payload.notes } } : item);
+        return state.map(item => item.enquiry.id === action.payload.id ? { ...item, enquiry: { ...item.enquiry, notes: action.payload.notes } } : item);
       }
       if (action.type === 'update_assignee') {
         const staff = staffMembers.find(s => s.id === action.payload.assigneeId);
@@ -73,7 +73,7 @@ export default function EnquiriesKanban({ initialData, staffMembers = [] }: { in
     const id = selectedEnquiry.enquiry.id;
 
     startTransition(() => {
-      if (internalNotes !== selectedEnquiry.enquiry.internalNotes) {
+      if (internalNotes !== selectedEnquiry.enquiry.notes) {
         addOptimisticData({ type: 'update_notes', payload: { id, notes: internalNotes } });
       }
       if (assignedTo !== (selectedEnquiry.enquiry.assignedTo || '')) {
@@ -84,7 +84,7 @@ export default function EnquiriesKanban({ initialData, staffMembers = [] }: { in
     setSelectedEnquiry(null);
 
     try {
-      if (internalNotes !== selectedEnquiry.enquiry.internalNotes) {
+      if (internalNotes !== selectedEnquiry.enquiry.notes) {
         await updateEnquiryNotes(id, internalNotes);
       }
       if (assignedTo !== (selectedEnquiry.enquiry.assignedTo || '')) {
@@ -207,7 +207,7 @@ export default function EnquiriesKanban({ initialData, staffMembers = [] }: { in
                               <div className="h-6 w-6 rounded-full border-2 border-white bg-surface-dim flex items-center justify-center text-[10px] font-bold text-on-surface">
                                 {assignee ? assignee.name.charAt(0) : '?'}
                               </div>
-                              <span className="text-[10px] font-bold text-on-surface truncate max-w-[150px]">{enq.internalNotes || 'No notes'}</span>
+                              <span className="text-[10px] font-bold text-on-surface truncate max-w-[150px]">{enq.notes || 'No notes'}</span>
                             </div>
                           </div>
                         </div>
@@ -258,7 +258,7 @@ export default function EnquiriesKanban({ initialData, staffMembers = [] }: { in
                             <span className="rounded bg-tertiary-fixed px-2 py-0.5 text-[9px] font-black text-on-tertiary-fixed">{enq.status.toUpperCase()}</span>
                           </div>
                           <div className="flex items-center justify-between border-t border-outline-variant pt-3 mt-1">
-                            <span className="text-[10px] font-bold text-tertiary truncate max-w-[180px]">{enq.internalNotes || 'Awaiting update'}</span>
+                            <span className="text-[10px] font-bold text-tertiary truncate max-w-[180px]">{enq.notes || 'Awaiting update'}</span>
                             <div className="h-6 w-6 rounded-full border-2 border-white bg-surface-dim flex items-center justify-center text-[10px] font-bold text-on-surface">
                                 {assignee ? assignee.name.charAt(0) : '?'}
                             </div>
@@ -371,7 +371,7 @@ export default function EnquiriesKanban({ initialData, staffMembers = [] }: { in
                 <textarea 
                   name="internalNotes"
                   rows={4}
-                  defaultValue={selectedEnquiry.enquiry.internalNotes || ''}
+                  defaultValue={selectedEnquiry.enquiry.notes || ''}
                   className="w-full rounded-xl border border-outline-variant bg-surface-container-lowest p-3 text-on-surface font-body-md focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary resize-none"
                   placeholder="Add your notes about this lead..."
                 ></textarea>

@@ -11,12 +11,12 @@ export default function Navbar() {
         </div>
         <nav className="hidden md:flex items-center gap-8">
           <Link className="text-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200" href="/browse">Inventory</Link>
-          <Link className="text-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#">About</Link>
-          <Link className="text-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#">Contact</Link>
+          <Link className="text-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200" href="/how-it-works">About</Link>
+          <a className="text-surface-variant font-label-md text-label-md hover:text-primary transition-colors duration-200" href="mailto:support@tribemotors.com">Contact</a>
         </nav>
-        <button className="bg-primary hover:bg-surface-tint text-on-primary font-label-md text-label-md px-6 py-3 rounded active:scale-95 transition-transform hidden md:block">
+        <Link href="/staff/login" className="bg-primary hover:bg-surface-tint text-on-primary font-label-md text-label-md px-6 py-3 rounded active:scale-95 transition-transform hidden md:block">
           Sign In
-        </button>
+        </Link>
         <button className="md:hidden text-surface-variant p-2">
           <span className="material-symbols-outlined">menu</span>
         </button>

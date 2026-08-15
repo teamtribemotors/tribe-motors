@@ -9,10 +9,10 @@ export default function Footer() {
           <p className="font-body-md text-body-md text-surface-variant text-center md:text-left max-w-xs">Premium Automotive Concierge. Visakhapatnam, India.</p>
         </div>
         <nav className="flex flex-wrap justify-center md:justify-end gap-x-8 gap-y-4">
-          <Link className="font-body-md text-body-md text-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</Link>
-          <Link className="font-body-md text-body-md text-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</Link>
-          <Link className="font-body-md text-body-md text-surface-variant hover:text-primary transition-colors" href="#">Cookie Policy</Link>
-          <Link className="font-body-md text-body-md text-surface-variant hover:text-primary transition-colors" href="#">Support</Link>
+          <Link className="font-body-md text-body-md text-surface-variant hover:text-primary transition-colors" href="/">Privacy Policy</Link>
+          <Link className="font-body-md text-body-md text-surface-variant hover:text-primary transition-colors" href="/">Terms of Service</Link>
+          <Link className="font-body-md text-body-md text-surface-variant hover:text-primary transition-colors" href="/">Cookie Policy</Link>
+          <a className="font-body-md text-body-md text-surface-variant hover:text-primary transition-colors" href="mailto:support@tribemotors.com">Support</a>
         </nav>
       </div>
       <div className="border-t border-on-secondary-fixed-variant py-6 text-center">

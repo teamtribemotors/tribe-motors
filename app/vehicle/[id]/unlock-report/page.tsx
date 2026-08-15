@@ -7,6 +7,7 @@ import { formatIndianCurrency } from '../../../utils';
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
 import PaymentOptions from '../../../components/PaymentOptions';
+import RazorpayButton from '../../../components/RazorpayButton';
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -76,10 +77,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
           {/* Action Area */}
           <div className="mt-stack-lg border-t border-outline-variant/30 pt-stack-lg text-center">
-            <button className="w-full md:w-auto px-stack-xl py-4 bg-primary text-white font-label-md text-label-md rounded-md hover:opacity-90 transition-opacity duration-200 shadow-sm flex justify-center items-center gap-2 mx-auto">
-              <span className="material-symbols-outlined" data-icon="lock">lock</span>
-              Pay &amp; Unlock Report
-            </button>
+            <RazorpayButton vehicleId={vehicle.id} amount={2499} />
             <p className="mt-stack-sm font-label-sm text-label-sm text-on-surface-variant flex items-center justify-center gap-1">
               <span className="material-symbols-outlined text-[14px]" data-icon="verified_user">verified_user</span>
               Secure 256-bit encrypted payment. Instant access after successful transaction.
