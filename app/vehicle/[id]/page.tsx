@@ -9,6 +9,7 @@ import Footer from '../../components/Footer';
 import ContactDealerModal from '../../components/ContactDealerModal';
 import Link from 'next/link';
 import VehicleGallery from '../../components/VehicleGallery';
+import VerifiedBadge from '../../components/VerifiedBadge';
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -63,7 +64,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
               <div className="flex justify-between items-start mb-stack-sm">
                 <h1 className="font-headline-lg text-headline-lg text-on-surface leading-tight">{vehicle.year} {vehicle.make} {vehicle.model}</h1>
                 {vehicle.isCertified && (
-                  <span className="bg-tertiary text-on-tertiary font-label-sm text-label-sm px-3 py-1 rounded-full whitespace-nowrap ml-2">Verified</span>
+                  <VerifiedBadge className="ml-2 whitespace-nowrap flex-shrink-0" />
                 )}
               </div>
               <div className="font-display-lg text-display-lg text-primary mb-stack-md">{formatIndianCurrency(vehicle.price)}</div>

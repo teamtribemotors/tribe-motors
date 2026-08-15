@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { formatIndianCurrency } from '../utils';
+import VerifiedBadge from './VerifiedBadge';
 
 export interface VehicleCardProps {
   id: string;
@@ -27,9 +28,8 @@ export default function VehicleCard({ vehicle }: { vehicle: VehicleCardProps }) 
     <Link href={`/vehicle/${vehicle.id}`} className="block h-full">
       <article className="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/30 group hover:shadow-lg transition-all duration-300 relative flex flex-col h-full cursor-pointer">
         {vehicle.isCertified && (
-          <div className="absolute top-4 right-4 z-10 trust-badge px-3 py-1 rounded-full text-label-sm font-label-sm flex items-center gap-1 shadow-sm">
-            <span className="material-symbols-outlined text-[16px]" data-icon="verified">verified</span>
-            Verified
+          <div className="absolute top-4 right-4 z-10">
+            <VerifiedBadge />
           </div>
         )}
         <div className="relative w-full aspect-[4/3] bg-surface-variant overflow-hidden">
