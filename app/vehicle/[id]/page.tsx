@@ -117,7 +117,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 )}
               </div>
               <div className="font-display-lg text-display-lg text-primary mb-stack-md">{formatIndianCurrency(vehicle.price)}</div>
-              
+
               {/* Quick Specs Grid */}
               <div className="grid grid-cols-2 gap-stack-sm mb-stack-lg">
                 <div className="flex flex-col bg-surface p-stack-sm rounded border border-outline-variant/20">
@@ -144,9 +144,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
               {/* Actions */}
               <div className="flex flex-col gap-stack-sm">
-                <button className="w-full bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md h-[48px] rounded transition-colors duration-200">
+                <Link href={`/vehicle/${vehicle.id}/schedule-visit`} className="w-full flex justify-center items-center bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md h-[48px] rounded transition-colors duration-200">
                   Schedule Test Drive
-                </button>
+                </Link>
                 <ContactDealerModal vehicleId={vehicle.id} vehicleModel={`${vehicle.year} ${vehicle.make} ${vehicle.model}`} />
               </div>
             </div>
@@ -158,7 +158,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 <h4 className="font-label-md text-label-md text-on-surface font-bold">Unlock Full History Report</h4>
               </div>
               <p className="font-body-md text-body-md text-on-surface-variant mb-4 text-sm">
-                Get 150-point inspection results, accident history, and service records. <br/><span className="italic text-xs mt-1 block">14 people viewed this report today.</span>
+                Get 150-point inspection results, accident history, and service records. <br /><span className="italic text-xs mt-1 block">14 people viewed this report today.</span>
               </p>
               <Link href={`/vehicle/${vehicle.id}/unlock-report`} className="flex items-center justify-center w-full bg-tertiary hover:bg-on-tertiary-fixed-variant text-on-tertiary font-label-md text-label-md h-[40px] rounded transition-colors duration-200">
                 View Report

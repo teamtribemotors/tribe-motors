@@ -59,8 +59,7 @@ export default async function ScheduleVisitPage({ params }: { params: Promise<{ 
             <h1 className="font-display-lg text-display-lg text-on-surface mb-2">Schedule Visit</h1>
             <p className="font-body-lg text-body-lg text-on-surface-variant">Select a preferred date and time to view the vehicle in person or arrange a test drive.</p>
           </header>
-          
-          <ScheduleVisitForm />
+          <ScheduleVisitForm vehicleId={vehicle.id} />
         </div>
       </main>
 

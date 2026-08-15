@@ -25,11 +25,16 @@ export async function bulkInsertVehicles(vehiclesData: any[]) {
     year: v.year ? parseInt(v.year) : new Date().getFullYear(),
     price: v.price ? parseInt(v.price) : 0,
     mileage: v.mileage ? parseInt(v.mileage) : 0,
-    exteriorColor: v.exteriorColor || v.color || 'Unknown',
-    interiorColor: v.interiorColor || 'Unknown',
-    vin: v.vin || '',
-    status: 'Draft',
-    images: []
+    fuelType: v.fuelType || 'Petrol',
+    transmission: v.transmission || 'Automatic',
+    bodyType: v.bodyType || 'Sedan',
+    owners: v.owners || '1st Owner',
+    color: v.color || v.exteriorColor || 'Unknown',
+    colorHex: v.colorHex || '#000000',
+    title: v.title || `${v.year || new Date().getFullYear()} ${v.make || 'Unknown'} ${v.model || 'Unknown'}`,
+    imageUrl: v.imageUrl || 'https://placeholder.com/car.jpg',
+    imageAlt: v.imageAlt || 'Vehicle Image',
+    status: 'Draft'
   }));
 
   await db.insert(vehicles).values(toInsert);

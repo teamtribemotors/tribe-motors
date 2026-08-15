@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { Calendar, dateFnsLocalizer, Views } from 'react-big-calendar';
+import { Calendar, dateFnsLocalizer, Views, View } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import { enUS } from 'date-fns/locale/en-US';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -22,7 +22,7 @@ const localizer = dateFnsLocalizer({
 
 export default function AppointmentsClient({ initialData }: { initialData: any[] }) {
     const [selectedBooking, setSelectedBooking] = useState<any>(null);
-    const [view, setView] = useState(Views.WEEK);
+    const [view, setView] = useState<View>(Views.WEEK);
     const [date, setDate] = useState(new Date());
 
     // Map initialData to calendar events
