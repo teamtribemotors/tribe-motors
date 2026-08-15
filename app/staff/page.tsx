@@ -4,6 +4,8 @@ import { db } from '../../db';
 import { vehicles as vehiclesTable, enquiries, appointments, reportUnlocks, activityLogs, tasks, staff } from '../../db/schema';
 import { desc, eq, not } from 'drizzle-orm';
 import Link from 'next/link';
+import TasksClient from '../components/TasksClient';
+import AutoRefresh from '../components/AutoRefresh';
 
 export default async function StaffDashboard() {
   const allVehicles = await db.select().from(vehiclesTable).orderBy(desc(vehiclesTable.createdAt));
@@ -40,6 +42,7 @@ export default async function StaffDashboard() {
       <StaffSidebar />
       
       <main className="flex flex-1 flex-col overflow-hidden bg-surface-bright">
+        <AutoRefresh intervalMs={15000} />
         <StaffHeader title="Dashboard" icon="dashboard" />
         
         {/* Scrollable Body */}
@@ -124,46 +127,7 @@ export default async function StaffDashboard() {
                   <span className="px-2.5 py-0.5 rounded-full bg-primary-container text-on-primary-container text-[10px] font-label-sm uppercase tracking-wider">3 Urgent</span>
                 </div>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left">
-                  <thead className="bg-surface-container-lowest">
-                    <tr>
-                      <th className="px-6 py-3 font-label-sm text-xs uppercase tracking-wider text-outline">Task Details</th>
-                      <th className="px-6 py-3 font-label-sm text-xs uppercase tracking-wider text-outline">Status</th>
-                      <th className="px-6 py-3 font-label-sm text-xs uppercase tracking-wider text-outline">Assigned To</th>
-                      <th className="px-6 py-3 text-right"></th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-outline-variant/20">
-                    {pendingTasks.map(({ task, assignee }) => (
-                      <tr key={task.id} className="hover:bg-surface-container-low transition-colors group">
-                        <td className="px-6 py-4">
-                          <div className="flex flex-col">
-                            <p className="text-on-surface font-label-md text-sm">{task.title}</p>
-                            <p className="text-outline font-body-md text-xs">{task.description}</p>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className={`inline-flex items-center rounded-full px-2 py-1 text-[10px] font-label-sm uppercase tracking-tight ${task.status === 'Overdue' ? 'bg-error-container/50 text-on-error-container' : 'bg-surface-container-high text-on-surface-variant'}`}>{task.status}</span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-2">
-                            <div className="size-6 rounded-full bg-surface-variant flex items-center justify-center text-[10px] font-bold text-on-surface">
-                              {assignee ? assignee.name.charAt(0) : '?'}
-                            </div>
-                            <p className="text-on-surface font-label-md text-xs">{assignee ? assignee.name : 'Unassigned'}</p>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <button className="text-primary hover:bg-primary-fixed/30 p-1.5 rounded-lg transition-colors">
-                            <span className="material-symbols-outlined">chevron_right</span>
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <TasksClient initialTasks={pendingTasks} />
             </div>
           </div>
           
@@ -188,10 +152,10 @@ export default async function StaffDashboard() {
                 <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">add_circle</span>
                 <span className="text-on-surface font-label-sm text-sm uppercase tracking-wider">New Listing</span>
               </Link>
-              <button className="flex flex-col items-center justify-center gap-3 rounded-xl bg-surface-container p-6 border border-outline-variant/30 hover:border-primary transition-all group">
+              <Link href="/staff/inventory/bulk-upload" className="flex flex-col items-center justify-center gap-3 rounded-xl bg-surface-container p-6 border border-outline-variant/30 hover:border-primary transition-all group">
                 <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">cloud_upload</span>
                 <span className="text-on-surface font-label-sm text-sm uppercase tracking-wider">Bulk Upload</span>
-              </button>
+              </Link>
             </div>
           </div>
           

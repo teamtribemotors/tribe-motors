@@ -25,10 +25,16 @@ export default async function Page() {
               <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-1 tracking-tight">Inventory</h1>
               <p className="font-body-md text-body-md text-on-surface-variant">Manage and view the current vehicle catalogue.</p>
             </div>
-            <Link href="/staff/inventory/new" className="bg-[#FE3B01] hover:bg-primary text-on-primary font-label-md text-label-md px-8 py-3 rounded-lg shadow-md transition-all flex items-center gap-2 min-h-[48px]">
-              <span className="material-symbols-outlined">add</span>
-              Add New Vehicle
-            </Link>
+            <div className="flex gap-4">
+              <Link href="/staff/inventory/bulk-upload" className="bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md px-6 py-3 rounded-lg shadow-sm transition-all flex items-center gap-2 min-h-[48px]">
+                <span className="material-symbols-outlined">cloud_upload</span>
+                Bulk Upload
+              </Link>
+              <Link href="/staff/inventory/new" className="bg-[#FE3B01] hover:bg-primary text-on-primary font-label-md text-label-md px-8 py-3 rounded-lg shadow-md transition-all flex items-center gap-2 min-h-[48px]">
+                <span className="material-symbols-outlined">add</span>
+                Add New Vehicle
+              </Link>
+            </div>
           </div>
 
           {/* Filter Tabs */}

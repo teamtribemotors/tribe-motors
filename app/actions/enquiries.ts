@@ -23,3 +23,17 @@ export async function updateEnquiryStatus(id: string, status: string) {
 
   return { success: true };
 }
+
+export async function updateEnquiryNotes(id: string, internalNotes: string) {
+  await requireAuth();
+  await db.update(enquiries).set({ internalNotes }).where(eq(enquiries.id, id));
+  revalidatePath('/staff/enquiries');
+  return { success: true };
+}
+
+export async function assignEnquiry(id: string, assignedTo: string) {
+  await requireAuth();
+  await db.update(enquiries).set({ assignedTo }).where(eq(enquiries.id, id));
+  revalidatePath('/staff/enquiries');
+  return { success: true };
+}

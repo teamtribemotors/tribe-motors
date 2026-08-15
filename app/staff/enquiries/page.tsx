@@ -4,6 +4,7 @@ import { db } from '../../../db';
 import { enquiries, staff } from '../../../db/schema';
 import { desc, eq } from 'drizzle-orm';
 import EnquiriesKanban from './EnquiriesKanban';
+import AutoRefresh from '../../components/AutoRefresh';
 
 export default async function EnquiriesPage() {
   const data = await db.select({
@@ -14,10 +15,13 @@ export default async function EnquiriesPage() {
   .leftJoin(staff, eq(enquiries.assignedTo, staff.id))
   .orderBy(desc(enquiries.createdAt));
 
+  const allStaff = await db.select().from(staff);
+
   return (
     <div className="flex h-screen w-full overflow-hidden bg-surface-bright text-on-surface font-body-md antialiased">
       <StaffSidebar />
       <main className="flex flex-1 flex-col overflow-hidden bg-surface-bright">
+        <AutoRefresh intervalMs={15000} />
         <StaffHeader title="Enquiries" icon="shuffle" />
 
         <div className="flex flex-1 flex-col overflow-hidden">
@@ -44,7 +48,7 @@ export default async function EnquiriesPage() {
             </div>
           </div>
 
-          <EnquiriesKanban initialData={data} />
+          <EnquiriesKanban initialData={data} staffMembers={allStaff} />
         </div>
       </main>
     </div>
