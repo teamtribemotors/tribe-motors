@@ -34,8 +34,13 @@ export default async function StaffDashboard() {
   .limit(3);
 
   const totalInventory = allVehicles.length;
-  // Live listings would ideally be queried with status 'Live', mock for now
+  // Live listings would ideally be queried with status 'Live'
   const liveListings = allVehicles.filter((v: any) => v.status === 'Live').length;
+  
+  const urgentTasksCount = pendingTasks.filter(t => t.task.priority === 'Urgent').length;
+  const targetUnlocks = 200;
+  const unlocksPercentage = Math.min(Math.round((reportsUnlockedCount / targetUnlocks) * 100), 100);
+  const remainingUnlocks = Math.max(targetUnlocks - reportsUnlockedCount, 0);
   
   return (
     <div className="flex h-screen w-full overflow-hidden bg-surface-bright text-on-surface font-body-md antialiased">
@@ -124,7 +129,7 @@ export default async function StaffDashboard() {
               <div className="px-6 py-4 border-b border-outline-variant/30 bg-surface-container-lowest flex items-center justify-between">
                 <h3 className="text-on-surface font-headline-md text-lg">Pending Tasks</h3>
                 <div className="flex gap-2">
-                  <span className="px-2.5 py-0.5 rounded-full bg-primary-container text-on-primary-container text-[10px] font-label-sm uppercase tracking-wider">3 Urgent</span>
+                  {urgentTasksCount > 0 && <span className="px-2.5 py-0.5 rounded-full bg-primary-container text-on-primary-container text-[10px] font-label-sm uppercase tracking-wider">{urgentTasksCount} Urgent</span>}
                 </div>
               </div>
               <TasksClient initialTasks={pendingTasks} />
@@ -136,11 +141,11 @@ export default async function StaffDashboard() {
             <div className="relative overflow-hidden rounded-xl bg-inverse-surface text-inverse-on-surface p-8 shadow-lg">
               <div className="relative z-10">
                 <h4 className="text-2xl font-headline-md mb-2 text-primary">Performance Goals</h4>
-                <p className="text-outline-variant font-body-md text-sm mb-6 max-w-md">Your branch is currently at 82% of its monthly target for report unlocks. Push for 10 more to hit the Gold tier.</p>
+                <p className="text-outline-variant font-body-md text-sm mb-6 max-w-md">Your branch is currently at {unlocksPercentage}% of its monthly target for report unlocks. {remainingUnlocks > 0 ? `Push for ${remainingUnlocks} more to hit the target.` : 'Target achieved!'}</p>
                 <div className="w-full bg-outline-variant/20 h-2 rounded-full mb-2">
-                  <div className="bg-primary h-full rounded-full" style={{ width: "82%" }}></div>
+                  <div className="bg-primary h-full rounded-full" style={{ width: `${unlocksPercentage}%` }}></div>
                 </div>
-                <p className="text-xs font-label-sm text-primary tracking-widest uppercase">Target: 200 Units</p>
+                <p className="text-xs font-label-sm text-primary tracking-widest uppercase">Target: {targetUnlocks} Units</p>
               </div>
               <div className="absolute -right-4 -bottom-4 opacity-20">
                 <span className="material-symbols-outlined text-[120px]">analytics</span>
