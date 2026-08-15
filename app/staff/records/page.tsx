@@ -14,10 +14,10 @@ export default async function ServiceRecordsPage() {
         .from(serviceRecords)
         .innerJoin(vehicles, eq(serviceRecords.vehicleId, vehicles.id))
         .orderBy(desc(serviceRecords.date));
-        
+
     const totalRecords = records.length;
     const pendingRecords = records.filter(r => r.record.status === 'Pending').length;
-    
+
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
     const recentRecords = records.filter(r => new Date(r.record.date) >= oneWeekAgo).length;
@@ -31,9 +31,9 @@ export default async function ServiceRecordsPage() {
                 <div className="flex-1 p-6 md:p-10 flex flex-col gap-8 overflow-y-auto w-full custom-scrollbar relative">
                     {/* Background decorative gradient */}
                     <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-surface-container-low to-transparent opacity-50 pointer-events-none z-0"></div>
-                    
+
                     <div className="relative z-10 flex flex-col gap-8 max-w-7xl mx-auto w-full">
-                        
+
                         {/* Header & Metrics */}
                         <div className="flex flex-col gap-6">
                             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -84,14 +84,14 @@ export default async function ServiceRecordsPage() {
                                 <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/60 group-focus-within:text-primary transition-colors">search</span>
                                 <input className="w-full h-12 pl-12 pr-4 rounded-xl bg-surface-container-low border border-transparent focus:border-primary/50 focus:ring-2 focus:ring-primary/20 font-body-md text-on-surface transition-all outline-none shadow-inner" placeholder="Search by VIN, Model or Type..." type="text" />
                             </div>
-                            
+
                             <div className="flex items-center gap-4 w-full lg:w-auto">
                                 <div className="flex items-center bg-surface-container-low rounded-xl p-1 shadow-inner overflow-hidden">
                                     <button className="px-6 py-2 rounded-lg bg-surface-bright text-primary font-label-md font-bold shadow-sm">All</button>
                                     <button className="px-6 py-2 rounded-lg text-on-surface-variant hover:text-on-surface font-label-md transition-colors">Pending</button>
                                     <button className="px-6 py-2 rounded-lg text-on-surface-variant hover:text-on-surface font-label-md transition-colors">Complete</button>
                                 </div>
-                                
+
                                 <div className="relative shrink-0">
                                     <select className="appearance-none bg-surface-container-low border-none rounded-xl pl-4 pr-10 py-3 font-label-md text-on-surface focus:ring-2 focus:ring-primary/20 shadow-inner cursor-pointer font-bold">
                                         <option>Type: All</option>
@@ -111,13 +111,13 @@ export default async function ServiceRecordsPage() {
                                 <div className="col-span-2">Date</div>
                                 <div className="col-span-2 text-right">Status</div>
                             </div>
-                            
+
                             <div className="flex flex-col gap-3">
                                 {records.map(({ record, vehicle }) => (
                                     <div key={record.id} className="group grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-surface-bright p-4 md:px-6 md:py-4 rounded-2xl border border-outline-variant/30 hover:border-primary/40 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer relative overflow-hidden">
                                         {/* Status Accent Bar */}
                                         {record.status === 'Pending' && <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary"></div>}
-                                        
+
                                         <div className="col-span-1 md:col-span-5 flex items-center gap-5">
                                             <div className="w-20 h-14 rounded-xl bg-surface-container overflow-hidden shrink-0 bg-cover bg-center shadow-inner" style={{ backgroundImage: `url(${vehicle.imageUrl})` }}></div>
                                             <div>
@@ -143,7 +143,7 @@ export default async function ServiceRecordsPage() {
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="col-span-1 md:col-span-3 flex items-center">
                                             <div className="flex items-center gap-2">
                                                 <span className="material-symbols-outlined text-outline-variant text-[20px]">
@@ -154,11 +154,11 @@ export default async function ServiceRecordsPage() {
                                                 </a>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="col-span-1 md:col-span-2 flex flex-col justify-center">
                                             <p className="font-label-md text-sm text-on-surface">{new Date(record.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
                                         </div>
-                                        
+
                                         <div className="col-span-1 md:col-span-2 flex items-center justify-between md:justify-end gap-4">
                                             <div>
                                                 {record.status === 'Completed' ? (
@@ -184,7 +184,7 @@ export default async function ServiceRecordsPage() {
                                     </div>
                                 ))}
                             </div>
-                            
+
                             <div className="mt-4 text-center pb-8">
                                 <button className="font-label-md text-sm font-bold text-on-surface-variant bg-surface-bright border border-outline-variant/40 px-6 py-3 rounded-xl hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-all shadow-sm inline-flex items-center gap-2">
                                     View All Past Records <span className="material-symbols-outlined text-[18px]">expand_more</span>
