@@ -29,13 +29,27 @@ export default function Filters({ availableMakes }: { availableMakes: { name: st
   const applyPrice = () => {
     // handled via state binding on inputs, but button resets page
     setPage(null);
+    setIsOpen(false);
   };
 
   const filteredMakes = availableMakes.filter(m => m.name.toLowerCase().includes(makeSearch.toLowerCase()));
 
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <div className="bg-surface-container-lowest rounded-xl border border-outline-variant/50 p-6 sticky top-24">
-      <h2 className="text-headline-md font-headline-md text-on-background mb-6">Filters</h2>
+    <>
+      {/* Mobile Toggle Button */}
+      <button 
+        className="md:hidden w-full flex items-center justify-center gap-2 bg-surface-container-low border border-outline-variant rounded-lg p-3 mb-4 text-on-surface font-label-md"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="material-symbols-outlined">{isOpen ? 'close' : 'filter_list'}</span>
+        {isOpen ? 'Close Filters' : 'Show Filters'}
+      </button>
+
+      {/* Filter Content */}
+      <div className={`${isOpen ? 'block' : 'hidden'} md:block bg-surface-container-lowest rounded-xl border border-outline-variant/50 p-6 sticky top-24`}>
+        <h2 className="hidden md:block text-headline-md font-headline-md text-on-background mb-6">Filters</h2>
       
       {/* Filter: Make */}
       <div className="filter-section pb-6 mb-6">
@@ -115,6 +129,7 @@ export default function Filters({ availableMakes }: { availableMakes: { name: st
       >
         Apply Filters
       </button>
-    </div>
+      </div>
+    </>
   );
 }

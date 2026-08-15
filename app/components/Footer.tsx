@@ -16,7 +16,7 @@ export default function Footer() {
         </nav>
       </div>
       <div className="border-t border-on-secondary-fixed-variant py-6 text-center">
-        <p className="font-body-md text-label-sm text-surface-variant">© 2024 Tribe Motors. Premium Automotive Concierge.</p>
+        <p className="font-body-md text-label-sm text-surface-variant">© 2026 Tribe Motors. Premium Automotive Concierge.</p>
       </div>
     </footer>
   );

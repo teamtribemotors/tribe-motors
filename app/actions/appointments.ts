@@ -72,7 +72,7 @@ export async function scheduleVisit(prevState: any, formData: FormData) {
       customerId = newCustomer[0].id;
     }
 
-    const startTime = new Date(`2024-10-${date.padStart(2, '0')} ${time}`);
+    const startTime = new Date(`2026-10-${date.padStart(2, '0')} ${time}`);
     const endTime = new Date(startTime.getTime() + 60 * 60 * 1000);
 
     // Insert appointment
