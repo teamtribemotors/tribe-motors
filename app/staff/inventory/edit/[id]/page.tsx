@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import StaffSidebar from '@/app/components/StaffSidebar';
+import StaffHeader from '@/app/components/StaffHeader';
 import VehicleForm from '@/app/components/VehicleForm';
 import VehicleQR from '@/app/components/VehicleQR';
 import { db } from '@/db';
@@ -13,53 +14,46 @@ export default async function EditVehiclePage({ params }: { params: Promise<{ id
 
     if (!vehicle || vehicle.length === 0) {
         return (
-            <div className="bg-background text-on-background h-screen overflow-hidden flex font-body-md">
+            <div className="flex h-screen w-full overflow-hidden bg-surface-bright text-on-surface font-body-md antialiased">
                 <StaffSidebar />
-                <main className="flex-1 overflow-y-auto bg-background relative z-0 ml-64 p-margin-desktop">
-                    <p>Vehicle not found.</p>
-                    <Link href="/staff/inventory" className="text-primary hover:underline mt-4 inline-block">Return to Inventory</Link>
+                <main className="flex flex-1 flex-col overflow-hidden bg-surface-bright">
+                    <StaffHeader title="Inventory" icon="directions_car" />
+                    <div className="flex-1 p-8 text-center">
+                        <p className="font-body-md text-on-surface">Vehicle not found.</p>
+                        <Link href="/staff/inventory" className="text-primary hover:underline mt-4 inline-block">Return to Inventory</Link>
+                    </div>
                 </main>
             </div>
         );
     }
 
-    // Server Action embedded or pass initialData directly since it's a Client Component
     return (
-        <div className="bg-background text-on-background h-screen overflow-hidden flex font-body-md">
+        <div className="flex h-screen w-full overflow-hidden bg-surface-bright text-on-surface font-body-md antialiased">
             <StaffSidebar />
-            <main className="flex-1 overflow-y-auto bg-background relative z-0 ml-64 p-margin-desktop">
-                <header className="mb-stack-lg flex justify-between items-end">
-                    <div>
-                        <h2 className="font-headline-lg text-headline-lg text-on-background mb-2">Edit Vehicle</h2>
-                        <p className="font-body-md text-body-md text-on-surface-variant">Update the details for this inventory listing.</p>
+            <main className="flex flex-1 flex-col overflow-hidden bg-surface-bright">
+                <StaffHeader title="Inventory" icon="directions_car" />
+                
+                <div className="flex-1 overflow-y-auto px-margin-mobile md:px-margin-desktop pt-8 pb-32 custom-scrollbar">
+                    {/* Header */}
+                    <div className="mb-12">
+                        <div className="flex items-center gap-2 text-on-surface-variant mb-2 font-label-sm text-label-sm uppercase">
+                            <Link href="/staff/inventory" className="hover:text-primary transition-colors">Inventory</Link>
+                            <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+                            <span className="text-primary">Edit Vehicle</span>
+                        </div>
+                        <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Edit Vehicle</h2>
                     </div>
-                    <div className="flex gap-4">
-                        <Link href="/staff/inventory" className="px-6 py-2 rounded border-2 border-primary text-primary font-label-bold text-label-bold hover:bg-primary-fixed hover:border-primary-fixed transition-colors">
-                            Cancel
-                        </Link>
-                        <button
-                            className="px-6 py-2 rounded bg-primary text-on-primary font-label-bold text-label-bold hover:opacity-90 transition-opacity shadow-[0_4px_12px_rgba(139,62,47,0.15)]"
-                            form="vehicle-form"
-                            type="submit"
-                        >
-                            Save Changes
-                        </button>
-                    </div>
-                </header>
-
-                {/* We just need to handle the success redirect from client side. But actually VehicleForm is client so we can just let it handle. Wait, we can't pass a function to a Client Component from a Server Component. We will redirect via a Server Action or we can use next/navigation in the Client Component. */}
-                {/* Wait, VehicleForm takes onSuccess as a prop. Since VehicleForm is "use client", we can't pass a Server function unless it's a Server Action. */}
-                <div className="flex flex-col lg:flex-row gap-8 items-start">
-                    <div className="flex-1 w-full">
-                        <VehicleForm initialData={vehicle[0]} />
-                    </div>
-                    <div className="w-full lg:w-80 flex-shrink-0">
-                        <VehicleQR vehicleId={id} />
+                    
+                    <div className="flex flex-col lg:flex-row gap-8 items-start">
+                        <div className="flex-1 w-full">
+                            <VehicleForm initialData={vehicle[0]} />
+                        </div>
+                        <div className="w-full lg:w-80 flex-shrink-0 mt-8 lg:mt-0">
+                            <VehicleQR vehicleId={id} />
+                        </div>
                     </div>
                 </div>
             </main>
         </div>
     );
 }
-
-{/* Wait, let me just replace this entirely by making a small client wrapper or moving `useRouter` to VehicleForm. */ }

@@ -1,4 +1,5 @@
 import StaffSidebar from '../../components/StaffSidebar';
+import StaffHeader from '../../components/StaffHeader';
 import { db } from '../../../db';
 import { enquiries } from '../../../db/schema';
 import { desc } from 'drizzle-orm';
@@ -6,53 +7,165 @@ import { desc } from 'drizzle-orm';
 export default async function EnquiriesPage() {
   const data = await db.select().from(enquiries).orderBy(desc(enquiries.createdAt));
 
-  return (
-    <div className="bg-background text-on-background min-h-screen flex selection:bg-primary-fixed selection:text-on-primary-fixed">
-      <StaffSidebar />
-      <main className="flex-1 ml-64 p-8">
-        <header className="mb-8 flex justify-between items-end">
-          <div>
-            <h2 className="font-headline-lg text-headline-lg text-primary tracking-tight">Enquiries</h2>
-            <p className="font-body-lg text-body-lg text-on-surface-variant mt-1">Manage customer enquiries and contacts.</p>
-          </div>
-        </header>
+  // Map enquiries to Kanban columns based on their status
+  const pending = data.filter(e => e.status === 'New' || e.status === 'Pending' || !e.status);
+  const processing = data.filter(e => e.status === 'In Progress' || e.status === 'Processing');
+  const qcCheck = data.filter(e => e.status === 'QC' || e.status === 'Review');
+  const ready = data.filter(e => e.status === 'Resolved' || e.status === 'Closed' || e.status === 'Ready');
 
-        <section className="bg-surface-container rounded-2xl shadow-sm border border-outline-variant overflow-hidden">
-          {data.length === 0 ? (
-            <div className="py-20 flex flex-col items-center justify-center text-center">
-              <span className="material-symbols-outlined text-6xl text-on-surface-variant/50 mb-4">forum</span>
-              <h3 className="font-headline-md text-headline-md text-on-surface mb-2">No enquiries yet</h3>
-              <p className="font-body-md text-body-md text-on-surface-variant max-w-md">When customers contact you about a vehicle, their enquiries will appear here.</p>
+  return (
+    <div className="flex h-screen w-full overflow-hidden bg-surface-bright text-on-surface font-body-md antialiased">
+      <StaffSidebar />
+      <main className="flex flex-1 flex-col overflow-hidden bg-surface-bright">
+        <StaffHeader title="Enquiries" icon="shuffle" />
+
+        <div className="flex flex-1 flex-col overflow-hidden">
+          {/* Secondary Nav / Tabs */}
+          <div className="flex items-center justify-between border-b border-outline-variant bg-surface px-8 py-4">
+            <div className="flex items-baseline gap-6">
+              <h2 className="font-headline-lg text-2xl font-bold text-on-surface">Fulfillment Queue</h2>
+              <div className="flex gap-6">
+                <a className="border-b-2 border-primary pb-1 text-sm font-bold text-on-surface" href="#">All Queues</a>
+                <a className="pb-1 text-sm font-medium text-outline hover:text-on-surface transition-colors" href="#">Priority</a>
+                <a className="pb-1 text-sm font-medium text-outline hover:text-on-surface transition-colors" href="#">Completed</a>
+              </div>
             </div>
-          ) : (
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-outline-variant bg-surface-container-low text-on-surface-variant">
-                  <th className="font-label-bold text-label-bold p-4">Name</th>
-                  <th className="font-label-bold text-label-bold p-4">Phone</th>
-                  <th className="font-label-bold text-label-bold p-4">Vehicle Model</th>
-                  <th className="font-label-bold text-label-bold p-4">Date</th>
-                  <th className="font-label-bold text-label-bold p-4">Status</th>
-                </tr>
-              </thead>
-              <tbody className="font-body-md text-body-md text-on-surface">
-                {data.map((enq) => (
-                  <tr key={enq.id} className="border-b border-outline-variant hover:bg-surface-container-high transition-colors">
-                    <td className="p-4">{enq.name}</td>
-                    <td className="p-4">{enq.number}</td>
-                    <td className="p-4">{enq.vehicleModel}</td>
-                    <td className="p-4">{new Date(enq.createdAt).toLocaleDateString()}</td>
-                    <td className="p-4">
-                      <span className={`px-2 py-1 rounded text-xs ${enq.status === 'New' ? 'bg-[#228B22]/10 text-green-800' : 'bg-surface-variant text-on-surface-variant'}`}>
-                        {enq.status}
-                      </span>
-                    </td>
-                  </tr>
+            <div className="flex items-center gap-2 rounded-lg bg-surface-container-low p-1">
+              <button className="flex items-center justify-center rounded-md bg-white px-3 py-1.5 text-xs font-bold text-primary shadow-sm">
+                Kanban
+              </button>
+              <button className="flex items-center justify-center rounded-md px-3 py-1.5 text-xs font-medium text-outline hover:bg-surface-container-high">
+                List
+              </button>
+              <button className="flex items-center justify-center rounded-md px-3 py-1.5 text-xs font-medium text-outline hover:bg-surface-container-high">
+                Timeline
+              </button>
+            </div>
+          </div>
+
+          {/* Kanban Board */}
+          <div className="flex flex-1 overflow-x-auto p-6 custom-scrollbar bg-surface-bright">
+            <div className="flex gap-6">
+              
+              {/* Column 1: Pending */}
+              <div className="min-w-[320px] max-w-[320px] flex flex-col gap-4">
+                <div className="flex items-center justify-between px-2">
+                  <div className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-outline"></span>
+                    <h3 className="text-sm font-bold text-on-surface uppercase tracking-wider">Pending</h3>
+                    <span className="rounded-full bg-surface-container-high px-2 py-0.5 text-[10px] font-bold text-outline">{pending.length}</span>
+                  </div>
+                  <button className="text-outline hover:text-on-surface"><span className="material-symbols-outlined text-lg">more_horiz</span></button>
+                </div>
+                {pending.map(enq => (
+                  <div key={enq.id} className="flex flex-col gap-3 rounded-xl border border-outline-variant bg-white p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                    <div className="flex justify-between items-start">
+                      <span className="rounded-md bg-primary-fixed px-2 py-1 text-[10px] font-bold text-on-primary-fixed-variant">ENQ #{enq.id.slice(0, 8)}</span>
+                      <span className="text-[10px] text-outline font-medium">{new Date(enq.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <p className="text-sm font-semibold text-on-surface leading-snug">{enq.vehicleModel}</p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-outline">{enq.name} • {enq.number}</span>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-outline-variant pt-3 mt-1">
+                      <div className="flex -space-x-2">
+                         <div className="h-6 w-6 rounded-full border-2 border-white bg-surface-dim flex items-center justify-center text-[10px] font-bold text-on-surface">
+                           {enq.name.charAt(0)}
+                         </div>
+                      </div>
+                      <span className="material-symbols-outlined text-outline text-lg">forum</span>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          )}
-        </section>
+              </div>
+
+              {/* Column 2: Processing */}
+              <div className="min-w-[320px] max-w-[320px] flex flex-col gap-4">
+                <div className="flex items-center justify-between px-2">
+                  <div className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-primary"></span>
+                    <h3 className="text-sm font-bold text-on-surface uppercase tracking-wider">Processing</h3>
+                    <span className="rounded-full bg-primary-fixed px-2 py-0.5 text-[10px] font-bold text-on-primary-fixed-variant">{processing.length}</span>
+                  </div>
+                  <button className="text-outline hover:text-on-surface"><span className="material-symbols-outlined text-lg">more_horiz</span></button>
+                </div>
+                {processing.map(enq => (
+                  <div key={enq.id} className="flex flex-col gap-3 rounded-xl border border-primary/20 bg-white p-4 shadow-sm border-l-4 border-l-primary hover:shadow-md transition-shadow cursor-pointer">
+                    <div className="flex justify-between items-start">
+                      <span className="rounded-md bg-primary-fixed px-2 py-1 text-[10px] font-bold text-on-primary-fixed-variant">ENQ #{enq.id.slice(0, 8)}</span>
+                      <div className="flex items-center gap-1 text-[10px] text-primary font-bold">
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                        </span>
+                        ACTIVE
+                      </div>
+                    </div>
+                    <p className="text-sm font-semibold text-on-surface leading-snug">{enq.vehicleModel}</p>
+                    <div className="w-full bg-surface-container-low rounded-full h-1.5 mt-1">
+                      <div className="bg-primary h-1.5 rounded-full" style={{ width: "65%" }}></div>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-outline-variant pt-3 mt-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-on-surface">Following up</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Column 3: QC Check */}
+              <div className="min-w-[320px] max-w-[320px] flex flex-col gap-4">
+                <div className="flex items-center justify-between px-2">
+                  <div className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-tertiary"></span>
+                    <h3 className="text-sm font-bold text-on-surface uppercase tracking-wider">QC Check</h3>
+                    <span className="rounded-full bg-tertiary-fixed px-2 py-0.5 text-[10px] font-bold text-on-tertiary-fixed">{qcCheck.length}</span>
+                  </div>
+                  <button className="text-outline hover:text-on-surface"><span className="material-symbols-outlined text-lg">more_horiz</span></button>
+                </div>
+                {qcCheck.map(enq => (
+                  <div key={enq.id} className="flex flex-col gap-3 rounded-xl border border-outline-variant bg-white p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                    <div className="flex justify-between items-start">
+                      <span className="rounded-md bg-surface-container-highest px-2 py-1 text-[10px] font-bold text-on-surface">ENQ #{enq.id.slice(0, 8)}</span>
+                      <span className="text-[10px] text-outline font-medium">{new Date(enq.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <p className="text-sm font-semibold text-on-surface leading-snug">{enq.vehicleModel}</p>
+                    <div className="flex items-center gap-2">
+                      <span className="rounded bg-tertiary-fixed px-2 py-0.5 text-[9px] font-black text-on-tertiary-fixed">REVIEW</span>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-outline-variant pt-3 mt-1">
+                      <span className="text-[10px] font-bold text-tertiary">Awaiting Manager</span>
+                      <span className="material-symbols-outlined text-outline text-lg">switch_account</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Column 4: Ready / Closed */}
+              <div className="min-w-[320px] max-w-[320px] flex flex-col gap-4">
+                <div className="flex items-center justify-between px-2">
+                  <div className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-secondary"></span>
+                    <h3 className="text-sm font-bold text-on-surface uppercase tracking-wider">Ready / Closed</h3>
+                    <span className="rounded-full bg-secondary-fixed px-2 py-0.5 text-[10px] font-bold text-on-secondary-fixed">{ready.length}</span>
+                  </div>
+                  <button className="text-outline hover:text-on-surface"><span className="material-symbols-outlined text-lg">more_horiz</span></button>
+                </div>
+                {ready.map(enq => (
+                  <div key={enq.id} className="flex flex-col gap-3 rounded-xl border border-outline-variant bg-white p-4 shadow-sm opacity-70 hover:opacity-100 transition-opacity cursor-pointer">
+                    <div className="flex justify-between items-start">
+                      <span className="rounded-md bg-surface-container-highest px-2 py-1 text-[10px] font-bold text-on-surface">ENQ #{enq.id.slice(0, 8)}</span>
+                      <span className="text-[10px] text-outline font-medium">{new Date(enq.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <p className="text-sm font-semibold text-on-surface leading-snug">{enq.vehicleModel}</p>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   );

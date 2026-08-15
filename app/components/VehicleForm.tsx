@@ -113,254 +113,254 @@ export default function VehicleForm({ initialData }: { initialData?: any }) {
     });
   };
 
+  const handleSaveDraft = () => {
+      setValue('status', 'Draft');
+      handleSubmit(onSubmit)();
+  }
+
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-5xl space-y-stack-md" id="vehicle-form">
-        {initialData?.id && <input type="hidden" {...register('id')} />}
+    <form onSubmit={handleSubmit(onSubmit)} className="max-w-[1280px] mx-auto space-y-md" id="vehicle-form">
+      {initialData?.id && <input type="hidden" {...register('id')} />}
 
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-gutter">
-          <div className="xl:col-span-2 space-y-stack-md">
-            <section className="bg-surface-container-lowest rounded-xl p-stack-md shadow-[0_4px_24px_rgba(139,62,47,0.04)] border border-surface-container">
-              <h3 className="font-headline-md text-headline-md text-on-background mb-6 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">directions_car</span>
-                Basic Details
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-gutter gap-y-6">
-                <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Make</label>
-                  <input
-                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface"
-                    placeholder="e.g. Audi"
-                    {...register('make')}
-                  />
-                  {errors.make && <p className="text-error text-sm mt-1">{errors.make.message}</p>}
-                </div>
-                <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Model</label>
-                  <input
-                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface"
-                    placeholder="e.g. Q5"
-                    {...register('model')}
-                  />
-                  {errors.model && <p className="text-error text-sm mt-1">{errors.model.message}</p>}
-                </div>
-                <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Year</label>
-                  <select
-                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface bg-none appearance-none"
-                    {...register('year')}
-                  >
-                    <option value="">Select Year</option>
-                    {Array.from({ length: new Date().getFullYear() - 1899 }, (_, i) => new Date().getFullYear() - i).map(y => (
-                      <option key={y} value={y}>{y}</option>
-                    ))}
-                  </select>
-                  {errors.year && <p className="text-error text-sm mt-1">{errors.year.message}</p>}
-                </div>
-                <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Body Type</label>
-                  <select
-                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface bg-none"
-                    {...register('bodyType')}
-                  >
-                    <option value="SUV">SUV</option>
-                    <option value="Sedan">Sedan</option>
-                    <option value="Hatchback">Hatchback</option>
-                  </select>
-                </div>
-              </div>
-            </section>
-
-            <section className="bg-surface-container-lowest rounded-xl p-stack-md shadow-[0_4px_24px_rgba(139,62,47,0.04)] border border-surface-container">
-              <h3 className="font-headline-md text-headline-md text-on-background mb-6 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">settings_suggest</span>
-                Specifications
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-gutter gap-y-6">
-                <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Kilometers Driven</label>
-                  <input
-                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface"
-                    placeholder="e.g. 12450"
-                    type="number"
-                    {...register('mileage')}
-                  />
-                  {errors.mileage && <p className="text-error text-sm mt-1">{errors.mileage.message}</p>}
-                </div>
-                <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Transmission</label>
-                  <select
-                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface bg-none"
-                    {...register('transmission')}
-                  >
-                    <option value="Automatic">Automatic</option>
-                    <option value="Manual">Manual</option>
-                    <option value="DCT">DCT</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Fuel Type</label>
-                  <select
-                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface bg-none"
-                    {...register('fuelType')}
-                  >
-                    <option value="Petrol">Petrol</option>
-                    <option value="Diesel">Diesel</option>
-                    <option value="EV">EV</option>
-                    <option value="Hybrid">Hybrid</option>
-                  </select>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-gutter gap-y-6 mt-6">
-                <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Color</label>
-                  <div className="flex items-center gap-3 bg-surface-container-low border border-outline-variant rounded p-1 focus-within:ring-1 focus-within:ring-primary focus-within:border-primary transition-colors">
-                    <input
-                      type="color"
-                      className="h-10 w-10 rounded cursor-pointer border-0 p-0 bg-transparent flex-shrink-0 ml-1"
-                      value={watch('colorHex') || '#000000'}
-                      onChange={(e) => setValue('colorHex', e.target.value, { shouldValidate: true })}
-                    />
-                    <input
-                      type="text"
-                      className="flex-1 bg-transparent border-none focus:outline-none font-body-md text-on-surface py-2 px-2"
-                      placeholder="e.g. Phantom Black"
-                      {...register('color')}
-                    />
-                  </div>
-                  {errors.color && <p className="text-error text-sm mt-1">{errors.color.message}</p>}
-                </div>
-                <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Owners</label>
-                  <select
-                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface bg-none"
-                    {...register('owners')}
-                  >
-                    <option value="1st Owner">1st Owner</option>
-                    <option value="2nd Owner">2nd Owner</option>
-                    <option value="3rd Owner">3rd Owner</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Accidental History</label>
-                  <div className="flex gap-4 mt-3">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" value="true" className="text-primary focus:ring-primary border-outline" {...register('accidentalHistory')} />
-                      <span className="font-label-bold text-label-bold text-on-surface">Yes</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" value="false" className="text-primary focus:ring-primary border-outline" {...register('accidentalHistory')} />
-                      <span className="font-label-bold text-label-bold text-on-surface">No</span>
-                    </label>
-                  </div>
-                  {errors.accidentalHistory && <p className="text-error text-sm mt-1">{errors.accidentalHistory.message}</p>}
-                </div>
-              </div>
-              
-              <div className="mt-6">
-                <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Description</label>
-                <Controller
-                  name="description"
-                  control={control}
-                  render={({ field }) => (
-                    <RichTextEditor value={field.value || ''} onChange={field.onChange} />
-                  )}
-                />
-              </div>
-            </section>
+      {/* Basic Information */}
+      <section className="bg-surface rounded-lg border border-outline-variant/30 p-md shadow-sm">
+        <h3 className="font-headline-md text-headline-md mb-6 pb-2 border-b border-outline-variant/30 text-on-surface">Basic Information</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="space-y-2">
+            <label className="font-label-md text-label-md text-on-surface-variant block">Make</label>
+            <input
+              className="w-full p-4 bg-surface-container-lowest border border-outline-variant rounded focus:outline-none focus:border-primary font-body-md text-body-md shadow-sm"
+              placeholder="e.g. Mercedes-Benz"
+              {...register('make')}
+            />
+            {errors.make && <p className="text-error text-sm mt-1">{errors.make.message}</p>}
           </div>
-
-          <div className="space-y-stack-md">
-            <section className="bg-surface-container-lowest rounded-xl p-stack-md shadow-[0_4px_24px_rgba(139,62,47,0.04)] border border-surface-container">
-              <h3 className="font-headline-md text-headline-md text-on-background mb-6 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">image</span>
-                Media
-              </h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Vehicle Image</label>
-                  {watch('imageUrl') && (
-                    <div className="mb-4 aspect-[3/2] rounded overflow-hidden bg-surface-variant relative">
-                      <img src={watch('imageUrl')} alt="Preview" className="w-full h-full object-cover" />
-                    </div>
-                  )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    disabled={isUploading}
-                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-on-primary hover:file:opacity-90"
-                  />
-                  {isUploading && <p className="text-primary text-sm mt-2">Uploading...</p>}
-                  {errors.imageUrl && <p className="text-error text-sm mt-1">{errors.imageUrl.message}</p>}
-                </div>
-                <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Image Alt Text</label>
-                  <input
-                    className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface"
-                    placeholder="Describe the vehicle image"
-                    {...register('imageAlt')}
-                  />
-                  {errors.imageAlt && <p className="text-error text-sm mt-1">{errors.imageAlt.message}</p>}
-                </div>
-              </div>
-            </section>
-
-            <section className="bg-surface-container-lowest rounded-xl p-stack-md shadow-[0_4px_24px_rgba(139,62,47,0.04)] border border-surface-container">
-              <h3 className="font-headline-md text-headline-md text-on-background mb-6 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">payments</span>
-                Pricing & Status
-              </h3>
-              <div className="space-y-6">
-                <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-2">Listing Price (₹)</label>
-                  <div className="relative">
-                    <span className="absolute left-4 top-3 text-on-surface-variant font-body-md">₹</span>
-                    <input
-                      className="w-full bg-surface-container-low border border-outline-variant rounded px-4 py-3 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors font-body-md text-on-surface pl-8 text-lg font-bold text-primary"
-                      placeholder="0"
-                      type="number"
-                      {...register('price')}
-                    />
-                  </div>
-                  {errors.price && <p className="text-error text-sm mt-1">{errors.price.message}</p>}
-                </div>
-
-                <div>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" className="rounded border-outline-variant text-primary focus:ring-primary" {...register('isCertified')} />
-                    <span className="font-label-bold text-label-bold text-on-surface">Tribe Certified</span>
-                  </label>
-                </div>
-
-                <hr className="border-outline-variant" />
-                <div>
-                  <label className="block font-label-bold text-label-bold text-on-surface-variant mb-3">Inventory Status</label>
-                  <div className="space-y-3">
-                    {['Live', 'Draft', 'Pending', 'Sold'].map((s) => (
-                      <label key={s} className="flex items-center gap-3 cursor-pointer p-3 rounded border border-outline-variant hover:border-primary transition-colors">
-                        <input
-                          className="text-primary focus:ring-primary border-outline"
-                          type="radio"
-                          value={s}
-                          {...register('status')}
-                        />
-                        <span className="font-label-bold text-label-bold text-on-surface">{s}</span>
-                      </label>
-                    ))}
-                  </div>
-                  {errors.status && <p className="text-error text-sm mt-1">{errors.status.message}</p>}
-                </div>
-              </div>
-            </section>
+          <div className="space-y-2">
+            <label className="font-label-md text-label-md text-on-surface-variant block">Model</label>
+            <input
+              className="w-full p-4 bg-surface-container-lowest border border-outline-variant rounded focus:outline-none focus:border-primary font-body-md text-body-md shadow-sm"
+              placeholder="e.g. G-Class"
+              {...register('model')}
+            />
+            {errors.model && <p className="text-error text-sm mt-1">{errors.model.message}</p>}
+          </div>
+          <div className="space-y-2">
+            <label className="font-label-md text-label-md text-on-surface-variant block">Year</label>
+            <select
+              className="w-full p-4 bg-surface-container-lowest border border-outline-variant rounded focus:outline-none focus:border-primary font-body-md text-body-md shadow-sm"
+              {...register('year')}
+            >
+              <option value="">Select Year</option>
+              {Array.from({ length: new Date().getFullYear() - 1899 }, (_, i) => new Date().getFullYear() - i).map(y => (
+                <option key={y} value={y}>{y}</option>
+              ))}
+            </select>
+            {errors.year && <p className="text-error text-sm mt-1">{errors.year.message}</p>}
+          </div>
+          <div className="space-y-2">
+            <label className="font-label-md text-label-md text-on-surface-variant block">Body Type</label>
+            <select
+              className="w-full p-4 bg-surface-container-lowest border border-outline-variant rounded focus:outline-none focus:border-primary font-body-md text-body-md shadow-sm"
+              {...register('bodyType')}
+            >
+              <option value="SUV">SUV</option>
+              <option value="Sedan">Sedan</option>
+              <option value="Hatchback">Hatchback</option>
+            </select>
           </div>
         </div>
+      </section>
 
-        {/* The imageUrl and imageAlt are now handled in the Media section */}
-        <input type="hidden" {...register('imageUrl')} />
-        <input type="hidden" {...register('colorHex')} />
-        <button id="hidden-submit" type="submit" disabled={isPending} className="hidden" />
-      </form>
-    </>
+      {/* Specifications */}
+      <section className="bg-surface rounded-lg border border-outline-variant/30 p-md shadow-sm">
+        <h3 className="font-headline-md text-headline-md mb-6 pb-2 border-b border-outline-variant/30 text-on-surface">Specifications</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="space-y-2">
+            <label className="font-label-md text-label-md text-on-surface-variant block">Mileage (km)</label>
+            <input
+              className="w-full p-4 bg-surface-container-lowest border border-outline-variant rounded focus:outline-none focus:border-primary font-body-md text-body-md shadow-sm"
+              placeholder="0"
+              type="number"
+              {...register('mileage')}
+            />
+            {errors.mileage && <p className="text-error text-sm mt-1">{errors.mileage.message}</p>}
+          </div>
+          <div className="space-y-2">
+            <label className="font-label-md text-label-md text-on-surface-variant block">Transmission</label>
+            <select
+              className="w-full p-4 bg-surface-container-lowest border border-outline-variant rounded focus:outline-none focus:border-primary font-body-md text-body-md shadow-sm"
+              {...register('transmission')}
+            >
+              <option value="Automatic">Automatic</option>
+              <option value="Manual">Manual</option>
+              <option value="DCT">DCT</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label className="font-label-md text-label-md text-on-surface-variant block">Fuel Type</label>
+            <select
+              className="w-full p-4 bg-surface-container-lowest border border-outline-variant rounded focus:outline-none focus:border-primary font-body-md text-body-md shadow-sm"
+              {...register('fuelType')}
+            >
+              <option value="Petrol">Petrol</option>
+              <option value="Diesel">Diesel</option>
+              <option value="Electric">Electric</option>
+              <option value="Hybrid">Hybrid</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label className="font-label-md text-label-md text-on-surface-variant block">Color</label>
+            <div className="flex items-center gap-3 w-full p-4 bg-surface-container-lowest border border-outline-variant rounded focus-within:ring-1 focus-within:ring-primary focus-within:border-primary shadow-sm">
+                <input
+                    type="color"
+                    className="h-8 w-8 rounded cursor-pointer border-0 p-0 bg-transparent flex-shrink-0"
+                    value={watch('colorHex') || '#000000'}
+                    onChange={(e) => setValue('colorHex', e.target.value, { shouldValidate: true })}
+                />
+                <input
+                    type="text"
+                    className="flex-1 bg-transparent border-none focus:outline-none font-body-md text-body-md p-0"
+                    placeholder="e.g. Phantom Black"
+                    {...register('color')}
+                />
+            </div>
+            {errors.color && <p className="text-error text-sm mt-1">{errors.color.message}</p>}
+          </div>
+          <div className="space-y-2">
+            <label className="font-label-md text-label-md text-on-surface-variant block">Owners</label>
+            <select
+              className="w-full p-4 bg-surface-container-lowest border border-outline-variant rounded focus:outline-none focus:border-primary font-body-md text-body-md shadow-sm"
+              {...register('owners')}
+            >
+              <option value="1st Owner">1st Owner</option>
+              <option value="2nd Owner">2nd Owner</option>
+              <option value="3rd Owner">3rd Owner</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label className="font-label-md text-label-md text-on-surface-variant block">Accidental History</label>
+            <div className="flex gap-4 mt-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" value="true" className="text-primary focus:ring-primary border-outline w-5 h-5" {...register('accidentalHistory')} />
+                    <span className="font-label-md text-label-md text-on-surface">Yes</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" value="false" className="text-primary focus:ring-primary border-outline w-5 h-5" {...register('accidentalHistory')} />
+                    <span className="font-label-md text-label-md text-on-surface">No</span>
+                </label>
+            </div>
+            {errors.accidentalHistory && <p className="text-error text-sm mt-1">{errors.accidentalHistory.message}</p>}
+          </div>
+        </div>
+      </section>
+
+      {/* Description */}
+      <section className="bg-surface rounded-lg border border-outline-variant/30 p-md shadow-sm">
+        <h3 className="font-headline-md text-headline-md mb-6 pb-2 border-b border-outline-variant/30 text-on-surface">Description</h3>
+        <Controller
+            name="description"
+            control={control}
+            render={({ field }) => (
+            <RichTextEditor value={field.value || ''} onChange={field.onChange} />
+            )}
+        />
+      </section>
+
+      {/* Media & Pricing */}
+      <section className="bg-surface rounded-lg border border-outline-variant/30 p-md shadow-sm mb-32">
+        <h3 className="font-headline-md text-headline-md mb-6 pb-2 border-b border-outline-variant/30 text-on-surface">Media & Pricing</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+                <div className="space-y-2">
+                    <label className="font-label-md text-label-md text-on-surface-variant block">Vehicle Image</label>
+                    {watch('imageUrl') && (
+                    <div className="mb-4 aspect-[3/2] rounded-lg overflow-hidden bg-surface-variant relative shadow-sm border border-outline-variant/30">
+                        <img src={watch('imageUrl')} alt="Preview" className="w-full h-full object-cover" />
+                    </div>
+                    )}
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        disabled={isUploading}
+                        className="w-full p-4 bg-surface-container-lowest border border-outline-variant rounded focus:outline-none focus:border-primary font-body-md text-body-md shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-on-primary hover:file:opacity-90"
+                    />
+                    {isUploading && <p className="text-primary text-sm mt-2 font-label-sm">Uploading...</p>}
+                    {errors.imageUrl && <p className="text-error text-sm mt-1">{errors.imageUrl.message}</p>}
+                </div>
+                <div className="space-y-2">
+                    <label className="font-label-md text-label-md text-on-surface-variant block">Image Alt Text</label>
+                    <input
+                        className="w-full p-4 bg-surface-container-lowest border border-outline-variant rounded focus:outline-none focus:border-primary font-body-md text-body-md shadow-sm"
+                        placeholder="Describe the vehicle image"
+                        {...register('imageAlt')}
+                    />
+                    {errors.imageAlt && <p className="text-error text-sm mt-1">{errors.imageAlt.message}</p>}
+                </div>
+            </div>
+
+            <div className="space-y-6">
+                <div className="space-y-2">
+                    <label className="font-label-md text-label-md text-on-surface-variant block">Price (INR)</label>
+                    <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-body-md">₹</span>
+                        <input
+                            className="w-full pl-8 pr-4 py-4 bg-surface-container-lowest border border-outline-variant rounded focus:outline-none focus:border-primary font-body-md text-body-md shadow-sm text-lg font-bold text-primary"
+                            placeholder="0"
+                            type="number"
+                            {...register('price')}
+                        />
+                    </div>
+                    {errors.price && <p className="text-error text-sm mt-1">{errors.price.message}</p>}
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-3 cursor-pointer p-4 rounded-lg border border-outline-variant bg-surface-container-lowest hover:border-primary transition-colors shadow-sm">
+                    <input type="checkbox" className="rounded border-outline-variant text-primary focus:ring-primary w-5 h-5" {...register('isCertified')} />
+                    <span className="font-label-md text-label-md text-on-surface">Tribe Certified</span>
+                  </label>
+                </div>
+            </div>
+        </div>
+      </section>
+
+      {/* Hidden Fields */}
+      <input type="hidden" {...register('imageUrl')} />
+      <input type="hidden" {...register('colorHex')} />
+
+      {/* Status & Action Bar */}
+      <div className="fixed bottom-0 right-0 left-0 md:left-64 bg-surface border-t border-outline-variant p-4 md:p-6 flex flex-col md:flex-row items-center justify-between shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-40">
+        <div className="flex items-center gap-4 mb-4 md:mb-0">
+            <label className="font-label-md text-label-md text-on-surface-variant">Status:</label>
+            <select 
+                className="p-2 bg-surface-container-lowest border border-outline-variant rounded focus:outline-none focus:border-primary font-label-md text-label-md"
+                {...register('status')}
+            >
+                <option value="Draft">Draft</option>
+                <option value="Pending">Pending</option>
+                <option value="Live">Live</option>
+                <option value="Sold">Sold</option>
+            </select>
+            {errors.status && <p className="text-error text-sm mt-1">{errors.status.message}</p>}
+        </div>
+        <div className="flex items-center gap-4 w-full md:w-auto">
+            <button 
+                onClick={handleSaveDraft}
+                disabled={isPending}
+                className="flex-1 md:flex-none px-6 py-3 border border-inverse-surface text-inverse-surface hover:bg-inverse-surface/5 font-label-md text-label-md rounded transition-colors text-center disabled:opacity-50" 
+                type="button"
+            >
+                Save Draft
+            </button>
+            <button 
+                disabled={isPending}
+                className="flex-1 md:flex-none px-8 py-3 bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md rounded transition-colors shadow-sm text-center disabled:opacity-50" 
+                type="submit"
+            >
+                {initialData?.id ? 'Save Changes' : 'Publish Vehicle'}
+            </button>
+        </div>
+      </div>
+    </form>
   );
 }
