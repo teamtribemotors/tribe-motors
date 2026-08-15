@@ -67,7 +67,7 @@ export default function ServiceRecordDetailPage({ params }: { params: Promise<{ 
                         <div className="flex items-center justify-between border-b border-surface-variant pb-4 mb-6">
                             <h3 className="font-headline-md text-headline-md text-on-background flex items-center gap-2">
                                 <span className="material-symbols-outlined text-primary">picture_as_pdf</span>
-                                <a href={record.fileUrl} target="_blank" rel="noopener noreferrer" className="hover:underline text-primary">
+                                <a href={record?.fileUrl || undefined} target="_blank" rel="noopener noreferrer" className="hover:underline text-primary">
                                     View Document (PDF)
                                 </a>
                             </h3>

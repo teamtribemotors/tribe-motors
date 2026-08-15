@@ -149,7 +149,7 @@ export default async function ServiceRecordsPage() {
                                                 <span className="material-symbols-outlined text-outline-variant text-[20px]">
                                                     picture_as_pdf
                                                 </span>
-                                                <a href={record.fileUrl} target="_blank" rel="noopener noreferrer" className="font-label-md text-sm text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
+                                                <a href={record.fileUrl || undefined} target="_blank" rel="noopener noreferrer" className="font-label-md text-sm text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
                                                     View Document
                                                 </a>
                                             </div>
