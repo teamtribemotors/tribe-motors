@@ -11,6 +11,7 @@ export interface VehicleCardProps {
   isCertified: boolean;
   imageUrl: string;
   imageAlt: string;
+  year?: number | string;
 }
 
 export default function VehicleCard({ vehicle }: { vehicle: VehicleCardProps }) {
@@ -22,26 +23,39 @@ export default function VehicleCard({ vehicle }: { vehicle: VehicleCardProps }) 
 
   return (
     <Link href={`/vehicle/${vehicle.id}`} className="block h-full">
-      <article className="bg-surface rounded-xl vehicle-card-shadow overflow-hidden group hover:scale-[1.01] transition-transform duration-300 h-full flex flex-col">
-        <div className="relative aspect-[3/2] overflow-hidden bg-surface-variant flex-shrink-0">
-          <img className="w-full h-full object-cover" data-alt={vehicle.imageAlt} src={vehicle.imageUrl} alt={vehicle.title} />
+      <article className="bg-surface-container-lowest rounded-lg border border-secondary-container/50 overflow-hidden hover:shadow-lg transition-shadow duration-300 group cursor-pointer flex flex-col h-full">
+        <div className="relative h-64 overflow-hidden">
+          <img 
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+            data-alt={vehicle.imageAlt} 
+            src={vehicle.imageUrl} 
+            alt={vehicle.title} 
+          />
           {vehicle.isCertified && (
-            <div className="absolute top-3 right-3 bg-verified-green text-surface-bright font-label-sm text-label-sm px-3 py-1 rounded-full flex items-center gap-1 shadow-md">
-              <span className="material-symbols-outlined text-[14px] text-surface-bright">workspace_premium</span>
-              Verified
+            <div className="absolute top-4 right-4">
+              <span className="trust-badge">
+                <span className="material-symbols-outlined text-[14px]">verified</span> Verified
+              </span>
             </div>
           )}
         </div>
-        <div className="p-stack-md flex flex-col gap-stack-sm flex-grow">
-          <div className="flex justify-between items-start">
-            <h2 className="font-headline-md text-headline-md text-on-background line-clamp-1 group-hover:text-primary transition-colors">{vehicle.title}</h2>
-          </div>
-          <p className="font-headline-md text-headline-md text-primary font-bold font-display-lg">{formattedPrice}</p>
-          <div className="flex flex-wrap gap-2 mt-auto pt-2">
-            <span className="bg-surface-container text-on-background font-label-sm text-label-sm px-2 py-1 rounded">{formattedMileage}</span>
-            <span className="bg-surface-container text-on-background font-label-sm text-label-sm px-2 py-1 rounded">{vehicle.fuelType}</span>
-            <span className="bg-surface-container text-on-background font-label-sm text-label-sm px-2 py-1 rounded">{vehicle.transmission}</span>
-          </div>
+        <div className="p-6 flex flex-col flex-grow">
+          <h3 className="font-headline-md text-headline-md text-on-surface mb-2">{vehicle.title}</h3>
+          <p className="font-display-lg text-headline-md text-primary mb-6">{formattedPrice}</p>
+          <ul className="flex flex-col gap-3 mt-auto border-t border-secondary-container pt-4">
+            <li className="flex justify-between items-center text-sm">
+              <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Year</span>
+              <span className="font-body-md text-body-md text-on-surface">{vehicle.year || 'N/A'}</span>
+            </li>
+            <li className="flex justify-between items-center text-sm">
+              <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Transmission</span>
+              <span className="font-body-md text-body-md text-on-surface">{vehicle.transmission}</span>
+            </li>
+            <li className="flex justify-between items-center text-sm">
+              <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Mileage</span>
+              <span className="font-body-md text-body-md text-on-surface">{formattedMileage}</span>
+            </li>
+          </ul>
         </div>
       </article>
     </Link>

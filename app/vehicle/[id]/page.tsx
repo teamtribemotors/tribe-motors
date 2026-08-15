@@ -21,118 +21,200 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
       <Navbar />
 
-      <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg flex flex-col gap-stack-lg">
+      <main className="flex-grow w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg grid grid-cols-1 md:grid-cols-12 gap-gutter">
+        {/* Breadcrumbs (Spans full width) */}
+        <div className="col-span-1 md:col-span-12 mb-stack-sm">
+          <nav aria-label="Breadcrumb" className="flex text-on-surface-variant font-label-sm text-label-sm">
+            <ol className="inline-flex items-center space-x-1 md:space-x-2">
+              <li className="inline-flex items-center">
+                <Link className="hover:text-primary transition-colors" href="/browse">Inventory</Link>
+              </li>
+              <li className="">
+                <div className="flex items-center">
+                  <span className="material-symbols-outlined text-[16px] mx-1">chevron_right</span>
+                  <Link className="hover:text-primary transition-colors" href="/browse">{vehicle.make}</Link>
+                </div>
+              </li>
+              <li aria-current="page" className="">
+                <div className="flex items-center">
+                  <span className="material-symbols-outlined text-[16px] mx-1">chevron_right</span>
+                  <span className="text-on-surface">{vehicle.model}</span>
+                </div>
+              </li>
+            </ol>
+          </nav>
+        </div>
 
-        <section className="flex flex-col gap-stack-md">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-stack-sm">
-            <div>
-              <div className="flex gap-2 mb-2">
-                <span className="bg-surface-container-low text-on-surface-variant px-3 py-1 rounded font-label-sm text-label-sm uppercase tracking-wide border border-surface-dim">{vehicle.transmission}</span>
-                <span className="bg-surface-container-low text-on-surface-variant px-3 py-1 rounded font-label-sm text-label-sm uppercase tracking-wide border border-surface-dim">{vehicle.fuelType}</span>
-                <span className="bg-surface-container-low text-on-surface-variant px-3 py-1 rounded font-label-sm text-label-sm uppercase tracking-wide border border-surface-dim">{vehicle.owners}</span>
+        {/* Left Column: Gallery & Details */}
+        <div className="col-span-1 md:col-span-8 flex flex-col gap-stack-lg">
+          {/* Gallery */}
+          <div className="flex flex-col gap-stack-sm">
+            <div className="w-full aspect-[16/9] bg-surface-container rounded-lg overflow-hidden relative group">
+              <img className="w-full h-full object-cover" data-alt={vehicle.imageAlt} src={vehicle.imageUrl} />
+            </div>
+            <div className="grid grid-cols-4 gap-stack-sm">
+              <div className="aspect-[4/3] bg-surface-container rounded cursor-pointer overflow-hidden"><img className="w-full h-full object-cover" src={vehicle.imageUrl} /></div>
+              <div className="aspect-[4/3] bg-surface-container rounded cursor-pointer overflow-hidden"><img className="w-full h-full object-cover" src={vehicle.imageUrl} /></div>
+              <div className="aspect-[4/3] bg-surface-container rounded cursor-pointer overflow-hidden"><img className="w-full h-full object-cover" src={vehicle.imageUrl} /></div>
+              <div className="aspect-[4/3] bg-surface-container rounded cursor-pointer overflow-hidden"><img className="w-full h-full object-cover" src={vehicle.imageUrl} /></div>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="bg-surface-container-lowest border border-outline-variant/30 p-stack-md rounded-lg">
+            <h3 className="font-headline-md text-headline-md text-on-surface mb-stack-md">Description</h3>
+            {vehicle.description ? (
+              <div
+                className="font-body-md text-body-md text-on-surface-variant mb-4 prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: vehicle.description }}
+              />
+            ) : (
+              <p className="font-body-md text-body-md text-on-surface-variant mb-4">No description provided.</p>
+            )}
+          </div>
+
+          {/* Detailed Specs */}
+          <div className="bg-surface-container-lowest border border-outline-variant/30 p-stack-md rounded-lg">
+            <h3 className="font-headline-md text-headline-md text-on-surface mb-stack-md">Technical Specifications</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-gutter gap-y-stack-sm">
+              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
+                <span className="font-label-md text-label-md text-on-surface-variant">Make</span>
+                <span className="font-body-md text-body-md text-on-surface">{vehicle.make}</span>
               </div>
-              <h1 className="font-display-lg text-display-lg md:text-[48px] text-on-background">{vehicle.title}</h1>
-              <p className="font-body-lg text-body-lg text-on-surface-variant mt-2">{vehicle.mileage.toLocaleString('en-IN')} km • {vehicle.status}</p>
-            </div>
-            <div className="text-left md:text-right">
-              <p className="font-display-lg text-[32px] md:text-[40px] text-primary font-bold">{formatIndianCurrency(vehicle.price)}</p>
-            </div>
-          </div>
-
-          <div className="h-[50vh] md:h-[60vh] rounded-xl overflow-hidden shadow-ambient-sm relative group cursor-pointer">
-            <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt={vehicle.imageAlt} src={vehicle.imageUrl} />
-          </div>
-        </section>
-
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
-
-          <div className="lg:col-span-8 flex flex-col gap-stack-lg">
-            <div className="bg-surface-container-lowest p-stack-md rounded-xl shadow-ambient-sm border border-surface-variant">
-              <h2 className="font-headline-md text-headline-md text-on-background border-b border-surface-variant pb-4 mb-6 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary" data-icon="tune">tune</span>
-                Vehicle Specifications
-              </h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-y-6 gap-x-4">
-                <div>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Make</p>
-                  <p className="font-body-md text-body-md text-on-background font-medium">{vehicle.make}</p>
-                </div>
-                <div>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Model</p>
-                  <p className="font-body-md text-body-md text-on-background font-medium">{vehicle.model}</p>
-                </div>
-                <div>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Year</p>
-                  <p className="font-body-md text-body-md text-on-background font-medium">{vehicle.year}</p>
-                </div>
-                <div>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Transmission</p>
-                  <p className="font-body-md text-body-md text-on-background font-medium">{vehicle.transmission}</p>
-                </div>
-                <div>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Body Type</p>
-                  <p className="font-body-md text-body-md text-on-background font-medium">{vehicle.bodyType}</p>
-                </div>
-                <div>
-                  <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Color</p>
-                  <p className="font-body-md text-body-md text-on-background font-medium flex items-center gap-2">
-                    <span className="w-4 h-4 inline-block rounded-full border border-outline-variant" style={{ backgroundColor: vehicle.color }}></span>
-                    <span className="uppercase">{vehicle.color}</span>
-                  </p>
-                </div>
+              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
+                <span className="font-label-md text-label-md text-on-surface-variant">Model</span>
+                <span className="font-body-md text-body-md text-on-surface">{vehicle.model}</span>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
+                <span className="font-label-md text-label-md text-on-surface-variant">Year</span>
+                <span className="font-body-md text-body-md text-on-surface">{vehicle.year}</span>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
+                <span className="font-label-md text-label-md text-on-surface-variant">Transmission</span>
+                <span className="font-body-md text-body-md text-on-surface">{vehicle.transmission}</span>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
+                <span className="font-label-md text-label-md text-on-surface-variant">Body Type</span>
+                <span className="font-body-md text-body-md text-on-surface">{vehicle.bodyType}</span>
+              </div>
+              <div className="flex justify-between border-b border-outline-variant/20 pb-2">
+                <span className="font-label-md text-label-md text-on-surface-variant">Exterior Color</span>
+                <span className="font-body-md text-body-md text-on-surface uppercase">{vehicle.color}</span>
               </div>
             </div>
-            <div className="bg-surface-container-lowest p-stack-md rounded-xl shadow-ambient-sm border border-surface-variant">
-              <h2 className="font-headline-md text-headline-md text-on-background border-b border-surface-variant pb-4 mb-6 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary" data-icon="description">description</span>
-                Description
-              </h2>
-              {vehicle.description ? (
-                <div
-                  className="font-body-md text-body-md text-on-surface-variant leading-relaxed prose prose-sm max-w-none prose-p:my-2 prose-ul:my-2 prose-li:my-0"
-                  dangerouslySetInnerHTML={{ __html: vehicle.description }}
-                />
-              ) : (
-                <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed italic">
-                  No description provided.
-                </p>
-              )}
-            </div>
           </div>
+        </div>
 
-          <div className="lg:col-span-4 flex flex-col gap-stack-md">
-            <div className="bg-surface-container-lowest rounded-xl shadow-ambient overflow-hidden border border-outline-variant relative">
-
-              <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#8b3e2f_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
-              <div className="p-stack-md relative z-10 flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center mb-4 shadow-sm border border-surface-variant">
-                  <span className="material-symbols-outlined text-[#D4AF37] text-3xl filled-icon" data-icon="lock">lock</span>
+        {/* Right Column: Sticky Info Panel */}
+        <div className="col-span-1 md:col-span-4 relative">
+          <div className="sticky top-[104px] flex flex-col gap-stack-md">
+            {/* Core Info Card */}
+            <div className="bg-surface-container-lowest border border-outline-variant/30 p-stack-md rounded-lg shadow-sm">
+              <div className="flex justify-between items-start mb-stack-sm">
+                <h1 className="font-headline-lg text-headline-lg text-on-surface leading-tight">{vehicle.year} {vehicle.make} {vehicle.model}</h1>
+                {vehicle.isCertified && (
+                  <span className="bg-tertiary text-on-tertiary font-label-sm text-label-sm px-3 py-1 rounded-full whitespace-nowrap ml-2">Verified</span>
+                )}
+              </div>
+              <div className="font-display-lg text-display-lg text-primary mb-stack-md">{formatIndianCurrency(vehicle.price)}</div>
+              
+              {/* Quick Specs Grid */}
+              <div className="grid grid-cols-2 gap-stack-sm mb-stack-lg">
+                <div className="flex flex-col bg-surface p-stack-sm rounded border border-outline-variant/20">
+                  <span className="material-symbols-outlined text-on-surface-variant mb-1">speed</span>
+                  <span className="font-label-sm text-label-sm text-on-surface-variant">Mileage</span>
+                  <span className="font-body-md text-body-md font-semibold text-on-surface">{vehicle.mileage.toLocaleString('en-IN')} km</span>
                 </div>
-                <h3 className="font-headline-md text-headline-md text-on-background mb-2">Inspection Report &amp; Service History</h3>
-                <p className="font-body-md text-body-md text-on-surface-variant mb-6 px-4">
-                  Access a comprehensive 140-point inspection, complete service timeline, and structural integrity verification.
-                </p>
+                <div className="flex flex-col bg-surface p-stack-sm rounded border border-outline-variant/20">
+                  <span className="material-symbols-outlined text-on-surface-variant mb-1">settings</span>
+                  <span className="font-label-sm text-label-sm text-on-surface-variant">Transmission</span>
+                  <span className="font-body-md text-body-md font-semibold text-on-surface">{vehicle.transmission}</span>
+                </div>
+                <div className="flex flex-col bg-surface p-stack-sm rounded border border-outline-variant/20">
+                  <span className="material-symbols-outlined text-on-surface-variant mb-1">local_gas_station</span>
+                  <span className="font-label-sm text-label-sm text-on-surface-variant">Fuel</span>
+                  <span className="font-body-md text-body-md font-semibold text-on-surface">{vehicle.fuelType}</span>
+                </div>
+                <div className="flex flex-col bg-surface p-stack-sm rounded border border-outline-variant/20">
+                  <span className="material-symbols-outlined text-on-surface-variant mb-1">person</span>
+                  <span className="font-label-sm text-label-sm text-on-surface-variant">Owners</span>
+                  <span className="font-body-md text-body-md font-semibold text-on-surface">{vehicle.owners}</span>
+                </div>
+              </div>
 
-                <Link href={`/vehicle/${id}/unlock-report`} className="w-full bg-accent-orange text-on-primary font-label-bold text-label-bold py-4 rounded-lg flex items-center justify-center gap-3 hover:opacity-90 transition-opacity shadow-md relative overflow-hidden group">
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#D4AF37]"></div>
-                  <span className="material-symbols-outlined text-[#D4AF37]" data-icon="key">key</span>
-                  Unlock Report — ₹199
-                </Link>
+              {/* Actions */}
+              <div className="flex flex-col gap-stack-sm">
+                <button className="w-full bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md h-[48px] rounded transition-colors duration-200">
+                  Schedule Test Drive
+                </button>
                 <ContactDealerModal vehicleId={vehicle.id} vehicleModel={`${vehicle.year} ${vehicle.make} ${vehicle.model}`} />
               </div>
             </div>
 
-            {vehicle.isCertified && (
-              <div className="bg-verified-green rounded-xl p-6 flex items-start gap-4 shadow-ambient-sm">
-                <span className="material-symbols-outlined text-[#D4AF37] text-3xl filled-icon" data-icon="verified">verified</span>
-                <div>
-                  <h4 className="font-label-bold text-label-bold text-surface-bright mb-1">Verified Excellence</h4>
-                  <p className="font-body-md text-body-md text-green-100 text-sm">This vehicle has passed our rigorous physical and mechanical vetting process.</p>
+            {/* Trust CTA */}
+            <div className="bg-surface-container-lowest border-2 border-tertiary p-stack-md rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="material-symbols-outlined text-tertiary">lock</span>
+                <h4 className="font-label-md text-label-md text-on-surface font-bold">Unlock Full History Report</h4>
+              </div>
+              <p className="font-body-md text-body-md text-on-surface-variant mb-4 text-sm">
+                Get 150-point inspection results, accident history, and service records. <br/><span className="italic text-xs mt-1 block">14 people viewed this report today.</span>
+              </p>
+              <Link href={`/vehicle/${vehicle.id}/unlock-report`} className="flex items-center justify-center w-full bg-tertiary hover:bg-on-tertiary-fixed-variant text-on-tertiary font-label-md text-label-md h-[40px] rounded transition-colors duration-200">
+                View Report
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Curated For You Section (Spans full width) */}
+        <div className="col-span-1 md:col-span-12 mt-stack-xl">
+          <h2 className="font-headline-md text-headline-md text-on-surface mb-stack-md">Curated for You</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+            <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-lg overflow-hidden group cursor-pointer hover:shadow-md transition-shadow duration-300">
+              <div className="aspect-[16/9] bg-surface-container relative overflow-hidden">
+                <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A bright red 2022 Audi R8 V10 Performance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKqea3a3DrmLYQTIrGSIejLimBY2quU7h4cWfyLtMn0JHTUX_ZcSkpM19zGE_KdYgP2I58LJmKkxxeJ5BOuJ6QGxC8PzLaydidQZdtCzSDhT_D8YUDmokwYcjk0pm9UdFrr_tgICrtei7-uJmy68UZyrImGMNUG9xelD8muJY_omm8n5gtE2TrQUG0z0wmNH1PvyB5g-trv4VikIQHDI6x1nzThW5kW_V7qHHgCmssKJm4RB7laj1xMA" />
+              </div>
+              <div className="p-4">
+                <h4 className="font-label-md text-label-md text-on-surface font-bold mb-1">2022 Audi R8 V10 Performance</h4>
+                <div className="font-body-md text-body-md text-primary font-semibold mb-2">₹2,30,00,000</div>
+                <div className="flex gap-4 text-on-surface-variant font-label-sm text-label-sm">
+                  <span className="">8,500 km</span>
+                  <span className="">Petrol</span>
+                  <span className="">Auto</span>
                 </div>
               </div>
-            )}
+            </div>
+            <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-lg overflow-hidden group cursor-pointer hover:shadow-md transition-shadow duration-300">
+              <div className="aspect-[16/9] bg-surface-container relative overflow-hidden">
+                <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A pristine white 2020 Mercedes-AMG GT R" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFMSewNhvknzHL3XDDpD5ljxMi9wbG_xPB312X7GK6uI46B4lMdOOG0Om8R2dniePm-rr041cJZJXz1PXZP91y9Qc9qSRAFYbh4DhghRkJBglSNtmEvCOwJ6EqfKdjjC2XxYnLcwvCH1nIqB4AUnQO5bJYAyOWY4QffHxEtt-JjHcL4TWMjoSMF_QgL_p2t8Sps4_Vll9A78VqxMSnHTdvkEY-8Pnb1Z9El_oT7c5m1_0EW4kEySwtSA" />
+              </div>
+              <div className="p-4">
+                <h4 className="font-label-md text-label-md text-on-surface font-bold mb-1">2020 Mercedes-AMG GT R</h4>
+                <div className="font-body-md text-body-md text-primary font-semibold mb-2">₹1,95,00,000</div>
+                <div className="flex gap-4 text-on-surface-variant font-label-sm text-label-sm">
+                  <span className="">15,200 km</span>
+                  <span className="">Petrol</span>
+                  <span className="">Auto</span>
+                </div>
+              </div>
+            </div>
+            <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-lg overflow-hidden group cursor-pointer hover:shadow-md transition-shadow duration-300">
+              <div className="aspect-[16/9] bg-surface-container relative overflow-hidden">
+                <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A sleek silver 2021 Aston Martin Vantage" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfL6Lh8_-n31ErSDGS8iXRmtDNuAPrHQ094YkhIqLBpWnAHXgsv4W8NlT3eITPbd13jFVW2DTq189tjUt2QQdqGuTzEIcmIourYWGeC9-upTFoXz_ZRI3Rf75f8d_Kq4eeFNRivRmQtZhussngiJSqvO_tbD4WVE7ZsIdfZG7QtTPvsn_zBYzIbl5mY0SzQ5FtCy7tTnuxyowvsL2Tt6nkLLdfWvXgm7HucF1kB8Mx5hzEXP2dLxkY0A" />
+              </div>
+              <div className="p-4">
+                <h4 className="font-label-md text-label-md text-on-surface font-bold mb-1">2021 Aston Martin Vantage</h4>
+                <div className="font-body-md text-body-md text-primary font-semibold mb-2">₹1,78,00,000</div>
+                <div className="flex gap-4 text-on-surface-variant font-label-sm text-label-sm">
+                  <span className="">10,100 km</span>
+                  <span className="">Petrol</span>
+                  <span className="">Auto</span>
+                </div>
+              </div>
+            </div>
           </div>
-        </section>
+        </div>
       </main>
 
       <Footer />

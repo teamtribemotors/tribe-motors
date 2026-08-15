@@ -10,119 +10,146 @@ export default async function Page() {
     const featuredVehicles = await db.select().from(vehicles).orderBy(desc(vehicles.createdAt)).limit(3);
 
     return (
-        <div className="text-on-background font-body-md antialiased min-h-screen flex flex-col">
-
-
+        <>
             <Navbar />
             <main className="flex-grow">
-
-                <section className="relative pt-stack-lg pb-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto overflow-hidden">
-                    <div className="absolute inset-0 z-0 opacity-10 pointer-events-none bg-[radial-gradient(#6d281a_1px,transparent_1px)] bg-[length:24px_24px]"></div>
-                    <div className="relative z-10 max-w-3xl mx-auto text-center mt-12 mb-16">
-                        <h1 className="font-display-lg text-headline-lg-mobile md:text-display-lg text-primary mb-stack-md leading-tight">
-                            Verified, Transparent Pre-Owned Cars in Visakhapatnam.
-                        </h1>
-                        <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
-                            Experience a premium concirege approach to buying your next vehicle. Every car meticulously inspected, fully documented, and community-backed.
-                        </p>
-                    </div>
-
-                    <div className="relative z-20 max-w-4xl mx-auto bg-surface-container-lowest rounded-xl ambient-shadow-strong p-2 border border-surface-variant">
-                        <form className="flex flex-col md:flex-row gap-2">
-                            <div className="flex-1 relative group">
-                                <label className="absolute top-2 left-4 text-xs font-label-bold text-outline uppercase tracking-wider" htmlFor="make">Make</label>
-                                <select className="w-full h-16 pt-6 pb-2 pl-4 pr-10 bg-transparent bg-none border-none rounded-lg text-on-surface focus:ring-2 focus:ring-primary appearance-none outline-none font-body-md cursor-pointer transition-colors group-hover:bg-surface-container-low" id="make">
-                                    <option value="">Any Make</option>
-                                    <option value="toyota">Toyota</option>
-                                    <option value="honda">Honda</option>
-                                    <option value="hyundai">Hyundai</option>
-                                </select>
-                                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
-                            </div>
-                            <div className="w-px bg-surface-variant hidden md:block my-2"></div>
-                            <div className="flex-1 relative group">
-                                <label className="absolute top-2 left-4 text-xs font-label-bold text-outline uppercase tracking-wider" htmlFor="model">Model</label>
-                                <select className="w-full h-16 pt-6 pb-2 pl-4 pr-10 bg-transparent bg-none border-none rounded-lg text-on-surface focus:ring-2 focus:ring-primary appearance-none outline-none font-body-md cursor-pointer transition-colors group-hover:bg-surface-container-low" id="model">
-                                    <option value="">Any Model</option>
-                                </select>
-                                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
-                            </div>
-                            <div className="w-px bg-surface-variant hidden md:block my-2"></div>
-                            <div className="flex-1 relative group">
-                                <label className="absolute top-2 left-4 text-xs font-label-bold text-outline uppercase tracking-wider" htmlFor="price">Max Price</label>
-                                <select className="w-full h-16 pt-6 pb-2 pl-4 pr-10 bg-transparent bg-none border-none rounded-lg text-on-surface focus:ring-2 focus:ring-primary appearance-none outline-none font-body-md cursor-pointer transition-colors group-hover:bg-surface-container-low" id="price">
-                                    <option value="">No Limit</option>
-                                    <option value="500000">₹5,00,000</option>
-                                    <option value="1000000">₹10,00,000</option>
-                                    <option value="2000000">₹20,00,000</option>
-                                </select>
-                                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
-                            </div>
-                            <button className="md:w-auto w-full h-16 px-8 bg-primary text-on-primary font-label-bold text-label-bold rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2" type="submit">
-                                <span className="material-symbols-outlined">search</span>
-                                Search Inventory
-                            </button>
-                        </form>
-                    </div>
-                </section>
-
-                <section className="border-y border-surface-variant bg-surface-container-low py-8">
-                    <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-around items-center gap-8 md:gap-4 text-center">
-                        <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center flex-shrink-0">
-                                <span className="material-symbols-outlined filled-icon">verified</span>
-                            </div>
-                            <span className="font-headline-md text-headline-md text-on-surface text-lg">Every car inspected</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center flex-shrink-0">
-                                <span className="material-symbols-outlined filled-icon">history</span>
-                            </div>
-                            <span className="font-headline-md text-headline-md text-on-surface text-lg">Full service history</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center flex-shrink-0">
-                                <span className="material-symbols-outlined filled-icon">groups</span>
-                            </div>
-                            <span className="font-headline-md text-headline-md text-on-surface text-lg">Community-backed</span>
-                        </div>
-                    </div>
-                </section>
-
-                <section className="py-stack-lg px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-                    <div className="flex justify-between items-end mb-stack-md">
-                        <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">Featured Vehicles</h2>
-                        <Link className="font-label-bold text-label-bold text-primary hover:underline flex items-center gap-1" href="/browse">
-                            View all <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                        </Link>
-                    </div>
-                    {featuredVehicles.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-                            {featuredVehicles.map((vehicle) => (
-                                <VehicleCard key={vehicle.id} vehicle={vehicle} />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="flex flex-col items-center justify-center py-16 px-4 text-center bg-surface-container-lowest rounded-2xl border border-surface-variant ambient-shadow-sm">
-                            <div className="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mb-4">
-                                <span className="material-symbols-outlined text-3xl text-outline">directions_car</span>
-                            </div>
-                            <h3 className="font-headline-sm text-headline-sm text-on-surface mb-2">No vehicles currently featured</h3>
-                            <p className="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mb-6">
-                                We are currently updating our premium inventory. Check back soon for meticulously inspected pre-owned vehicles.
+                {/* Hero Section */}
+                <section className="relative h-[80vh] min-h-[600px] flex items-center w-full">
+                    <div className="absolute inset-0 z-0 bg-image-overlay" data-alt="A striking digital installation art piece featuring a cinematic, moody shot of a high-end sports car in a sleek, minimalist garage setting." style={{ backgroundImage: 'linear-gradient(rgb(26, 27, 31) 0%, rgba(26, 27, 31, 0.4) 15%, rgba(26, 27, 31, 0.8) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuC8sQ3I2UZjMlM5-en1GN75KbovjyCuFwPfGJs6x9BKgWOtwE5Q7TZuNlkG-WWOBBbRfinls4qwbqBfYxTguW6OIdR2oaECKaXckiPsRmC0_HG6BGX0tfezsvZIBsPL5E7x2YuETM7HRon5wKl3FfMMtWimY4fo-_ld4PxdxG9XMqxNLbmi_hLjUX-K8QAY2Bcq8YATo5qcJM5X5uw08lJhBOoAJbaDTROjX5tZJbgoWRqhUsvfWczuBg")', backgroundSize: 'cover', backgroundPosition: 'center center' }}></div>
+                    <div className="relative z-10 w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row gap-stack-lg items-center">
+                        <div className="w-full md:w-1/2 text-center md:text-left text-on-primary">
+                            <h1 className="font-display-lg text-headline-lg-mobile md:text-display-lg mb-6 leading-tight">
+                                The Art of the Verified Automobile.
+                            </h1>
+                            <p className="font-body-lg text-body-lg text-secondary-container mb-8 max-w-lg">
+                                Experience a curated concierge service for premium pre-owned cars in Visakhapatnam.
                             </p>
-                            <Link href="/browse" className="inline-flex h-10 px-6 bg-primary text-on-primary font-label-bold text-label-bold rounded-lg items-center justify-center hover:opacity-90 transition-opacity">
-                                Browse All Inventory
+                        </div>
+                        <div className="w-full md:w-1/2 max-w-md bg-surface p-8 rounded-lg shadow-xl text-on-surface">
+                            <h2 className="font-headline-md text-headline-md mb-6">Find Your Next Vehicle</h2>
+                            <form action="/browse" method="GET" className="flex flex-col gap-4">
+                                <div>
+                                    <label htmlFor="make" className="block font-label-sm text-label-sm text-on-surface-variant mb-2">Make</label>
+                                    <select id="make" name="make" className="w-full bg-surface-container-low border border-secondary-container rounded p-3 focus:border-outline focus:ring-0">
+                                        <option value="">Select Make</option>
+                                        <option value="Porsche">Porsche</option>
+                                        <option value="Mercedes-Benz">Mercedes-Benz</option>
+                                        <option value="BMW">BMW</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label htmlFor="model" className="block font-label-sm text-label-sm text-on-surface-variant mb-2">Model</label>
+                                    <select id="model" name="model" className="w-full bg-surface-container-low border border-secondary-container rounded p-3 focus:border-outline focus:ring-0">
+                                        <option value="">Select Model</option>
+                                        <option value="911">911</option>
+                                        <option value="S-Class">S-Class</option>
+                                        <option value="7 Series">7 Series</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label htmlFor="price" className="block font-label-sm text-label-sm text-on-surface-variant mb-2">Max Price (INR)</label>
+                                    <select id="price" name="price" className="w-full bg-surface-container-low border border-secondary-container rounded p-3 focus:border-outline focus:ring-0">
+                                        <option value="">Any Price</option>
+                                        <option value="2500000">₹ 25,00,000</option>
+                                        <option value="5000000">₹ 50,00,000</option>
+                                        <option value="7500000">₹ 75,00,000</option>
+                                        <option value="10000000">₹ 1,00,00,000+</option>
+                                    </select>
+                                </div>
+                                <button className="w-full bg-primary hover:bg-surface-tint text-on-primary font-label-md text-label-md py-4 rounded mt-4 transition-colors" type="submit">
+                                    Search Inventory
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Trust Pillars Section */}
+                <section className="py-stack-xl bg-surface-container-lowest">
+                    <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-3 gap-gutter">
+                        <div className="flex flex-col items-center md:items-start text-center md:text-left bg-surface-container-low p-8 rounded-lg border border-secondary-container/50">
+                            <div className="w-12 h-12 rounded-full bg-tertiary-fixed text-tertiary flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                            </div>
+                            <h3 className="font-headline-md text-headline-md mb-3 text-on-surface">Every Car Inspected</h3>
+                            <p className="font-body-md text-body-md text-on-surface-variant">
+                                150-point technical certification guaranteeing mechanical excellence and safety for absolute peace of mind.
+                            </p>
+                        </div>
+                        <div className="flex flex-col items-center md:items-start text-center md:text-left bg-surface-container-low p-8 rounded-lg border border-secondary-container/50">
+                            <div className="w-12 h-12 rounded-full bg-tertiary-fixed text-tertiary flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>history_edu</span>
+                            </div>
+                            <h3 className="font-headline-md text-headline-md mb-3 text-on-surface">Full Service History</h3>
+                            <p className="font-body-md text-body-md text-on-surface-variant">
+                                Transparent documentation for every vehicle, detailing past maintenance, ownership, and accident-free verification.
+                            </p>
+                        </div>
+                        <div className="flex flex-col items-center md:items-start text-center md:text-left bg-surface-container-low p-8 rounded-lg border border-secondary-container/50">
+                            <div className="w-12 h-12 rounded-full bg-tertiary-fixed text-tertiary flex items-center justify-center mb-6">
+                                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
+                            </div>
+                            <h3 className="font-headline-md text-headline-md mb-3 text-on-surface">Community-Backed</h3>
+                            <p className="font-body-md text-body-md text-on-surface-variant">
+                                Trusted by Vizag's most discerning automotive enthusiasts and supported by a network of premium local service partners.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Featured Vehicles Section */}
+                <section className="py-stack-xl bg-surface">
+                    <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop">
+                        <div className="flex justify-between items-end mb-10 border-b border-secondary-container pb-4">
+                            <h2 className="font-headline-lg-mobile md:text-headline-lg text-on-surface">Curated for You</h2>
+                            <Link href="/browse" className="text-primary font-label-md text-label-md hover:underline flex items-center gap-1">
+                                View All <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                             </Link>
                         </div>
-                    )}
+                        {featuredVehicles.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+                                {featuredVehicles.map((vehicle) => (
+                                    <VehicleCard key={vehicle.id} vehicle={vehicle} />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center py-16 px-4 text-center bg-surface-container-lowest rounded-2xl border border-surface-variant shadow-sm">
+                                <div className="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mb-4">
+                                    <span className="material-symbols-outlined text-3xl text-outline">directions_car</span>
+                                </div>
+                                <h3 className="font-headline-sm text-headline-sm text-on-surface mb-2">No vehicles currently featured</h3>
+                                <p className="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mb-6">
+                                    We are currently updating our premium inventory. Check back soon for meticulously inspected pre-owned vehicles.
+                                </p>
+                                <Link href="/browse" className="inline-flex h-10 px-6 bg-primary text-on-primary font-label-bold text-label-bold rounded-lg items-center justify-center hover:opacity-90 transition-opacity">
+                                    Browse All Inventory
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+                </section>
+
+                {/* Community Section */}
+                <section className="py-stack-xl bg-surface-container-high relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 10% 20%, #446253 0%, transparent 20%), radial-gradient(circle at 90% 80%, #b02600 0%, transparent 20%)' }}></div>
+                    <div className="max-w-[800px] mx-auto px-margin-mobile md:px-margin-desktop relative z-10 text-center">
+                        <span className="material-symbols-outlined text-tertiary text-[48px] mb-6 opacity-50">format_quote</span>
+                        <p className="font-headline-md text-headline-md text-on-surface mb-8 italic">
+                            "Finding a pristine luxury vehicle in Visakhapatnam used to mean compromising or travelling out of state. Tribe Motors brought an entirely new level of transparency and concierge-style service right to my doorstep. The documentation was flawless, and the car exceeded my expectations."
+                        </p>
+                        <div className="flex items-center justify-center gap-4">
+                            <div className="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center text-on-surface font-label-md text-label-md">
+                                VS
+                            </div>
+                            <div className="text-left">
+                                <p className="font-label-md text-label-md text-on-surface">Vikram S.</p>
+                                <p className="font-body-md text-label-sm text-on-surface-variant">Visakhapatnam Local & Enthusiast</p>
+                            </div>
+                        </div>
+                    </div>
                 </section>
             </main>
-
             <Footer />
-
-
-
-        </div>
+        </>
     );
 }

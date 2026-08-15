@@ -41,9 +41,7 @@ export default async function Page({
   const totalCount = totalCountResult[0].count;
   const totalPages = Math.ceil(totalCount / pageSize);
   return (
-    <div className="text-on-background antialiased min-h-screen flex flex-col font-body-md">
-
-
+    <>
       <Navbar />
       <main className="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg flex flex-col md:flex-row gap-gutter">
 
@@ -90,9 +88,6 @@ export default async function Page({
       </main>
 
       <Footer />
-
-
-
-    </div>
+    </>
   );
 }

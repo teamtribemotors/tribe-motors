@@ -27,10 +27,9 @@ export default function ContactDealerModal({
     <>
       <button 
         onClick={() => setIsOpen(true)}
-        className="w-full mt-4 bg-surface text-on-surface border border-outline-variant font-label-bold text-label-bold py-4 rounded-lg flex items-center justify-center gap-3 hover:bg-surface-variant transition-colors"
+        className="w-full border-2 border-inverse-surface text-inverse-surface hover:bg-inverse-surface hover:text-surface font-label-md text-label-md h-[48px] rounded transition-colors duration-200"
       >
-        <span className="material-symbols-outlined text-primary">chat_bubble</span>
-        Contact Dealer
+        Enquire Now
       </button>
 
       {isOpen && (
