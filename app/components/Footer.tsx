@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-inverse-surface w-full mt-auto">
+    <footer className="bg-[#27282C] w-full mt-auto">
       <div className="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop py-stack-lg w-full max-w-[1280px] mx-auto gap-8">
         <div className="flex flex-col items-center md:items-start gap-4">
           <img alt="Tribe Motors Logo" className="h-8 object-contain filter grayscale brightness-200 opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3rDwTLkuvA3jh_kSzID1gUgAst1MCqnGvmf6ekAv7KfaYDuA-yGlcZFIa19GwoZnhMZZIYi2GL6-VBQqqrQ0WJpPOpEhgKUzuL6z1CxoZWhjC91iLwieQKSkhxjoGiEqRvBPyA3z0DrPe4zrFcdT335AlMBbkZjzwklGOMByM7e1pz9smfp3uoH6skxCE5x8Pm-LIU9b9cFgcmoTxB7ERlRs6kzV9HLvgZFoCjNBALL8Px4dAOoSO1eQRPsOzwRVc6PU" />

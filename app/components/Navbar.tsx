@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Navbar() {
   return (
-    <header className="sticky top-0 z-50 bg-inverse-surface shadow-sm w-full">
+    <header className="sticky top-0 z-50 bg-[#27282C] shadow-sm w-full">
       <div className="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 w-full max-w-[1280px] mx-auto">
         <div className="flex items-center gap-2">
           <Link href="/">
