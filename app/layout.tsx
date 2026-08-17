@@ -29,7 +29,7 @@ export const viewport: Viewport = {
 
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import Tracker from './components/Tracker';
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from '@vercel/analytics/next';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
