@@ -29,6 +29,7 @@ export const viewport: Viewport = {
 
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import Tracker from './components/Tracker';
+import { Analytics } from '@vercel/analytics/react';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </NuqsAdapter>
         <Tracker />
+        <Analytics />
         <Toaster position="bottom-right" />
       </body>
     </html>
