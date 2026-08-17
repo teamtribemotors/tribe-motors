@@ -131,3 +131,16 @@ export const activityLogs = pgTable('activity_logs', {
   userId: uuid('user_id'), // User or staff who performed action
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
+
+export const pageVisits = pgTable('page_visits', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  path: text('path').notNull(),
+  visitorId: text('visitor_id').notNull(), // A unique ID (e.g., from a cookie) or IP hash
+  visitedAt: timestamp('visited_at').defaultNow().notNull(),
+}, (table) => {
+  return {
+    pathIdx: index('page_visits_path_idx').on(table.path),
+    visitorIdx: index('page_visits_visitor_id_idx').on(table.visitorId),
+  };
+});
+

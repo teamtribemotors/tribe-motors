@@ -28,6 +28,7 @@ export const viewport: Viewport = {
 };
 
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import Tracker from './components/Tracker';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <NuqsAdapter>
           {children}
         </NuqsAdapter>
+        <Tracker />
         <Toaster position="bottom-right" />
       </body>
     </html>
